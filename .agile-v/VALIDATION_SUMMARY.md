@@ -1,9 +1,25 @@
 # Validation Summary — Cycle C1
 
-**Generated:** 2026-08-01 (REQ-0227 personal ticket list scope)
+**Generated:** 2026-08-24 (REQ-0228 supply-chain-demo brain + warehouse stock pivot)
 **eval_gate_status:** PENDING (Human Gate 2)
-**Active:** Prod smoke after next deploy
+**Active:** REQ-0228 verify on PR; Gate 2 still Sentry 24h
 **Last ship:** personal /support-tickets created_by_me key
+
+---
+
+## REQ-0228 — supply-chain-demo brain + warehouse stock pivot (2026-08-24)
+
+| Check | Result |
+| ----- | ------ |
+| AGENTS.md + demo rules + add-dashboard-pivot skill | present |
+| Warehouse breakdown type + reserved filters | Business Insights Warehouses tab |
+| Quantity chart unit label | Allocated units |
+| Admin Warehouses by Type description | Location count by type |
+| Invalidation | unchanged (read-only) |
+| Gates | PENDING verify |
+
+Scope: built | Traceability: REQ-0228 | Findings: PENDING
+Commands: lint, test (warehouse-stock-pivot)
 
 ---
 

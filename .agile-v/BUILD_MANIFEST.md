@@ -645,3 +645,12 @@
 
 | ART-0227a | REQ-0227 | SupportTicketsPageContent created_by_me | separate key from admin all |
 | TC-0227 | REQ-0227 | lint + tsc + invalidate | PASS |
+
+| ART-0228a | REQ-0228 | `AGENTS.md` | Demo 101/201 + collab notes |
+| ART-0228b | REQ-0228 | `.cursor/rules/demo-naming.mdc` | Stem only, no customer names |
+| ART-0228c | REQ-0228 | `.cursor/rules/demo-heavy.mdc` | UI/charts; no Grafana |
+| ART-0228d | REQ-0228 | `.cursor/skills/add-dashboard-pivot/SKILL.md` | Filterable stock/order grid |
+| ART-0228e | REQ-0228 | `lib/insights/warehouse-stock-pivot.ts` | Type + reserved filters |
+| ART-0228f | REQ-0228 | `BusinessInsightsWarehouseSection.tsx` | Pivot chips + units axis |
+| ART-0228g | REQ-0228 | `AdminAnalyticsContent.tsx` | Warehouses by Type label |
+| TC-0228 | REQ-0228 | lint + pivot unit tests | PENDING |

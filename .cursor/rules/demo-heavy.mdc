@@ -1,0 +1,13 @@
+---
+description: Prefer visible UI, chart, and table changes. Keep the app runnable. Do not add Grafana.
+alwaysApply: true
+---
+
+# Demo-heavy UI (supply-chain-demo)
+
+- Prefer changes a reviewer can see: charts, tables, filters, pivots, and dashboard labels.
+- Use existing Recharts paths (Business Insights, admin Store Dashboard, warehouse stock summary).
+- Prefer graphs and pivots over mocked AI/ML.
+- Keep the app runnable after every change. Do not add Grafana or extra observability stacks.
+- Minimize new dependencies. Do not wire Stripe or Shippo unless the task needs payment or shipping.
+- After catalog / order / stock writes, use the existing TanStack invalidation helpers.

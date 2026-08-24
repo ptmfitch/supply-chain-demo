@@ -5,6 +5,31 @@ Canonical REQ source. All artifacts link via `REQ-XXXX`. Current cycle: C2. Stat
 
 ---
 
+## REQ-0228 — supply-chain-demo brain + warehouse stock pivot
+
+| Field | Value |
+|-------|-------|
+| **Priority** | P2 |
+| **Risk** | R0 |
+| **Status** | verify |
+| **Cycle** | C2 |
+| **Parent** | REQ-0119 |
+
+**Intent:** Field-eng demo repo **supply-chain-demo** needs agent brain files (AGENTS.md, naming/demo-heavy rules, add-dashboard-pivot skill) plus a small visible warehouse stock pivot so Bugbot/security review have a runnable UI surface. Industry stem only — no customer names. No Grafana. No Slack channel.
+
+**Acceptance criteria**
+
+- AC1: `AGENTS.md` at repo root documents 101 (end-to-end + light skills) and 201 (Bugbot/security), collab notes (Jira supply-chain-demo, Figma/Teams later, no Slack, GitHub ptmfitch)
+- AC2: `.cursor/rules/demo-naming.mdc` and `.cursor/rules/demo-heavy.mdc` are `alwaysApply`
+- AC3: `.cursor/skills/add-dashboard-pivot/SKILL.md` covers filterable stock/order grids
+- AC4: Business Insights Warehouses tab has type + reserved filters on the breakdown table; quantity chart labeled "Allocated units"
+- AC5: Admin Store Dashboard "Warehouses by Type" description is "Location count by type"
+- AC6: lint + pivot unit tests PASS; no invalidation registry change
+
+**Artifacts:** `AGENTS.md`, `.cursor/rules/demo-naming.mdc`, `.cursor/rules/demo-heavy.mdc`, `.cursor/skills/add-dashboard-pivot/SKILL.md`, `lib/insights/warehouse-stock-pivot.ts`, `BusinessInsightsWarehouseSection.tsx`, `AdminAnalyticsContent.tsx`
+
+---
+
 ## REQ-0227 — Personal support-ticket list scope (admin)
 
 | Field | Value |
