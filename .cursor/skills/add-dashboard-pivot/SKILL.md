@@ -17,8 +17,9 @@ Parent REQ for the first pivot: **REQ-0228**. New work needs its own `REQ-XXXX`.
 2. Filter client-side with `filterWarehouseStockPivot` and `listWarehouseStockPivotTypes` in `lib/insights/warehouse-stock-pivot.ts`.
 3. Render in a `ChartCard` + `Table` (see `components/business-insights/BusinessInsightsWarehouseSection.tsx`).
 4. Keep filters local React state. Show a filtered-count label and an empty state when nothing matches.
-5. Pair the grid with a Recharts chart when the page already has one. Add a unit axis/description label (e.g. "Allocated units").
-6. Use industry stem **supply-chain-demo** only. No customer names.
+5. Scope filters to the table unless the KPI/chart cards sit behind the same controls — do not let filtered charts disagree with unfiltered totals.
+6. Pair the grid with a Recharts chart when the page already has one. Add a unit axis/description label (e.g. "Allocated units").
+7. Use industry stem **supply-chain-demo** only. No customer names.
 
 ## Do not
 

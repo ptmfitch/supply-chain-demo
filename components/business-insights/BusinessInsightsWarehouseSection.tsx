@@ -99,14 +99,12 @@ export function BusinessInsightsWarehouseSection({
     [rows, typeKey, reservedOnly],
   );
   const metrics = useMemo(() => buildWarehouseRollupMetrics(rows), [rows]);
+  // REQ-0228 / Bugbot — filters apply to the breakdown table only; KPIs + charts stay store-wide.
   const quantityChartData = useMemo(
-    () => buildWarehouseQuantityChartData(filteredRows),
-    [filteredRows],
+    () => buildWarehouseQuantityChartData(rows),
+    [rows],
   );
-  const pieData = useMemo(
-    () => buildWarehouseSharePieData(filteredRows),
-    [filteredRows],
-  );
+  const pieData = useMemo(() => buildWarehouseSharePieData(rows), [rows]);
   const filtersActive = typeKey !== "all" || reservedOnly;
 
   return (

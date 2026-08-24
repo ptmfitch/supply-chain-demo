@@ -14,6 +14,7 @@
 | AGENTS.md + demo rules + add-dashboard-pivot skill | present |
 | Warehouse breakdown type + reserved filters | Business Insights Warehouses tab |
 | Quantity chart unit label | Allocated units |
+| Bugbot: filters table-only (charts/KPIs unfiltered) | fixed |
 | Admin Warehouses by Type description | Location count by type |
 | Invalidation | unchanged (read-only) |
 | Gates | lint (changed TS) ✓ tsc ✓ pivot tests 5 ✓ |
