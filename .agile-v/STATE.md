@@ -3,7 +3,7 @@
 | Field | Value |
 |-------|-------|
 | **Cycle** | C2 (C1 Gate 2 still PENDING) |
-| **Phase** | Stage 3 Build / Stage 4 Verify — REQ-0228 |
+| **Phase** | Stage 4 Verify — REQ-0228 PR open (do not merge) |
 | **Stopped** | — |
 | **Session** | 2026-08-24 — REQ-0228 supply-chain-demo brain + warehouse stock pivot |
 | **Active REQ** | REQ-0228 (verify) |

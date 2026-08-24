@@ -653,4 +653,4 @@
 | ART-0228e | REQ-0228 | `lib/insights/warehouse-stock-pivot.ts` | Type + reserved filters |
 | ART-0228f | REQ-0228 | `BusinessInsightsWarehouseSection.tsx` | Pivot chips + units axis |
 | ART-0228g | REQ-0228 | `AdminAnalyticsContent.tsx` | Warehouses by Type label |
-| TC-0228 | REQ-0228 | lint + pivot unit tests | PENDING |
+| TC-0228 | REQ-0228 | lint (changed TS) ✓ tsc ✓ pivot tests 5 ✓ | PASS |

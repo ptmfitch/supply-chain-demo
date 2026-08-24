@@ -16,10 +16,10 @@
 | Quantity chart unit label | Allocated units |
 | Admin Warehouses by Type description | Location count by type |
 | Invalidation | unchanged (read-only) |
-| Gates | PENDING verify |
+| Gates | lint (changed TS) ✓ tsc ✓ pivot tests 5 ✓ |
 
-Scope: built | Traceability: REQ-0228 | Findings: PENDING
-Commands: lint, test (warehouse-stock-pivot)
+Scope: built/verified | Traceability: REQ-0228 | Findings: PASS
+Commands: eslint (changed TS), tsc --noEmit, vitest warehouse-stock-pivot
 
 ---
 
