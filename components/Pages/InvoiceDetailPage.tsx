@@ -434,7 +434,7 @@ export default function InvoiceDetailPage({
                         "text-gray-700 dark:text-white",
                       )}
                     />
-                    <p className="text-sm text-gray-700 dark:text-white p-2 rounded-xl bg-gradient-to-r from-blue-100/40 via-blue-50/20 to-transparent dark:from-blue-500/10 dark:via-blue-500/5 dark:to-transparent border border-blue-200/30 dark:border-blue-400/10">
+                    <p className="text-sm text-gray-700 dark:text-white p-2 rounded-xl bg-blue-100 dark:bg-blue-950/45 border border-blue-200/30 dark:border-blue-400/10">
                       {dataLoading ? (
                         <DataSlotPulse variant="text-md" className="w-full" />
                       ) : (
@@ -455,7 +455,7 @@ export default function InvoiceDetailPage({
                         "text-gray-700 dark:text-white",
                       )}
                     />
-                    <p className="text-sm text-gray-700 dark:text-white p-2 rounded-xl bg-gradient-to-r from-violet-100/40 via-violet-50/20 to-transparent dark:from-violet-500/10 dark:via-violet-500/5 dark:to-transparent border border-violet-200/30 dark:border-violet-400/10">
+                    <p className="text-sm text-gray-700 dark:text-white p-2 rounded-xl bg-violet-100 dark:bg-violet-950/45 border border-violet-200/30 dark:border-violet-400/10">
                       {dataLoading ? (
                         <DataSlotPulse variant="text-md" className="w-full" />
                       ) : (

@@ -90,7 +90,7 @@ export function InvoiceItemsCard({
           [1, 2, 3].map((i) => (
             <div
               key={i}
-              className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-4 rounded-xl border border-sky-200/40 dark:border-sky-400/20 bg-gradient-to-r from-sky-100/40 via-sky-50/20 to-transparent dark:from-sky-500/10 dark:via-sky-500/5 dark:to-transparent"
+              className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-4 rounded-xl border border-sky-200/40 dark:border-sky-400/20 bg-sky-100 dark:bg-sky-950/45"
             >
               <div className="flex-1 space-y-2">
                 <DataSlotPulse variant="text-md" className="w-40" />

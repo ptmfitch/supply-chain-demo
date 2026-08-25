@@ -365,7 +365,7 @@ export default function AddProductDialog({
     <Dialog open={openProductDialog} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         {children || (
-          <Button className="h-10 font-medium inline-flex items-center justify-center rounded-xl border border-rose-400/30 dark:border-rose-400/30 bg-gradient-to-r from-rose-500/40 via-rose-500/30 to-rose-500/20 dark:from-rose-500/40 dark:via-rose-500/30 dark:to-rose-500/20 text-white shadow-[0_15px_35px_rgba(225,29,72,0.35)] backdrop-blur-md transition duration-200 hover:border-rose-300/50 hover:from-rose-500/50 hover:via-rose-500/40 hover:to-rose-500/30 dark:hover:border-rose-300/50 dark:hover:from-rose-500/50 dark:hover:via-rose-500/40 dark:hover:to-rose-500/30">
+          <Button className="h-10 font-medium inline-flex items-center justify-center rounded-xl border border-rose-400/30 dark:border-rose-400/30 bg-rose-100 dark:bg-rose-950/45 text-white shadow-sm backdrop-blur-md transition duration-200 hover:border-rose-300/50 hover:bg-rose-200 dark:hover:bg-rose-900/50 dark:hover:border-rose-300/50 hover:bg-rose-200 dark:hover:bg-rose-900/50">
             +Add Product
           </Button>
         )}
@@ -373,7 +373,7 @@ export default function AddProductDialog({
       <DialogContent
         className={cn(
           DIALOG_EDGE_SCROLL_SHELL,
-          "poppins border-rose-400/30 dark:border-rose-400/30 shadow-[0_30px_80px_rgba(225,29,72,0.35)] dark:shadow-[0_30px_80px_rgba(225,29,72,0.25)]",
+          "poppins border-rose-400/30 dark:border-rose-400/30 shadow-sm",
         )}
         onOpenAutoFocus={(e) => e.preventDefault()}
       >

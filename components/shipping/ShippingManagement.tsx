@@ -173,7 +173,7 @@ export default function ShippingManagement({
         className={cn(
           DIALOG_EDGE_SCROLL_SHELL,
           "overflow-visible border-emerald-400/30 dark:border-emerald-400/30",
-          "shadow-[0_30px_80px_rgba(16,185,129,0.35)] dark:shadow-[0_30px_80px_rgba(16,185,129,0.25)]",
+          "shadow-sm",
           "poppins sm:max-w-2xl",
         )}
       >
@@ -219,7 +219,7 @@ export default function ShippingManagement({
               onValueChange={(v) => setActiveTab(v as "auto" | "manual")}
               className="flex flex-col"
             >
-              <TabsList className="grid w-full grid-cols-2 h-11 p-1 rounded-lg bg-white/30 dark:bg-white/10 text-white shrink-0 border border-emerald-400/30 dark:border-white/20 shadow-[0_10px_30px_rgba(16,185,129,0.15)]">
+              <TabsList className="grid w-full grid-cols-2 h-11 p-1 rounded-lg bg-white/30 dark:bg-white/10 text-white shrink-0 border border-emerald-400/30 dark:border-white/20 shadow-sm">
                 <TabsTrigger
                   value="auto"
                   className="h-9 gap-2 rounded-md data-[state=active]:border data-[state=active]:border-emerald-400 data-[state=active]:ring-2 data-[state=active]:ring-emerald-500/50 data-[state=active]:bg-background data-[state=active]:text-slate-700 dark:data-[state=active]:text-white dark:data-[state=active]:bg-white/20"

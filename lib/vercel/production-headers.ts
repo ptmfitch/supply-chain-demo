@@ -3,8 +3,10 @@
  * @see docs/VERCEL_PRODUCTION_GUARDRAILS.md
  *
  * Security headers are mirrored in vercel.json (edge). Keep keys/values in sync.
- * Immutable Cache-Control for /_next/static lives ONLY here (not vercel.json) to avoid
- * duplicate rules and the Next.js build warning about custom static Cache-Control.
+ * Immutable Cache-Control for /_next/static lives ONLY here (not vercel.json) and
+ * only in production. In `next dev` those chunk URLs are not content-hashed the
+ * same way — `immutable` makes the browser keep a stale Navbar/client bundle
+ * while SSR HTML is fresh (hydration mismatch + Next.js Cache-Control warning).
  */
 
 export type HeaderEntry = { key: string; value: string };
@@ -27,16 +29,31 @@ export type NextHeaderRule = {
   headers: HeaderEntry[];
 };
 
+export type NextHeaderRuleOptions = {
+  /** Default: true when NODE_ENV is production. Never enable in `next dev`. */
+  includeStaticAssetCache?: boolean;
+};
+
 /** Rules passed to Next.js `async headers()` in next.config.ts. */
-export function buildNextProductionHeaderRules(): NextHeaderRule[] {
-  return [
+export function buildNextProductionHeaderRules(
+  options?: NextHeaderRuleOptions,
+): NextHeaderRule[] {
+  const includeStaticAssetCache =
+    options?.includeStaticAssetCache ?? process.env.NODE_ENV === "production";
+
+  const rules: NextHeaderRule[] = [
     {
       source: "/(.*)",
       headers: [...VERCEL_SECURITY_HEADERS],
     },
-    {
+  ];
+
+  if (includeStaticAssetCache) {
+    rules.push({
       source: "/_next/static/(.*)",
       headers: [{ key: "Cache-Control", value: NEXT_STATIC_CACHE_CONTROL }],
-    },
-  ];
+    });
+  }
+
+  return rules;
 }

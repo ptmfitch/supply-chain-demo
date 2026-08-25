@@ -48,7 +48,7 @@ export default function ProductReviewFilters({
   setPagination,
 }: ProductReviewFiltersProps) {
   const ratingTriggerClass =
-    "h-10 rounded-[28px] border border-amber-400/30 dark:border-amber-400/30 bg-gradient-to-r from-amber-500/25 via-amber-500/15 to-amber-500/10 dark:from-amber-500/25 dark:via-amber-500/15 dark:to-amber-500/10 text-gray-700 dark:text-white shadow-[0_10px_30px_rgba(245,158,11,0.2)] backdrop-blur-md transition duration-200 hover:border-amber-300/40 hover:from-amber-500/35 hover:via-amber-500/25 hover:to-amber-500/15 dark:hover:border-amber-300/40 dark:hover:from-amber-500/35 dark:hover:via-amber-500/25 dark:hover:to-amber-500/15";
+    "h-10 rounded-[28px] border border-amber-400/30 dark:border-amber-400/30 bg-amber-100 dark:bg-amber-950/45 text-gray-700 dark:text-white shadow-sm backdrop-blur-md transition duration-200 hover:border-amber-300/40 hover:bg-amber-200 dark:hover:bg-amber-900/50 dark:hover:border-amber-300/40 hover:bg-amber-200 dark:hover:bg-amber-900/50";
 
   const handleResetFilters = useCallback(() => {
     setSelectedStatuses([]);

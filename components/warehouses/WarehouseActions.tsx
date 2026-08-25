@@ -63,7 +63,7 @@ export default function WarehouseActions({
         </DropdownMenuTrigger>
         <DropdownMenuContent
           align="end"
-          className="border border-white/10 bg-gradient-to-br from-white/5 via-white/5 to-white/5 backdrop-blur-md shadow-lg"
+          className="border border-white/10 bg-white/90 dark:bg-stone-900/80 backdrop-blur-md shadow-lg"
         >
           <DropdownMenuItem asChild>
             <Link href={detailHref} className="flex items-center gap-2">

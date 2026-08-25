@@ -325,14 +325,14 @@ export default function AdminProductReviewDetailContent({
                       tone="sky"
                       valueClassName={cn("text-sm", DETAIL_DATA_VALUE_CLASS)}
                     >
-                      <Link
-                        href={`/admin/products/${r!.productId}`}
-                        className={cn(TABLE_CATALOG_LINK_CLASS, "text-sm")}
-                      >
-                        <CopyableText value={r!.productName}>
+                      <CopyableText value={r!.productName} className="min-w-0">
+                        <Link
+                          href={`/admin/products/${r!.productId}`}
+                          className={cn(TABLE_CATALOG_LINK_CLASS, "text-sm")}
+                        >
                           {r!.productName}
-                        </CopyableText>
-                      </Link>
+                        </Link>
+                      </CopyableText>
                     </DetailInfoRow>
                     {r!.productSku ? (
                       <DetailInfoRow
@@ -492,14 +492,14 @@ export default function AdminProductReviewDetailContent({
                   valueClassName={cn("text-sm", DETAIL_DATA_VALUE_CLASS)}
                 >
                   {r.orderNumber ? (
-                    <Link
-                      href={`/admin/orders/${r.orderId}`}
-                      className={cn(TABLE_CATALOG_LINK_CLASS, "text-sm")}
-                    >
-                      <CopyableText value={r.orderNumber}>
+                    <CopyableText value={r.orderNumber} className="min-w-0">
+                      <Link
+                        href={`/admin/orders/${r.orderId}`}
+                        className={cn(TABLE_CATALOG_LINK_CLASS, "text-sm")}
+                      >
                         {r.orderNumber}
-                      </CopyableText>
-                    </Link>
+                      </Link>
+                    </CopyableText>
                   ) : (
                     <span className={TYPO_BODY_MUTED}>—</span>
                   )}
@@ -555,14 +555,14 @@ export default function AdminProductReviewDetailContent({
                     tone="violet"
                     valueClassName={cn("text-sm", DETAIL_DATA_VALUE_CLASS)}
                   >
-                    <Link
-                      href={`/admin/invoices/${r.invoiceId}`}
-                      className={cn(TABLE_CATALOG_LINK_CLASS, "text-sm")}
-                    >
-                      <CopyableText value={r.invoiceNumber}>
+                    <CopyableText value={r.invoiceNumber} className="min-w-0">
+                      <Link
+                        href={`/admin/invoices/${r.invoiceId}`}
+                        className={cn(TABLE_CATALOG_LINK_CLASS, "text-sm")}
+                      >
                         {r.invoiceNumber}
-                      </CopyableText>
-                    </Link>
+                      </Link>
+                    </CopyableText>
                   </DetailInfoRow>
                 ) : null}
                 {r.invoiceStatus ? (

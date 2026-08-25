@@ -49,8 +49,8 @@ export function AdminEmbedDataTable<T>({
     <div
       className={cn(
         "rounded-[28px] border border-violet-400/20 dark:border-white/10",
-        "shadow-[0_30px_80px_rgba(139,92,246,0.25)] dark:shadow-[0_30px_80px_rgba(139,92,246,0.15)]",
-        "bg-gradient-to-br from-white/20 via-white/15 to-white/10 dark:from-white/5 dark:via-white/5 dark:to-white/5",
+        "shadow-sm",
+        "bg-white/90 dark:bg-stone-900/80",
         "backdrop-blur-md overflow-hidden",
         className,
       )}

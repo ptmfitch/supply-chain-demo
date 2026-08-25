@@ -17,17 +17,15 @@ export function navbarNavLinkClass(
   if (isActive) {
     return cn(
       base,
-      "text-sky-600 dark:text-sky-400 bg-gradient-to-br from-sky-500/15 via-sky-500/10 to-sky-500/5 dark:from-sky-500/20 dark:via-sky-500/10 dark:to-sky-500/5 backdrop-blur-md",
-      variant === "desktop" &&
-        "shadow-[0_5px_15px_rgba(2,132,199,0.2)]",
+      "text-sky-600 dark:text-sky-400 bg-sky-100 dark:bg-sky-950/45",
+      variant === "desktop" && "shadow-sm",
     );
   }
 
   return cn(
     base,
-    "text-gray-700 dark:text-muted-foreground hover:text-sky-600 dark:hover:text-foreground hover:bg-gradient-to-br hover:from-sky-500/10 hover:via-sky-500/5 hover:to-sky-500/5 dark:hover:from-white/10 dark:hover:via-white/5 dark:hover:to-white/5",
-    variant === "desktop" &&
-      "hover:backdrop-blur-md hover:shadow-[0_5px_15px_rgba(2,132,199,0.25)] dark:hover:shadow-[0_5px_15px_rgba(255,255,255,0.15)]",
+    "text-gray-700 dark:text-muted-foreground hover:text-sky-600 dark:hover:text-foreground hover:bg-sky-100 dark:hover:bg-stone-800",
+    variant === "desktop" && "hover:shadow-sm",
   );
 }
 
@@ -40,7 +38,8 @@ export function adminSidebarLinkClass(
   const isSub = options?.isSub ?? false;
   const collapsed = options?.collapsed ?? false;
   const isActive =
-    pathname === href || (href !== "/admin" && (pathname?.startsWith(href) ?? false));
+    pathname === href ||
+    (href !== "/admin" && (pathname?.startsWith(href) ?? false));
 
   return cn(
     "flex items-center gap-2 rounded-lg px-2 py-2 text-sm font-normal transition-colors",

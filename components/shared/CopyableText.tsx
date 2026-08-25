@@ -6,11 +6,12 @@
  *
  * Renders children (the visible value) followed by a small Copy icon button.
  * Click → navigator.clipboard.writeText(value) → Check icon for ~1.5s.
- * Safe inside <Link> table cells: the icon click stops propagation and
- * prevents default so the row link does not navigate.
- *
- * Usage:
- *   <CopyableText value={order.orderNumber}>{order.orderNumber}</CopyableText>
+ * The copy control is a <button>. Never nest this component inside <Link>/<a>
+ * — that is invalid HTML (<a><button>) and the browser repairs it, which
+ * hydrates as a mismatch (React often reports Navbar/Footer as the site).
+ * Wrap a Link as the child so the button is a sibling of <a>:
+ *   <CopyableText value={name}><Link href={href}>{name}</Link></CopyableText>
+ * Icon click still stopPropagation so a parent row link does not navigate.
  */
 
 import React, { useEffect, useRef, useState } from "react";

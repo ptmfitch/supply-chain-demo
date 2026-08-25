@@ -955,7 +955,7 @@ export default function BusinessInsightPage({
 
           {/* Date Range Filter */}
           <div>
-            <div className="rounded-[16px] border border-violet-400/20 bg-gradient-to-r from-violet-500/10 via-violet-500/5 to-transparent p-4 backdrop-blur-md shadow-[0_10px_30px_rgba(139,92,246,0.1)]">
+            <div className="rounded-[16px] border border-violet-400/20 bg-violet-100 dark:bg-violet-950/45 p-4 backdrop-blur-md shadow-sm">
               <div className="flex flex-col sm:flex-row sm:items-center gap-2">
                 <div className="flex items-center gap-2">
                   <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-violet-300/30 bg-violet-100/50 dark:border-white/15 dark:bg-white/10">
@@ -1587,7 +1587,7 @@ export default function BusinessInsightPage({
                               (product, index) => (
                                 <div
                                   key={index}
-                                  className="rounded-xl border border-amber-400/30 bg-gradient-to-br from-amber-500/15 via-amber-500/5 to-transparent p-3 backdrop-blur-md"
+                                  className="rounded-xl border border-amber-400/30 bg-amber-100 dark:bg-amber-950/45 p-3 backdrop-blur-md"
                                 >
                                   <div className="flex items-start justify-between gap-3">
                                     <div className="flex-1 min-w-0">
@@ -1638,7 +1638,7 @@ export default function BusinessInsightPage({
                               (product, index) => (
                                 <div
                                   key={index}
-                                  className="rounded-xl border border-rose-400/30 bg-gradient-to-br from-rose-500/15 via-rose-500/5 to-transparent p-3 backdrop-blur-md"
+                                  className="rounded-xl border border-rose-400/30 bg-rose-100 dark:bg-rose-950/45 p-3 backdrop-blur-md"
                                 >
                                   <div className="flex items-start justify-between gap-3">
                                     <div className="flex-1 min-w-0">
@@ -1684,7 +1684,7 @@ export default function BusinessInsightPage({
           {/* Additional Insights */}
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-2">
             {/* Quick Insights Card */}
-            <article className="rounded-[20px] border border-sky-400/20 bg-gradient-to-br from-sky-500/15 via-sky-500/5 to-transparent p-2 sm:p-4 backdrop-blur-md shadow-[0_15px_40px_rgba(2,132,199,0.15)] dark:shadow-[0_15px_40px_rgba(2,132,199,0.1)] transition hover:border-sky-300/40">
+            <article className="rounded-[20px] border border-sky-400/20 bg-sky-100 dark:bg-sky-950/45 p-2 sm:p-4 backdrop-blur-md shadow-sm transition hover:border-sky-300/40">
               <div className="flex items-center gap-2 mb-4">
                 <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-sky-300/30 bg-sky-100/50 dark:border-white/15 dark:bg-white/10">
                   <Eye className="h-4 w-4 text-gray-700 dark:text-white" />
@@ -1734,7 +1734,7 @@ export default function BusinessInsightPage({
             </article>
 
             {/* Performance Card */}
-            <article className="rounded-[20px] border border-emerald-400/20 bg-gradient-to-br from-emerald-500/15 via-emerald-500/5 to-transparent p-2 sm:p-4 backdrop-blur-md shadow-[0_15px_40px_rgba(16,185,129,0.15)] dark:shadow-[0_15px_40px_rgba(16,185,129,0.1)] transition hover:border-emerald-300/40">
+            <article className="rounded-[20px] border border-emerald-400/20 bg-emerald-100 dark:bg-emerald-950/45 p-2 sm:p-4 backdrop-blur-md shadow-sm transition hover:border-emerald-300/40">
               <div className="flex items-center gap-2 mb-4">
                 <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-emerald-300/30 bg-emerald-100/50 dark:border-white/15 dark:bg-white/10">
                   <Users className="h-4 w-4 text-gray-700 dark:text-white" />
@@ -1784,7 +1784,7 @@ export default function BusinessInsightPage({
             </article>
 
             {/* QR Code Card */}
-            <article className="rounded-[20px] border border-violet-400/20 bg-gradient-to-br from-violet-500/15 via-violet-500/5 to-transparent p-2 sm:p-4 backdrop-blur-md shadow-[0_15px_40px_rgba(139,92,246,0.15)] dark:shadow-[0_15px_40px_rgba(139,92,246,0.1)] transition hover:border-violet-300/40">
+            <article className="rounded-[20px] border border-violet-400/20 bg-violet-100 dark:bg-violet-950/45 p-2 sm:p-4 backdrop-blur-md shadow-sm transition hover:border-violet-300/40">
               <div className="flex items-center gap-2 mb-4">
                 <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-violet-300/30 bg-violet-100/50 dark:border-white/15 dark:bg-white/10">
                   <QrCode className="h-4 w-4 text-gray-700 dark:text-white" />
@@ -1802,7 +1802,7 @@ export default function BusinessInsightPage({
             </article>
 
             {/* AI Insights Card */}
-            <article className="rounded-[20px] border border-amber-400/20 bg-gradient-to-br from-amber-500/15 via-amber-500/5 to-transparent p-2 sm:p-4 backdrop-blur-md shadow-[0_15px_40px_rgba(245,158,11,0.12)] dark:shadow-[0_15px_40px_rgba(245,158,11,0.08)] transition hover:border-amber-300/40">
+            <article className="rounded-[20px] border border-amber-400/20 bg-amber-100 dark:bg-amber-950/45 p-2 sm:p-4 backdrop-blur-md shadow-sm transition hover:border-amber-300/40">
               <div className="flex items-center gap-2 mb-4">
                 <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-amber-300/30 bg-amber-100/50 dark:border-white/15 dark:bg-white/10">
                   <Sparkles className="h-4 w-4 text-gray-700 dark:text-white" />

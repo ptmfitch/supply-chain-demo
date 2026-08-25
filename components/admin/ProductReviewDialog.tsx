@@ -112,7 +112,7 @@ export default function ProductReviewDialog({
     <Dialog open={open} onOpenChange={setOpen}>
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
       <DialogContent
-        className="p-2 sm:p-4 sm:px-8 poppins max-h-[90vh] overflow-y-auto border-amber-400/30 dark:border-amber-400/30 shadow-[0_30px_80px_rgba(245,158,11,0.35)] dark:shadow-[0_30px_80px_rgba(245,158,11,0.25)]"
+        className="p-2 sm:p-4 sm:px-8 poppins max-h-[90vh] overflow-y-auto border-amber-400/30 dark:border-amber-400/30 shadow-sm"
         onOpenAutoFocus={(e) => e.preventDefault()}
       >
         <DialogHeaderBrand

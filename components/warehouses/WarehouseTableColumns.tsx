@@ -92,9 +92,11 @@ export const createWarehouseColumns = (
         ? `${detailBase}/warehouses/${w.id}`
         : `/warehouses/${w.id}`;
       return (
-        <Link href={href} className={cn("truncate", TABLE_CATALOG_LINK_CLASS)}>
-          <CopyableText value={w.name}>{w.name}</CopyableText>
-        </Link>
+        <CopyableText value={w.name} className="min-w-0">
+          <Link href={href} className={cn("truncate min-w-0", TABLE_CATALOG_LINK_CLASS)}>
+            {w.name}
+          </Link>
+        </CopyableText>
       );
     },
     header: ({ column }) => <SortableHeader column={column} label="Name" />,

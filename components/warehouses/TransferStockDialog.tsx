@@ -69,7 +69,7 @@ import {
 import type { Product, StockAllocation } from "@/types";
 import { cn } from "@/lib/utils";
 
-const TRANSFER_DIALOG_CONTENT_CLASS = `${DIALOG_EDGE_SCROLL_SHELL} poppins border-teal-400/30 dark:border-teal-400/30 shadow-[0_30px_80px_rgba(20,184,166,0.35)] dark:shadow-[0_30px_80px_rgba(20,184,166,0.25)]`;
+const TRANSFER_DIALOG_CONTENT_CLASS = `${DIALOG_EDGE_SCROLL_SHELL} poppins border-teal-400/30 dark:border-teal-400/30 shadow-sm`;
 
 export type TransferStockDialogProps = {
   open: boolean;

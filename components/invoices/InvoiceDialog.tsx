@@ -522,7 +522,7 @@ export default function InvoiceDialog({
     <Dialog open={open} onOpenChange={setOpen}>
       {children && <DialogTrigger asChild>{children}</DialogTrigger>}
       <DialogContent
-        className="p-2 sm:p-4 sm:px-8 poppins max-h-[90vh] overflow-y-auto border-indigo-400/30 dark:border-indigo-400/30 shadow-[0_30px_80px_rgba(99,102,241,0.45)] dark:shadow-[0_30px_80px_rgba(99,102,241,0.25)]"
+        className="p-2 sm:p-4 sm:px-8 poppins max-h-[90vh] overflow-y-auto border-indigo-400/30 dark:border-indigo-400/30 shadow-sm"
         onOpenAutoFocus={(e) => e.preventDefault()}
       >
         <DialogHeaderBrand

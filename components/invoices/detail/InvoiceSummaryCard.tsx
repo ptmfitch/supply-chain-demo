@@ -50,7 +50,7 @@ export function InvoiceSummaryRow({
   const rowClass =
     variant === "glass"
       ? "flex justify-between items-center text-sm p-2 rounded-lg bg-white/5"
-      : "flex justify-between items-center text-sm p-2 rounded-lg bg-gradient-to-r from-teal-100/40 via-teal-50/20 to-transparent dark:from-teal-500/10 dark:via-teal-500/5 dark:to-transparent";
+      : "flex justify-between items-center text-sm p-2 rounded-lg bg-teal-100 dark:bg-teal-950/45";
 
   return (
     <div className={rowClass}>
@@ -144,7 +144,7 @@ export function InvoiceSummaryCard({
         )}
         <Separator className="my-2 bg-teal-200/50 dark:bg-teal-400/20" />
         {/* REQ-0148 / REQ-0164 — Total + emerald icon (OrderSummaryCard parity) */}
-        <div className="flex justify-between text-sm sm:text-base font-normal p-2 rounded-xl bg-gradient-to-r from-emerald-100/50 via-emerald-50/30 to-transparent dark:from-emerald-500/15 dark:via-emerald-500/10 dark:to-transparent border border-emerald-200/30 dark:border-emerald-400/20">
+        <div className="flex justify-between text-sm sm:text-base font-normal p-2 rounded-xl bg-emerald-100 dark:bg-emerald-950/45 border border-emerald-200/30 dark:border-emerald-400/20">
           <span className="text-gray-700 dark:text-white inline-flex items-center gap-1.5">
             <CircleDollarSign className="h-4 w-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
             Total:

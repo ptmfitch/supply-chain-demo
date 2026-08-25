@@ -72,39 +72,39 @@ const detailInfoToneClasses: Record<
 > = {
   orange: {
     icon: "text-orange-500 dark:text-orange-400",
-    row: "from-orange-100/50 via-orange-50/30 to-transparent dark:from-orange-500/10 dark:via-orange-500/5 dark:to-transparent border-orange-200/30 dark:border-orange-400/10",
+    row: "bg-orange-100 dark:bg-orange-950/45 border-orange-200/30 dark:border-orange-400/10",
   },
   amber: {
     icon: "text-amber-500 dark:text-amber-400",
-    row: "from-amber-100/50 via-amber-50/30 to-transparent dark:from-amber-500/10 dark:via-amber-500/5 dark:to-transparent border-amber-200/30 dark:border-amber-400/10",
+    row: "bg-amber-100 dark:bg-amber-950/45 border-amber-200/30 dark:border-amber-400/10",
   },
   sky: {
     icon: "text-sky-500 dark:text-sky-400",
-    row: "from-sky-100/50 via-sky-50/30 to-transparent dark:from-sky-500/10 dark:via-sky-500/5 dark:to-transparent border-sky-200/30 dark:border-sky-400/10",
+    row: "bg-sky-100 dark:bg-sky-950/45 border-sky-200/30 dark:border-sky-400/10",
   },
   emerald: {
     icon: "text-emerald-500 dark:text-emerald-400",
-    row: "from-emerald-100/50 via-emerald-50/30 to-transparent dark:from-emerald-500/10 dark:via-emerald-500/5 dark:to-transparent border-emerald-200/30 dark:border-emerald-400/10",
+    row: "bg-emerald-100 dark:bg-emerald-950/45 border-emerald-200/30 dark:border-emerald-400/10",
   },
   violet: {
     icon: "text-violet-500 dark:text-violet-400",
-    row: "from-violet-100/50 via-violet-50/30 to-transparent dark:from-violet-500/10 dark:via-violet-500/5 dark:to-transparent border-violet-200/30 dark:border-violet-400/10",
+    row: "bg-violet-100 dark:bg-violet-950/45 border-violet-200/30 dark:border-violet-400/10",
   },
   blue: {
     icon: "text-sky-500 dark:text-sky-400",
-    row: "from-blue-100/50 via-blue-50/30 to-transparent dark:from-blue-500/10 dark:via-blue-500/5 dark:to-transparent border-blue-200/30 dark:border-blue-400/10",
+    row: "bg-blue-100 dark:bg-blue-950/45 border-blue-200/30 dark:border-blue-400/10",
   },
   teal: {
     icon: "text-teal-500 dark:text-teal-400",
-    row: "from-teal-100/50 via-teal-50/30 to-transparent dark:from-teal-500/10 dark:via-teal-500/5 dark:to-transparent border-teal-200/30 dark:border-teal-400/10",
+    row: "bg-teal-100 dark:bg-teal-950/45 border-teal-200/30 dark:border-teal-400/10",
   },
   rose: {
     icon: "text-rose-500 dark:text-rose-400",
-    row: "from-rose-100/50 via-rose-50/30 to-transparent dark:from-rose-500/10 dark:via-rose-500/5 dark:to-transparent border-rose-200/30 dark:border-rose-400/10",
+    row: "bg-rose-100 dark:bg-rose-950/45 border-rose-200/30 dark:border-rose-400/10",
   },
   cyan: {
     icon: "text-cyan-500 dark:text-cyan-400",
-    row: "from-cyan-100/50 via-cyan-50/30 to-transparent dark:from-cyan-500/10 dark:via-cyan-500/5 dark:to-transparent border-cyan-200/30 dark:border-cyan-400/10",
+    row: "bg-cyan-100 dark:bg-cyan-950/45 border-cyan-200/30 dark:border-cyan-400/10",
   },
 };
 
@@ -129,7 +129,7 @@ export function DetailInfoRow({
   return (
     <div
       className={cn(
-        "flex flex-wrap items-center gap-2 text-sm p-2 rounded-xl bg-gradient-to-r border",
+        "flex flex-wrap items-center gap-2 text-sm p-2 rounded-xl border",
         styles.row,
       )}
     >

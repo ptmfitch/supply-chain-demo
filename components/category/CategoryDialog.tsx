@@ -64,7 +64,7 @@ import { Category } from "@/types";
 import { createCategoryColumns } from "./CategoryTableColumns";
 import { Plus, Tag, X, FileText, StickyNote } from "lucide-react";
 
-const CATEGORY_DIALOG_CONTENT_CLASS = `${DIALOG_EDGE_SCROLL_SHELL} poppins border-sky-400/30 dark:border-sky-400/30 shadow-[0_30px_80px_rgba(2,132,199,0.35)] dark:shadow-[0_30px_80px_rgba(2,132,199,0.25)]`;
+const CATEGORY_DIALOG_CONTENT_CLASS = `${DIALOG_EDGE_SCROLL_SHELL} poppins border-sky-400/30 dark:border-sky-400/30 shadow-sm`;
 
 interface AddCategoryDialogProps {
   children?: React.ReactNode;

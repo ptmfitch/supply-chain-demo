@@ -165,7 +165,7 @@ export default function PaymentDialog({
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="poppins max-h-[90vh] flex flex-col overflow-hidden pl-4 sm:pl-8 pt-4 sm:pt-7 pb-4 sm:pb-7 pr-0 border-sky-400/30 dark:border-sky-400/30 shadow-[0_30px_80px_rgba(2,132,199,0.35)] dark:shadow-[0_30px_80px_rgba(2,132,199,0.25)]">
+      <DialogContent className="poppins max-h-[90vh] flex flex-col overflow-hidden pl-4 sm:pl-8 pt-4 sm:pt-7 pb-4 sm:pb-7 pr-0 border-sky-400/30 dark:border-sky-400/30 shadow-sm">
         <DialogHeaderBrand
           className={DIALOG_EDGE_SCROLL_HEADER}
           icon={CreditCard}
@@ -176,7 +176,7 @@ export default function PaymentDialog({
 
         <div className="flex flex-col gap-2 sm:gap-4 overflow-y-auto min-h-0 flex-1 w-full">
           <div className="pr-4 sm:pr-8 flex flex-col gap-2 sm:gap-4">
-            <div className="rounded-lg border border-sky-400/30 dark:border-white/20 bg-white/10 dark:bg-white/5 backdrop-blur-md p-4 space-y-2 flex-shrink-0 shadow-[0_10px_30px_rgba(2,132,199,0.15)] dark:shadow-[0_10px_30px_rgba(2,132,199,0.1)]">
+            <div className="rounded-lg border border-sky-400/30 dark:border-white/20 bg-white/10 dark:bg-white/5 backdrop-blur-md p-4 space-y-2 flex-shrink-0 shadow-sm">
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium text-white">
                   {type === "order" ? "Order" : "Invoice"} Summary

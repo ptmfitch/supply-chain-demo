@@ -38,7 +38,7 @@ export function OrderShippingAddressCard({
           Shipping Address
         </h3>
       </div>
-      <p className="text-sm text-gray-700 dark:text-white p-2 rounded-xl bg-gradient-to-r from-violet-100/40 via-violet-50/20 to-transparent dark:from-violet-500/10 dark:via-violet-500/5 dark:to-transparent border border-violet-200/30 dark:border-violet-400/10">
+      <p className="text-sm text-gray-700 dark:text-white p-2 rounded-xl bg-violet-100 dark:bg-violet-950/45 border border-violet-200/30 dark:border-violet-400/10">
         {dataLoading ? (
           <DataSlotPulse variant="text-md" className="w-full" />
         ) : (
