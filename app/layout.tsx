@@ -7,6 +7,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { KeyboardShortcutsProvider } from "@/components/providers/KeyboardShortcutsProvider";
 import { Poppins } from "next/font/google";
 import localFont from "next/font/local";
+import Script from "next/script";
 import React from "react";
 import { AuthProvider } from "@/contexts";
 import { ShellSsrProvider } from "@/contexts/shell-ssr-context";
@@ -16,6 +17,8 @@ import { getShellNotificationsForUser } from "@/lib/server/notifications-data";
 import { QueryProvider } from "@/lib/react-query";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
+import { ColourBlindModeProvider } from "@/components/providers/ColourBlindModeProvider";
+import { COLOUR_BLIND_FOUC_SCRIPT } from "@/lib/ui/colour-blind-mode";
 import { ErrorBoundary } from "@/components/shared/ErrorBoundary";
 import { AuthSessionToasts } from "@/components/shared/AuthSessionToasts";
 import { SuppressApiErrorOverlay } from "@/components/shared/SuppressApiErrorOverlay";
@@ -142,6 +145,9 @@ export default async function RootLayout({
         suppressHydrationWarning
         style={{ overscrollBehavior: "none" }}
       >
+        <Script id="colour-blind-fouc" strategy="beforeInteractive">
+          {COLOUR_BLIND_FOUC_SCRIPT}
+        </Script>
         <ErrorBoundary>
           <QueryProvider>
             <AuthProvider initialUser={initialUser}>
@@ -161,11 +167,13 @@ export default async function RootLayout({
                 enableSystem
                 disableTransitionOnChange
               >
+                <ColourBlindModeProvider>
                 <TooltipProvider delayDuration={200}>
                   <KeyboardShortcutsProvider>
                     {children}
                   </KeyboardShortcutsProvider>
                 </TooltipProvider>
+                </ColourBlindModeProvider>
               </ThemeProvider>
               {/* Toaster must mount before AuthSessionToasts so useToast listeners exist when deferred toasts fire */}
               <Toaster />

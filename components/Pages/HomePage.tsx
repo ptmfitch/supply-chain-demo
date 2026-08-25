@@ -125,10 +125,8 @@ export default function HomePage({
           title="Store Overview"
           description={
             <>
-              The cards below show your store-wide metrics as the store owner,
-              including your own activity and activity from clients and others.
-              Numbers update automatically when you or others make changes. For
-              your personal orders, products, and activity only, visit{" "}
+              Store-wide metrics for you, clients, and others. Personal
+              activity only:{" "}
               <Link
                 href="/admin/my-activity"
                 className="font-medium text-sky-600 hover:text-sky-800 dark:text-sky-400 dark:hover:text-sky-300"

@@ -66,8 +66,11 @@ import {
   createChartBarLabelRenderer,
 } from "@/lib/ui/chart-point-label";
 import type { WarehouseStockSummary } from "@/types/stock-allocation";
-
-const PIE_COLORS = ["#06b6d4", "#0ea5e9", "#10b981", "#8b5cf6", "#f59e0b"];
+import {
+  getCategoricalChartColors,
+  getWarehouseSharePieColors,
+} from "@/lib/ui/colour-blind-mode";
+import { useColourBlindMode } from "@/hooks/use-colour-blind-mode";
 
 export type BusinessInsightsWarehouseSectionProps = {
   rows: WarehouseStockSummary[];
@@ -90,6 +93,9 @@ export function BusinessInsightsWarehouseSection({
   rows,
   loading,
 }: BusinessInsightsWarehouseSectionProps) {
+  const colourBlind = useColourBlindMode();
+  const pieColors = getWarehouseSharePieColors(colourBlind);
+  const barFill = getCategoricalChartColors(colourBlind)[0];
   const [typeKey, setTypeKey] = useState<string | "all">("all");
   const [reservedOnly, setReservedOnly] = useState(false);
 
@@ -192,7 +198,7 @@ export function BusinessInsightsWarehouseSection({
                 />
                 <Bar
                   dataKey="quantity"
-                  fill="#06b6d4"
+                  fill={barFill}
                   label={createChartBarLabelRenderer()}
                 />
               </BarChart>
@@ -229,13 +235,13 @@ export function BusinessInsightsWarehouseSection({
                     </text>
                   )}
                   outerRadius="100%"
-                  fill="#06b6d4"
+                  fill={barFill}
                   dataKey="value"
                 >
                   {pieData.map((_entry, index) => (
                     <Cell
                       key={`wh-pie-${index}`}
-                      fill={PIE_COLORS[index % PIE_COLORS.length]}
+                      fill={pieColors[index % pieColors.length]}
                     />
                   ))}
                 </Pie>

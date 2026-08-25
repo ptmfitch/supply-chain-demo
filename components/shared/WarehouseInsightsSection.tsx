@@ -15,7 +15,8 @@ import {
 import { ChartCard } from "@/components/ui/chart-card";
 import { DeferredChartSection } from "@/components/ui/deferred-chart-section";
 import { ResponsiveChartContainer } from "@/components/ui/responsive-chart-container";
-import { WAREHOUSE_STOCK_PIE_COLORS } from "@/lib/ui/catalog-insights-chart-data";
+import { getWarehouseStockPieColors } from "@/lib/ui/colour-blind-mode";
+import { useColourBlindChartOptions } from "@/hooks/use-colour-blind-mode";
 import {
   CHART_LABEL_TOP_MARGIN,
   createChartBarLabelRenderer,
@@ -61,6 +62,8 @@ export function WarehouseInsightsSection({
   showUrgentForecastTable = false,
   className,
 }: WarehouseInsightsSectionProps) {
+  const chartOptions = useColourBlindChartOptions();
+  const pieColors = getWarehouseStockPieColors(chartOptions);
   const stockChartData = [
     { name: "Available", value: insights.stockBreakdown.available },
     { name: "Reserved", value: insights.stockBreakdown.reserved },
@@ -156,11 +159,7 @@ export function WarehouseInsightsSection({
                 {stockChartData.map((_, index) => (
                   <Cell
                     key={`cell-${index}`}
-                    fill={
-                      WAREHOUSE_STOCK_PIE_COLORS[
-                        index % WAREHOUSE_STOCK_PIE_COLORS.length
-                      ]
-                    }
+                    fill={pieColors[index % pieColors.length]}
                   />
                 ))}
               </Pie>
