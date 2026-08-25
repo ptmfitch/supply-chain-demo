@@ -98,6 +98,8 @@ import {
   buildWarehouseRollupMetrics,
   formatWarehouseRollupForAi,
 } from "@/lib/insights/business-insights-warehouse-rollup";
+import { getCategoricalChartColors } from "@/lib/ui/colour-blind-mode";
+import { useColourBlindMode } from "@/hooks/use-colour-blind-mode";
 import { cn } from "@/lib/utils";
 import {
   FOCUS_NO_LAYOUT_SHIFT_CLASS,
@@ -119,8 +121,6 @@ const BUSINESS_INSIGHT_DATE_INPUT_CLASS = cn(
   FOCUS_NO_LAYOUT_SHIFT_CLASS,
   GLASS_FOCUS_RING.violet,
 );
-
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8"];
 
 /** Resolve product.category to a display name (string | {name} | null). */
 function resolveProductCategoryName(product: Product): string | null {
@@ -183,6 +183,8 @@ export default function BusinessInsightPage({
   ]);
   const { user } = useAuth();
   const { toast } = useToast();
+  const colourBlind = useColourBlindMode();
+  const colors = getCategoricalChartColors(colourBlind);
 
   // State for QR code URL - set on client side to avoid SSR window error
   const [qrUrl, setQrUrl] = useState("");
@@ -1161,14 +1163,14 @@ export default function BusinessInsightPage({
                                 </text>
                               )}
                               outerRadius="100%"
-                              fill="#8884d8"
+                              fill={colors[4]}
                               dataKey="value"
                             >
                               {analyticsData.categoryDistribution.map(
                                 (_entry, index) => (
                                   <Cell
                                     key={`cell-${index}`}
-                                    fill={COLORS[index % COLORS.length]}
+                                    fill={colors[index % colors.length]}
                                   />
                                 ),
                               )}
@@ -1207,7 +1209,7 @@ export default function BusinessInsightPage({
                               type="monotone"
                               dataKey="products"
                               stroke="#8884d8"
-                              fill="#8884d8"
+                              fill={colors[4]}
                               dot={{ r: 3, fill: "#8884d8" }}
                               label={createChartDotLabelRenderer(
                                 analyticsData.monthlyTrend.length,
@@ -1257,7 +1259,7 @@ export default function BusinessInsightPage({
                                 type="monotone"
                                 dataKey="totalValue"
                                 stroke="#00C49F"
-                                fill="#00C49F"
+                                fill={colors[1]}
                                 dot={{ r: 3, fill: "#00C49F" }}
                                 label={createChartDotLabelRenderer(
                                   orderTrendByMonth.length,
@@ -1285,7 +1287,7 @@ export default function BusinessInsightPage({
                               <Tooltip />
                               <Bar
                                 dataKey="orderCount"
-                                fill="#8884D8"
+                                fill={colors[4]}
                                 label={createChartBarLabelRenderer(
                                   formatChartCountLabel,
                                 )}
@@ -1341,7 +1343,7 @@ export default function BusinessInsightPage({
                             <Tooltip />
                             <Bar
                               dataKey="value"
-                              fill="#8884d8"
+                              fill={colors[4]}
                               label={createChartBarLabelRenderer(
                                 formatChartCountLabel,
                               )}
@@ -1380,7 +1382,7 @@ export default function BusinessInsightPage({
                             <Tooltip />
                             <Bar
                               dataKey="value"
-                              fill="#00C49F"
+                              fill={colors[1]}
                               label={createChartBarLabelRenderer(
                                 formatChartCountLabel,
                               )}
@@ -1424,7 +1426,7 @@ export default function BusinessInsightPage({
                             />
                             <Bar
                               dataKey="totalValue"
-                              fill="#FFBB28"
+                              fill={colors[2]}
                               label={createChartBarLabelRenderer()}
                             />
                           </BarChart>
@@ -1466,7 +1468,7 @@ export default function BusinessInsightPage({
                             />
                             <Bar
                               dataKey="totalValue"
-                              fill="#FF8042"
+                              fill={colors[3]}
                               label={createChartBarLabelRenderer()}
                             />
                           </BarChart>
@@ -1513,7 +1515,7 @@ export default function BusinessInsightPage({
                             />
                             <Bar
                               dataKey="value"
-                              fill="#FFBB28"
+                              fill={colors[2]}
                               label={createChartBarLabelRenderer()}
                             />
                           </BarChart>

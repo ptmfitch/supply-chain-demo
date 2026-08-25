@@ -18,6 +18,7 @@ import {
   LogIn,
   LogOut,
   MessageSquare,
+  OctagonX,
   Package,
   Pencil,
   Plus,
@@ -46,6 +47,11 @@ import {
   getWarehouseTypeTone,
 } from "@/lib/ui/warehouse-type-styles";
 import { cn } from "@/lib/utils";
+import {
+  statusCbmClass,
+  statusCbmTextClass,
+  type StatusCbmKind,
+} from "@/lib/ui/colour-blind-mode";
 
 /** Human-readable label: snake_case / lowercase → Title case */
 export function formatSemanticLabel(value: string): string {
@@ -67,12 +73,30 @@ function normalizeKey(value: string): string {
 }
 
 const ORDER_STATUS: Record<string, BadgeTone> = {
-  pending: { className: GLASS_BADGE_CLASS.orange, icon: Clock },
-  confirmed: { className: GLASS_BADGE_CLASS.sky, icon: CheckCircle },
-  processing: { className: GLASS_BADGE_CLASS.yellow, icon: Loader2 },
-  shipped: { className: GLASS_BADGE_CLASS.purple, icon: Truck },
-  delivered: { className: GLASS_BADGE_CLASS.emerald, icon: CheckCircle },
-  cancelled: { className: GLASS_BADGE_CLASS.rose, icon: XCircle },
+  pending: {
+    className: cn(GLASS_BADGE_CLASS.orange, statusCbmClass("warn")),
+    icon: Clock,
+  },
+  confirmed: {
+    className: cn(GLASS_BADGE_CLASS.sky, statusCbmClass("ok")),
+    icon: CheckCircle,
+  },
+  processing: {
+    className: cn(GLASS_BADGE_CLASS.yellow, statusCbmClass("warn")),
+    icon: Loader2,
+  },
+  shipped: {
+    className: cn(GLASS_BADGE_CLASS.purple, statusCbmClass("ok")),
+    icon: Truck,
+  },
+  delivered: {
+    className: cn(GLASS_BADGE_CLASS.emerald, statusCbmClass("ok")),
+    icon: CheckCircle,
+  },
+  cancelled: {
+    className: cn(GLASS_BADGE_CLASS.rose, statusCbmClass("crit")),
+    icon: XCircle,
+  },
 };
 
 /** REQ-0187 — solid/opaque contrast for dark dialog glass (invoice picker/panel) */
@@ -86,11 +110,20 @@ const ORDER_STATUS_HUE: Record<string, GlassBadgeHue> = {
 };
 
 const PAYMENT_STATUS: Record<string, BadgeTone> = {
-  paid: { className: GLASS_BADGE_CLASS.emerald, icon: CheckCircle },
+  paid: {
+    className: cn(GLASS_BADGE_CLASS.emerald, statusCbmClass("ok")),
+    icon: CheckCircle,
+  },
   unpaid: { className: GLASS_BADGE_CLASS.slate, icon: AlertCircle },
   /** Legacy checkout value — display as Unpaid with orange (order-pending hue) */
-  pending: { className: GLASS_BADGE_CLASS.orange, icon: AlertCircle },
-  partial: { className: GLASS_BADGE_CLASS.orange, icon: CircleDollarSign },
+  pending: {
+    className: cn(GLASS_BADGE_CLASS.orange, statusCbmClass("warn")),
+    icon: AlertCircle,
+  },
+  partial: {
+    className: cn(GLASS_BADGE_CLASS.orange, statusCbmClass("warn")),
+    icon: CircleDollarSign,
+  },
   refunded: { className: GLASS_BADGE_CLASS.violet, icon: RotateCcw },
 };
 
@@ -103,12 +136,30 @@ const PAYMENT_STATUS_HUE: Record<string, GlassBadgeHue> = {
 };
 
 const PRODUCT_STOCK_STATUS: Record<string, BadgeTone> = {
-  available: { className: GLASS_BADGE_CLASS.emerald, icon: CheckCircle },
-  in_stock: { className: GLASS_BADGE_CLASS.emerald, icon: CheckCircle },
-  stock_low: { className: GLASS_BADGE_CLASS.orange, icon: AlertTriangle },
-  low_stock: { className: GLASS_BADGE_CLASS.orange, icon: AlertTriangle },
-  stock_out: { className: GLASS_BADGE_CLASS.red, icon: XCircle },
-  out_of_stock: { className: GLASS_BADGE_CLASS.red, icon: XCircle },
+  available: {
+    className: cn(GLASS_BADGE_CLASS.emerald, statusCbmClass("ok")),
+    icon: CheckCircle,
+  },
+  in_stock: {
+    className: cn(GLASS_BADGE_CLASS.emerald, statusCbmClass("ok")),
+    icon: CheckCircle,
+  },
+  stock_low: {
+    className: cn(GLASS_BADGE_CLASS.orange, statusCbmClass("warn")),
+    icon: AlertTriangle,
+  },
+  low_stock: {
+    className: cn(GLASS_BADGE_CLASS.orange, statusCbmClass("warn")),
+    icon: AlertTriangle,
+  },
+  stock_out: {
+    className: cn(GLASS_BADGE_CLASS.red, statusCbmClass("crit")),
+    icon: OctagonX,
+  },
+  out_of_stock: {
+    className: cn(GLASS_BADGE_CLASS.red, statusCbmClass("crit")),
+    icon: OctagonX,
+  },
 };
 
 const ACTIVE_INACTIVE: Record<string, BadgeTone> = {
@@ -162,9 +213,18 @@ const REVIEW_STATUS_HUE: Record<string, GlassBadgeHue> = {
 const INVOICE_STATUS: Record<string, BadgeTone> = {
   draft: { className: GLASS_BADGE_CLASS.slate, icon: FileText },
   sent: { className: GLASS_BADGE_CLASS.sky, icon: FileText },
-  paid: { className: GLASS_BADGE_CLASS.emerald, icon: CheckCircle },
-  overdue: { className: GLASS_BADGE_CLASS.rose, icon: AlertCircle },
-  cancelled: { className: GLASS_BADGE_CLASS.orange, icon: XCircle },
+  paid: {
+    className: cn(GLASS_BADGE_CLASS.emerald, statusCbmClass("ok")),
+    icon: CheckCircle,
+  },
+  overdue: {
+    className: cn(GLASS_BADGE_CLASS.rose, statusCbmClass("crit")),
+    icon: AlertCircle,
+  },
+  cancelled: {
+    className: cn(GLASS_BADGE_CLASS.orange, statusCbmClass("crit")),
+    icon: XCircle,
+  },
 };
 
 /** Hue keys for solid/opaque contrast variants (REQ-0150 Select trigger/items). */
@@ -275,6 +335,61 @@ function resolveTone(
   return map[normalizeKey(status)] ?? DEFAULT_TONE;
 }
 
+function withCbmSolid(
+  className: string,
+  kind: StatusCbmKind | null,
+  solid: boolean,
+): string {
+  if (!kind) return className;
+  return cn(className, statusCbmClass(kind, solid));
+}
+
+function orderStatusCbmKind(key: string): StatusCbmKind | null {
+  switch (key) {
+    case "confirmed":
+    case "delivered":
+    case "shipped":
+      return "ok";
+    case "pending":
+    case "processing":
+      return "warn";
+    case "cancelled":
+      return "crit";
+    default:
+      return null;
+  }
+}
+
+function paymentStatusCbmKind(key: string): StatusCbmKind | null {
+  switch (key) {
+    case "paid":
+      return "ok";
+    case "pending":
+    case "partial":
+      return "warn";
+    case "unpaid":
+    case "refunded":
+      return null;
+    default:
+      return null;
+  }
+}
+
+function invoiceStatusCbmKind(key: string): StatusCbmKind | null {
+  switch (key) {
+    case "paid":
+      return "ok";
+    case "overdue":
+    case "cancelled":
+      return "crit";
+    case "draft":
+    case "sent":
+      return null;
+    default:
+      return null;
+  }
+}
+
 export type SemanticBadgeContrast = "glass" | "opaque" | "solid";
 
 export type SemanticBadgeProps = {
@@ -338,13 +453,21 @@ export function OrderStatusBadge({
   size,
   contrast,
 }: SemanticBadgeProps) {
+  const key = normalizeKey(status);
   const base = resolveTone(ORDER_STATUS, status);
-  const hue = ORDER_STATUS_HUE[normalizeKey(status)] ?? "slate";
+  const hue = ORDER_STATUS_HUE[key] ?? "slate";
+  const cbm = orderStatusCbmKind(key);
   const tone: BadgeTone =
     contrast === "solid"
-      ? { icon: base.icon, className: SOLID_BADGE_CLASS[hue] }
+      ? {
+          icon: base.icon,
+          className: withCbmSolid(SOLID_BADGE_CLASS[hue], cbm, true),
+        }
       : contrast === "opaque"
-        ? { icon: base.icon, className: OPAQUE_BADGE_CLASS[hue] }
+        ? {
+            icon: base.icon,
+            className: withCbmSolid(OPAQUE_BADGE_CLASS[hue], cbm, false),
+          }
         : base;
   return (
     <SemanticBadgeBase
@@ -420,11 +543,18 @@ export function PaymentStatusBadge({
   const key = normalizeKey(status);
   const base = resolveTone(PAYMENT_STATUS, status);
   const hue = PAYMENT_STATUS_HUE[key] ?? "slate";
+  const cbm = paymentStatusCbmKind(key);
   const tone: BadgeTone =
     contrast === "solid"
-      ? { icon: base.icon, className: SOLID_BADGE_CLASS[hue] }
+      ? {
+          icon: base.icon,
+          className: withCbmSolid(SOLID_BADGE_CLASS[hue], cbm, true),
+        }
       : contrast === "opaque"
-        ? { icon: base.icon, className: OPAQUE_BADGE_CLASS[hue] }
+        ? {
+            icon: base.icon,
+            className: withCbmSolid(OPAQUE_BADGE_CLASS[hue], cbm, false),
+          }
         : base;
   const displayLabel =
     label ??
@@ -609,13 +739,21 @@ export function InvoiceStatusBadge({
   size,
   contrast = "glass",
 }: SemanticBadgeProps) {
+  const key = normalizeKey(status);
   const base = resolveTone(INVOICE_STATUS, status);
-  const hue = INVOICE_STATUS_HUE[normalizeKey(status)] ?? "slate";
+  const hue = INVOICE_STATUS_HUE[key] ?? "slate";
+  const cbm = invoiceStatusCbmKind(key);
   const tone: BadgeTone =
     contrast === "solid"
-      ? { icon: base.icon, className: SOLID_BADGE_CLASS[hue] }
+      ? {
+          icon: base.icon,
+          className: withCbmSolid(SOLID_BADGE_CLASS[hue], cbm, true),
+        }
       : contrast === "opaque"
-        ? { icon: base.icon, className: OPAQUE_BADGE_CLASS[hue] }
+        ? {
+            icon: base.icon,
+            className: withCbmSolid(OPAQUE_BADGE_CLASS[hue], cbm, false),
+          }
         : base;
   return (
     <SemanticBadgeBase
@@ -675,9 +813,19 @@ export function productStockLabelFromAvailable(available: number): string {
  * Available >20 emerald · Stock Low >0 orange · Stock Out red.
  */
 export function productStockAvailableTextClass(available: number): string {
-  if (available > 20) return "text-emerald-600 dark:text-emerald-400";
-  if (available > 0) return "text-orange-600 dark:text-orange-400";
-  return "text-red-600 dark:text-red-400";
+  if (available > 20) {
+    return cn(
+      "text-emerald-600 dark:text-emerald-400",
+      statusCbmTextClass("ok"),
+    );
+  }
+  if (available > 0) {
+    return cn(
+      "text-orange-600 dark:text-orange-400",
+      statusCbmTextClass("warn"),
+    );
+  }
+  return cn("text-red-600 dark:text-red-400", statusCbmTextClass("crit"));
 }
 
 export function ProductStockFromQuantityBadge({

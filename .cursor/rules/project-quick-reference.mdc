@@ -61,6 +61,18 @@ npm start            # production server
 
 **Production:** Redeploy after env changes so `NEXT_PUBLIC_*` is baked into the client bundle.
 
+## Colour-blind mode (REQ-0230 / SCD-4)
+
+| Piece | Location |
+|-------|----------|
+| Storage + palettes | `lib/ui/colour-blind-mode.ts` — `colour-blind-mode` localStorage; `html[data-colour-blind]` (not a whole-app CSS filter) |
+| FOUC script | `app/layout.tsx` — `beforeInteractive` + `ColourBlindModeProvider` |
+| Picker | `Navbar` ModeToggle — Light/Dark/System + Switch “Colour-blind mode” (`w-56`) |
+| Status remap | `semantic-badges.tsx` + `globals.css` `.cbm-status-*` — stock/order/invoice; OctagonX for stock out |
+| Charts | `getCatalogStockPieColors` / `getCategoricalChartColors`; `--chart-1`…`--chart-5` under `[data-colour-blind]` |
+
+**Invalidation unchanged** — preference is client-only.
+
 ## Supplier catalog detail (REQ-0029)
 
 | Piece | Location |
