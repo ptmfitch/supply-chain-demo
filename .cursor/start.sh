@@ -21,6 +21,14 @@ NEXT_PUBLIC_API_URL="http://localhost:3000"
 EOF
 fi
 
+# Export .env into this shell so child processes (the tsx seed script in
+# particular) receive DATABASE_URL. tsx does not auto-load .env, unlike the
+# Prisma CLI and Next.js, so the seed would otherwise fail on a fresh DB.
+set -a
+# shellcheck disable=SC1091
+. ./.env
+set +a
+
 echo "==> [start] Ensure Docker daemon is running (fuse-overlayfs storage driver)"
 if ! sudo docker info >/dev/null 2>&1; then
   sudo bash -c 'nohup dockerd --storage-driver=fuse-overlayfs >/var/log/dockerd.log 2>&1 &'
