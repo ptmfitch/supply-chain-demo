@@ -1,9 +1,11 @@
 import { describe, expect, it } from "vitest";
 import {
+  CBM_GLASS_STATUS_FILL_CONTRACT,
   CBM_STATUS_DARK,
   CBM_STATUS_LIGHT,
   COLOUR_BLIND_FOUC_SCRIPT,
   COLOUR_BLIND_STORAGE_KEY,
+  cbmGlassBackgroundColor,
   getCatalogStockPieColors,
   getCategoricalChartColors,
   parseColourBlindStorage,
@@ -55,5 +57,25 @@ describe("colour-blind-mode (REQ-0230)", () => {
     expect(def[1]).toBe("#00C49F");
     expect(cbm[0]).toBe("#0072B2");
     expect(cbm).not.toEqual(def);
+  });
+
+  it("requires glass CBM pills to set background-color (not image-only)", () => {
+    expect(CBM_GLASS_STATUS_FILL_CONTRACT.setsBackgroundColor).toBe(true);
+    expect(CBM_GLASS_STATUS_FILL_CONTRACT.clearsBackgroundImage).toBe(true);
+    expect(CBM_GLASS_STATUS_FILL_CONTRACT.lightMix).toBe("pastel-with-white");
+    expect(CBM_GLASS_STATUS_FILL_CONTRACT.darkMix).toBe(
+      "translucent-with-transparent",
+    );
+    expect(CBM_GLASS_STATUS_FILL_CONTRACT.colorAndBorderUseImportant).toBe(
+      true,
+    );
+    expect(cbmGlassBackgroundColor("ok", false)).toBe(
+      "color-mix(in srgb, var(--cbm-ok) 18%, white)",
+    );
+    expect(cbmGlassBackgroundColor("ok", true)).toBe(
+      "color-mix(in srgb, var(--cbm-ok) 22%, transparent)",
+    );
+    expect(cbmGlassBackgroundColor("warn", false)).toContain("var(--cbm-warn)");
+    expect(cbmGlassBackgroundColor("crit", true)).toContain("var(--cbm-crit)");
   });
 });
