@@ -67,5 +67,3 @@ When a ticket exists in Jira project `supply-chain-demo`, mention it in the PR b
 | `.cursor/rules/demo-naming.mdc` | Always — stem only, no customer names |
 | `.cursor/rules/demo-heavy.mdc` | Always — visible UI/charts; no Grafana |
 | `.cursor/skills/add-dashboard-pivot/SKILL.md` | Adding a denser pivot-style stock/order grid with filters |
-
-Product governance (REQ-XXXX, gates) lives under `.agile-v/` and `.cursor/rules/agile-v-core.mdc`. New demo UI should still carry a parent `REQ-XXXX`.
