@@ -54,6 +54,14 @@ function toDateOnlyString(d: Date): string {
   return `${y}-${m}-${day}`;
 }
 
+/** UTC yyyy-mm-dd — same on Vercel (UTC) and any client TZ (REQ-0019). */
+function toUtcDateOnlyString(d: Date): string {
+  const y = d.getUTCFullYear();
+  const m = String(d.getUTCMonth() + 1).padStart(2, "0");
+  const day = String(d.getUTCDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
 /** Parse yyyy-mm-dd as local start of day (avoids UTC shifting the day). */
 export function parseRangeDate(value: string): Date {
   const [y, m, d] = value.split("-").map(Number);
@@ -72,10 +80,13 @@ export function formatRangeDateLabel(value: string): string {
   return formatStableDate(parseRangeDate(value));
 }
 
-/** Default = last 12 months (first day of the month 11 months back → today). */
+/**
+ * Default = last 12 months (UTC first of the month 11 months back → UTC today).
+ * UTC calendar days keep SSR HTML and the first client render identical.
+ */
 export function getDefaultDashboardRange(now: Date = new Date()): DashboardDateRange {
-  const from = new Date(now.getFullYear(), now.getMonth() - 11, 1);
-  return { from: toDateOnlyString(from), to: toDateOnlyString(now) };
+  const from = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - 11, 1));
+  return { from: toUtcDateOnlyString(from), to: toUtcDateOnlyString(now) };
 }
 
 export function isDefaultDashboardRange(
@@ -102,22 +113,25 @@ export function getDashboardRangeForPreset(
   preset: DashboardRangePresetKey,
   now: Date = new Date(),
 ): DashboardDateRange {
-  const to = toDateOnlyString(now);
+  const to = toUtcDateOnlyString(now);
   switch (preset) {
     case "30d": {
-      const from = new Date(now);
-      from.setDate(from.getDate() - 29);
-      return { from: toDateOnlyString(from), to };
+      const from = new Date(now.getTime());
+      from.setUTCDate(from.getUTCDate() - 29);
+      return { from: toUtcDateOnlyString(from), to };
     }
     case "90d": {
-      const from = new Date(now);
-      from.setDate(from.getDate() - 89);
-      return { from: toDateOnlyString(from), to };
+      const from = new Date(now.getTime());
+      from.setUTCDate(from.getUTCDate() - 89);
+      return { from: toUtcDateOnlyString(from), to };
     }
     case "12m":
       return getDefaultDashboardRange(now);
     case "ytd":
-      return { from: toDateOnlyString(new Date(now.getFullYear(), 0, 1)), to };
+      return {
+        from: toUtcDateOnlyString(new Date(Date.UTC(now.getUTCFullYear(), 0, 1))),
+        to,
+      };
     default: {
       const exhaustive: never = preset;
       throw new Error(`Unknown dashboard range preset: ${exhaustive}`);

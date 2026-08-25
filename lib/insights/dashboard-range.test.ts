@@ -16,7 +16,7 @@ import {
   tryDashboardRangeChange,
 } from "./dashboard-range";
 
-const NOW = new Date(2026, 7, 25); // Aug 25, 2026 (local)
+const NOW = new Date(Date.UTC(2026, 7, 25)); // Aug 25, 2026 (UTC)
 
 describe("getDefaultDashboardRange", () => {
   it("spans the first of the month 11 months back through today", () => {
@@ -33,6 +33,23 @@ describe("getDefaultDashboardRange", () => {
     expect(
       isDefaultDashboardRange({ from: "2026-08-01", to: "2026-08-25" }, NOW),
     ).toBe(false);
+  });
+
+  it("uses the UTC calendar day so SSR and the browser agree", () => {
+    // 03:00 UTC Aug 25 is still Aug 24 in US Pacific — local getters would diverge.
+    const instant = new Date("2026-08-25T03:00:00.000Z");
+    expect(getDefaultDashboardRange(instant)).toEqual({
+      from: "2025-09-01",
+      to: "2026-08-25",
+    });
+    expect(getDashboardRangeForPreset("ytd", instant)).toEqual({
+      from: "2026-01-01",
+      to: "2026-08-25",
+    });
+    expect(getDashboardRangeForPreset("30d", instant)).toEqual({
+      from: "2026-07-27",
+      to: "2026-08-25",
+    });
   });
 });
 
