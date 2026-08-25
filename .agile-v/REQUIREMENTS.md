@@ -5,6 +5,29 @@ Canonical REQ source. All artifacts link via `REQ-XXXX`. Current cycle: C2. Stat
 
 ---
 
+## REQ-0229 — Cursor-native rules and skills (no competitor agent files)
+
+| Field | Value |
+|-------|-------|
+| **Priority** | P2 |
+| **Risk** | R0 |
+| **Status** | done |
+| **Cycle** | C2 |
+| **Parent** | REQ-0008, REQ-0105 |
+
+**Intent:** Keep Cursor project config in `.cursor/` (rules + skills). Move Agile V skill stubs out of `.agile-v/skills/`. Replace root `CLAUDE.md` with `.cursor/rules/project-quick-reference.mdc`. Leave `.agile-v/` for governance (STATE, REQs, gates). No app/TanStack/SSR changes.
+
+**Acceptance criteria**
+
+- AC1: No tracked `CLAUDE.md`; quick reference lives at `.cursor/rules/project-quick-reference.mdc` (`alwaysApply: true`)
+- AC2: 24 Agile V skills + index live under `.cursor/skills/` (Cursor `SKILL.md` layout)
+- AC3: `.cursor/rules/agile-v-core.mdc` and playbook/walkthrough point at `.cursor/skills/`, not `.agile-v/skills/`
+- AC4: No product/API/invalidation change
+
+**Artifacts:** `.cursor/rules/project-quick-reference.mdc`, `.cursor/skills/*`, `.cursor/rules/agile-v-core.mdc`
+
+---
+
 ## REQ-0227 — Personal support-ticket list scope (admin)
 
 | Field | Value |

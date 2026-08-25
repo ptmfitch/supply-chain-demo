@@ -5,7 +5,7 @@ alwaysApply: true
 
 # Agile V Core (stock-inventory)
 
-**State:** `.agile-v/STATE.md` | **Requirements:** `.agile-v/REQUIREMENTS.md` | **Skills:** `.agile-v/skills/SKILLS_INDEX.md`
+**State:** `.agile-v/STATE.md` | **Requirements:** `.agile-v/REQUIREMENTS.md` | **Skills:** `.cursor/skills/agile-v-skills-index/SKILL.md`
 
 ## Directives (enforce every prompt)
 
@@ -31,7 +31,7 @@ Commands: lint, test, test:invalidate, build
 
 1. Read `.agile-v/STATE.md` — cycle, gate, resume
 2. Map work to `REQ-XXXX` in `.agile-v/REQUIREMENTS.md`
-3. Load from `.agile-v/skills/SKILLS_INDEX.md`: **01** always; **17** for Next.js build; **19** before claiming done; **23** for Sentry
+3. Load from `.cursor/skills/`: **agile-v-core** always; **build-js** for Next.js; **red-team-verifier** before claiming done; **observability-planner** for Sentry
 4. Write-through: `DECISION_LOG.md`, `BUILD_MANIFEST.md`, `VALIDATION_SUMMARY.md`
 
 **Upstream skills:** https://github.com/Agile-V/agile_v_skills

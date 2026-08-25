@@ -55,7 +55,7 @@ PROJECT_PLAN.md
 # Sentry Config File
 .env.sentry-build-plugin
 
-# Claude
+# Local tool caches (not Cursor project config)
 .claude
 .playwright-mcp
 

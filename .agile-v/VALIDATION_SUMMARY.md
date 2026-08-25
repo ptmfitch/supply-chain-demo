@@ -1,9 +1,21 @@
 # Validation Summary — Cycle C1
 
-**Generated:** 2026-08-01 (REQ-0227 personal ticket list scope)
+**Generated:** 2026-08-25 (REQ-0229 Cursor rules/skills)
 **eval_gate_status:** PENDING (Human Gate 2)
 **Active:** Prod smoke after next deploy
-**Last ship:** personal /support-tickets created_by_me key
+**Last ship:** Cursor-native rules/skills (REQ-0229)
+
+---
+
+## REQ-0229 — Cursor-native rules and skills (2026-08-25)
+
+| Check | Result |
+| ----- | ------ |
+| CLAUDE.md | removed; content in `.cursor/rules/project-quick-reference.mdc` |
+| Agile V skills | `.cursor/skills/` SKILL.md layout + `agile-v-skills-index` |
+| agile-v-core rule | points at `.cursor/skills/` |
+| Invalidation | unchanged |
+| Gates | docs-only — no app tests |
 
 ---
 
