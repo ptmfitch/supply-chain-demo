@@ -90,7 +90,8 @@ export const DIALOG_FORM_SUCCESS_TEXT =
 export const DIALOG_FORM_WARN_TEXT = "text-xs text-amber-400/90";
 
 /** REQ-0114 — dialog field labels */
-export const DIALOG_FORM_LABEL = "text-sm font-medium text-white/80";
+export const DIALOG_FORM_LABEL =
+  "text-sm font-medium text-gray-700 dark:text-white/80";
 
 /** REQ-0119 — compact grid field labels under a section DialogFormLabel */
 export const DIALOG_FORM_SUB_LABEL = "text-xs font-medium text-white/70";

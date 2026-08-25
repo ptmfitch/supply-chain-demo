@@ -171,7 +171,7 @@ export default function ProductReviewList({
           <div className="flex-shrink-0">
             <ProductReviewDialog
               trigger={
-                <Button className="h-10 rounded-[28px] border border-violet-400/30 dark:border-violet-400/30 bg-violet-100 dark:bg-violet-950/45 text-white shadow-sm flex items-center gap-2">
+                <Button className="h-10 rounded-[28px] border border-violet-400/30 dark:border-violet-400/30 bg-violet-100 dark:bg-violet-950/45 text-gray-700 dark:text-white shadow-sm flex items-center gap-2">
                   <Star className="h-4 w-4" />
                   Add Review
                 </Button>

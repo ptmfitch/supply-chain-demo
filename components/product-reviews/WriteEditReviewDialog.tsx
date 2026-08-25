@@ -243,7 +243,7 @@ export default function WriteEditReviewDialog({
         <span
           className={cn(
             "text-xs font-medium tabular-nums capitalize",
-            ratingDisplay.dialogTextClass,
+            ratingDisplay.textClass,
           )}
         >
           {rating}/5 · {ratingDisplay.label}
@@ -260,7 +260,7 @@ export default function WriteEditReviewDialog({
               "p-1 rounded-lg transition-colors",
               rating >= v
                 ? ratingDisplay.starClass
-                : "text-white/40 hover:text-amber-400",
+                : "text-gray-400 hover:text-amber-400 dark:text-white/40",
             )}
           >
             <Star
@@ -314,13 +314,13 @@ export default function WriteEditReviewDialog({
           title={isEdit ? "Edit review" : "Write a review"}
           description={description}
         />
-        <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-white/70">
+        <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-gray-700 dark:text-white/70">
           <span className="inline-flex items-center gap-1.5 min-w-0">
-            <Package className="h-3.5 w-3.5 shrink-0 text-amber-400/80" />
+            <Package className="h-3.5 w-3.5 shrink-0 text-amber-600 dark:text-amber-400/80" />
             <span className="truncate">{productName}</span>
           </span>
           {sku ? (
-            <span className="inline-flex items-center gap-1 text-white/50">
+            <span className="inline-flex items-center gap-1 text-gray-500 dark:text-white/50">
               <Hash className="h-3 w-3 shrink-0" />
               <span className="font-mono text-xs">{sku}</span>
             </span>

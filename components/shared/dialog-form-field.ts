@@ -5,7 +5,7 @@
 import { glassFormFieldClasses } from "@/lib/ui/focus-ring-styles";
 
 const DIALOG_FORM_FIELD_BASE =
-  "bg-white/10 dark:bg-white/5 backdrop-blur-md text-white placeholder:text-white/40";
+  "bg-white/70 dark:bg-white/5 backdrop-blur-md text-gray-700 dark:text-white placeholder:text-gray-500 dark:placeholder:text-white/40";
 
 const roseShell = `${DIALOG_FORM_FIELD_BASE} border border-rose-400/30 dark:border-white/20 shadow-sm`;
 const skyShell = `${DIALOG_FORM_FIELD_BASE} border border-sky-400/30 dark:border-white/20 shadow-sm`;

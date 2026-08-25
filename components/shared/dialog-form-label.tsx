@@ -41,7 +41,7 @@ export function DialogFormLabel({
         className={cn(DIALOG_FORM_LABEL, DIALOG_FORM_LABEL_ROW, className)}
       >
         {Icon ? (
-          <Icon className="h-4 w-4 shrink-0 text-white/70" aria-hidden />
+          <Icon className="h-4 w-4 shrink-0 text-gray-600 dark:text-white/70" aria-hidden />
         ) : null}
         <span className="min-w-0">
           {children}
@@ -52,7 +52,7 @@ export function DialogFormLabel({
             </span>
           ) : null}
           {optional ? (
-            <span className="text-xs font-normal text-white/50"> (optional)</span>
+            <span className="text-xs font-normal text-gray-500 dark:text-white/50"> (optional)</span>
           ) : null}
         </span>
       </Label>

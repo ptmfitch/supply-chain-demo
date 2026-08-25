@@ -732,7 +732,7 @@ export default function OrderDialog({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {children || (
-          <Button className="h-10 font-medium inline-flex items-center justify-center rounded-xl border border-violet-400/30 dark:border-violet-400/30 bg-violet-100 dark:bg-violet-950/45 text-white shadow-sm backdrop-blur-md transition duration-200 hover:border-violet-300/50 hover:bg-violet-200 dark:hover:bg-violet-900/50 dark:hover:border-violet-300/50 hover:bg-violet-200 dark:hover:bg-violet-900/50">
+          <Button className="h-10 font-medium inline-flex items-center justify-center rounded-xl border border-violet-400/30 dark:border-violet-400/30 bg-violet-100 dark:bg-violet-950/45 text-gray-700 dark:text-white shadow-sm backdrop-blur-md transition duration-200 hover:border-violet-300/50 hover:bg-violet-200 dark:hover:bg-violet-900/50 dark:hover:border-violet-300/50 hover:bg-violet-200 dark:hover:bg-violet-900/50">
             + Create Order
           </Button>
         )}

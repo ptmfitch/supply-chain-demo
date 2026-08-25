@@ -86,7 +86,8 @@ const variantConfig = {
       "shadow-sm",
     iconBg:
       "border-amber-300/30 bg-amber-100/50 dark:border-amber-400/30 dark:bg-amber-500/20",
-    button: "border-amber-400/30 bg-amber-100 dark:bg-amber-950/45 text-white",
+    button:
+      "border-amber-400/30 bg-amber-100 dark:bg-amber-950/45 text-gray-700 dark:text-white",
   },
   violet: {
     border: "border-violet-400/20",
@@ -96,7 +97,7 @@ const variantConfig = {
     iconBg:
       "border-violet-300/30 bg-violet-100/50 dark:border-violet-400/30 dark:bg-violet-500/20",
     button:
-      "border-violet-400/30 bg-violet-100 dark:bg-violet-950/45 text-white",
+      "border-violet-400/30 bg-violet-100 dark:bg-violet-950/45 text-gray-700 dark:text-white",
   },
   sky: {
     border: "border-sky-400/20",
@@ -104,7 +105,8 @@ const variantConfig = {
     shadow: "shadow-sm",
     iconBg:
       "border-sky-300/30 bg-sky-100/50 dark:border-sky-400/30 dark:bg-sky-500/20",
-    button: "border-sky-400/30 bg-sky-100 dark:bg-sky-950/45 text-white",
+    button:
+      "border-sky-400/30 bg-sky-100 dark:bg-sky-950/45 text-gray-700 dark:text-white",
   },
 };
 
