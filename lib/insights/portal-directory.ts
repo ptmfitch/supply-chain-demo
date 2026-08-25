@@ -137,69 +137,33 @@ export type SupplierUserInput = {
   image: string | null;
 };
 
-export type SupplierProductInput = {
-  id: string;
+export type SupplierProductAggregate = {
   supplierId: string;
-  price: number;
-  quantity: number;
-  createdAt: string;
+  productCount: number;
+  inventoryValue: number;
+  lastProductAt: string | null;
 };
 
-export type SupplierOrderLineInput = {
-  productId: string;
-  orderId: string;
-  createdAt: string;
+export type SupplierOrderAggregate = {
+  supplierId: string;
+  orderCount: number;
+  lastOrderAt: string | null;
 };
 
 export function buildSupplierDirectoryRows(
   suppliers: SupplierEntityInput[],
   users: SupplierUserInput[],
-  products: SupplierProductInput[],
-  orderLines: SupplierOrderLineInput[],
+  productAggs: SupplierProductAggregate[],
+  orderAggs: SupplierOrderAggregate[],
 ): SupplierDirectoryRow[] {
   const userById = new Map(users.map((u) => [u.id, u]));
-  const productSupplier = new Map(products.map((p) => [p.id, p.supplierId]));
-
-  type Agg = {
-    productCount: number;
-    inventoryValue: number;
-    orderIds: Set<string>;
-    lastProductAt: string | null;
-    lastOrderAt: string | null;
-  };
-  const aggBySupplier = new Map<string, Agg>();
-  const aggFor = (supplierId: string): Agg => {
-    let agg = aggBySupplier.get(supplierId);
-    if (!agg) {
-      agg = {
-        productCount: 0,
-        inventoryValue: 0,
-        orderIds: new Set(),
-        lastProductAt: null,
-        lastOrderAt: null,
-      };
-      aggBySupplier.set(supplierId, agg);
-    }
-    return agg;
-  };
-
-  for (const p of products) {
-    const agg = aggFor(p.supplierId);
-    agg.productCount += 1;
-    agg.inventoryValue += Number(p.price) * Number(p.quantity);
-    agg.lastProductAt = maxIso(agg.lastProductAt, p.createdAt);
-  }
-  for (const line of orderLines) {
-    const supplierId = productSupplier.get(line.productId);
-    if (!supplierId) continue;
-    const agg = aggFor(supplierId);
-    agg.orderIds.add(line.orderId);
-    agg.lastOrderAt = maxIso(agg.lastOrderAt, line.createdAt);
-  }
+  const productBySupplier = new Map(productAggs.map((a) => [a.supplierId, a]));
+  const orderBySupplier = new Map(orderAggs.map((a) => [a.supplierId, a]));
 
   return suppliers.map((s) => {
     const user = s.userId ? userById.get(s.userId) : undefined;
-    const agg = aggBySupplier.get(s.id);
+    const p = productBySupplier.get(s.id);
+    const o = orderBySupplier.get(s.id);
     return {
       supplierId: s.id,
       userId: s.userId,
@@ -207,10 +171,10 @@ export function buildSupplierDirectoryRows(
       email: user?.email ?? null,
       image: user?.image ?? null,
       joinedAt: s.createdAt,
-      productCount: agg?.productCount ?? 0,
-      inventoryValue: agg?.inventoryValue ?? 0,
-      orderCount: agg?.orderIds.size ?? 0,
-      lastActivityAt: maxIso(agg?.lastOrderAt, agg?.lastProductAt),
+      productCount: p?.productCount ?? 0,
+      inventoryValue: p?.inventoryValue ?? 0,
+      orderCount: o?.orderCount ?? 0,
+      lastActivityAt: maxIso(o?.lastOrderAt, p?.lastProductAt),
     };
   });
 }

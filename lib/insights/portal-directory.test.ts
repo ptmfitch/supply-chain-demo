@@ -109,7 +109,7 @@ describe("buildClientDirectoryRows", () => {
 });
 
 describe("buildSupplierDirectoryRows", () => {
-  it("aggregates products, inventory value, distinct orders, and last activity", () => {
+  it("merges product and order aggregates with zero defaults", () => {
     const rows = buildSupplierDirectoryRows(
       [
         {
@@ -128,41 +128,17 @@ describe("buildSupplierDirectoryRows", () => {
       [{ id: "u1", email: "sup@x.com", image: null }],
       [
         {
-          id: "p1",
           supplierId: "s1",
-          price: 10,
-          quantity: 5,
-          createdAt: "2026-03-01T00:00:00.000Z",
-        },
-        {
-          id: "p2",
-          supplierId: "s1",
-          price: 20,
-          quantity: 2,
-          createdAt: "2026-04-01T00:00:00.000Z",
+          productCount: 2,
+          inventoryValue: 90,
+          lastProductAt: "2026-04-01T00:00:00.000Z",
         },
       ],
       [
         {
-          productId: "p1",
-          orderId: "o1",
-          createdAt: "2026-08-01T00:00:00.000Z",
-        },
-        {
-          productId: "p2",
-          orderId: "o1",
-          createdAt: "2026-08-01T00:00:00.000Z",
-        },
-        {
-          productId: "p1",
-          orderId: "o2",
-          createdAt: "2026-08-15T00:00:00.000Z",
-        },
-        // Order line for a product not in the catalog map — ignored
-        {
-          productId: "ghost",
-          orderId: "o3",
-          createdAt: "2026-08-20T00:00:00.000Z",
+          supplierId: "s1",
+          orderCount: 2,
+          lastOrderAt: "2026-08-15T00:00:00.000Z",
         },
       ],
     );
@@ -170,8 +146,8 @@ describe("buildSupplierDirectoryRows", () => {
       supplierId: "s1",
       email: "sup@x.com",
       productCount: 2,
-      inventoryValue: 90, // 10*5 + 20*2
-      orderCount: 2, // o1 + o2 (distinct)
+      inventoryValue: 90,
+      orderCount: 2,
       lastActivityAt: "2026-08-15T00:00:00.000Z",
     });
     expect(rows[1]).toMatchObject({
