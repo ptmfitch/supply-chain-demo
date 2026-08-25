@@ -9,6 +9,10 @@ import { z } from "zod";
 import { getSessionFromRequest } from "@/utils/auth";
 import { logger } from "@/lib/logger";
 import { getDashboardRangeAnalyticsForAdmin } from "@/lib/server/dashboard-range-data";
+import {
+  DASHBOARD_RANGE_MAX_DAYS,
+  isDashboardRangeWithinMax,
+} from "@/lib/insights/dashboard-range";
 import { withRateLimit, defaultRateLimits } from "@/lib/api/rate-limit";
 
 const DATE_ONLY_RE = /^\d{4}-\d{2}-\d{2}$/;
@@ -20,6 +24,9 @@ const rangeQuerySchema = z
   })
   .refine((v) => v.from <= v.to, {
     message: "from must be on or before to",
+  })
+  .refine((v) => isDashboardRangeWithinMax(v), {
+    message: `range cannot exceed ${DASHBOARD_RANGE_MAX_DAYS} days`,
   });
 
 export async function GET(request: NextRequest) {
@@ -46,7 +53,9 @@ export async function GET(request: NextRequest) {
         parsed.error.flatten().formErrors.join("; "),
       );
       return NextResponse.json(
-        { error: "Invalid date range. Use from/to as yyyy-mm-dd." },
+        {
+          error: `Invalid date range. Use from/to as yyyy-mm-dd (max ${DASHBOARD_RANGE_MAX_DAYS} days).`,
+        },
         { status: 400 },
       );
     }

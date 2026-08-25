@@ -1,15 +1,13 @@
 /**
  * SCD-11 — Store Overview date-range helpers (client-safe, pure).
  *
- * The dashboard's default view stays "last 12 months" and is derived from the
- * already-fetched DashboardStats (no extra fetch). Custom ranges are computed
- * server-side (lib/server/dashboard-range-data.ts) using the same bucketing
- * math exported here, so client and server can never disagree on buckets.
+ * The picker defaults to last 12 months. Range-scoped cards (trends, status
+ * distributions, Top Products) always load from the range API so they match
+ * the selected window. Server bucketing uses the same helpers exported here.
  */
 
+import { formatStableDate } from "@/lib/date/format-stable";
 import type {
-  DashboardStats,
-  DashboardRangeAnalytics,
   DashboardRangeGranularity,
   DashboardTrendPoint,
 } from "@/types";
@@ -40,6 +38,9 @@ const MONTH_LABELS = [
 const DAY_BUCKET_MAX_DAYS = 45;
 const WEEK_BUCKET_MAX_DAYS = 182;
 
+/** Inclusive max span for /api/dashboard/range (covers last-12-months + leap day). */
+export const DASHBOARD_RANGE_MAX_DAYS = 366;
+
 function toDateOnlyString(d: Date): string {
   const y = d.getFullYear();
   const m = String(d.getMonth() + 1).padStart(2, "0");
@@ -58,6 +59,11 @@ export function rangeEndOfDay(value: string): Date {
   const d = parseRangeDate(value);
   d.setHours(23, 59, 59, 999);
   return d;
+}
+
+/** Format yyyy-mm-dd as a calendar day (no UTC midnight shift). */
+export function formatRangeDateLabel(value: string): string {
+  return formatStableDate(parseRangeDate(value));
 }
 
 /** Default = last 12 months (first day of the month 11 months back → today). */
@@ -117,6 +123,12 @@ export function rangeDayCount(range: DashboardDateRange): number {
   const from = parseRangeDate(range.from);
   const to = parseRangeDate(range.to);
   return Math.floor((to.getTime() - from.getTime()) / 86_400_000) + 1;
+}
+
+export function isDashboardRangeWithinMax(range: DashboardDateRange): boolean {
+  return (
+    range.from <= range.to && rangeDayCount(range) <= DASHBOARD_RANGE_MAX_DAYS
+  );
 }
 
 export function resolveRangeGranularity(
@@ -256,37 +268,5 @@ export function buildDashboardRangeTrends(
       const v = byKey.get(b.key)!;
       return { month: b.key, label: b.label, ...v };
     }),
-  };
-}
-
-/**
- * Default range needs no fetch: the base DashboardStats already carries the
- * last-12-months trends and all-time distributions/top products.
- */
-export function deriveDefaultRangeAnalyticsFromStats(
-  stats: DashboardStats,
-  range: DashboardDateRange,
-): DashboardRangeAnalytics {
-  return {
-    from: range.from,
-    to: range.to,
-    granularity: "month",
-    trends: stats.trends ?? [],
-    orderStatusDistribution: stats.orderAnalytics?.statusDistribution ?? {
-      pending: 0,
-      confirmed: 0,
-      processing: 0,
-      shipped: 0,
-      delivered: 0,
-      cancelled: 0,
-    },
-    invoiceStatusDistribution: stats.invoiceAnalytics?.statusDistribution ?? {
-      draft: 0,
-      sent: 0,
-      paid: 0,
-      overdue: 0,
-      cancelled: 0,
-    },
-    topProducts: stats.orderAnalytics?.topProducts ?? [],
   };
 }

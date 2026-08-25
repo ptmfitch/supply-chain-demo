@@ -25,6 +25,9 @@ import type {
   DashboardInvoiceStatusDist,
 } from "@/types";
 
+/** Hard cap so a cache-miss range cannot load unbounded rows. */
+const RANGE_ANALYTICS_ROW_LIMIT = 10_000;
+
 export async function getDashboardRangeAnalyticsForAdmin(
   userId: string,
   range: DashboardDateRange,
@@ -58,16 +61,19 @@ export async function getDashboardRangeAnalyticsForAdmin(
         where: whereRangeOrders,
         select: { id: true, createdAt: true, total: true, status: true },
         orderBy: { createdAt: "asc" },
+        take: RANGE_ANALYTICS_ROW_LIMIT,
       }),
       prisma.invoice.findMany({
         where: whereRangeInvoices,
         select: { createdAt: true, total: true },
         orderBy: { createdAt: "asc" },
+        take: RANGE_ANALYTICS_ROW_LIMIT,
       }),
       prisma.product.findMany({
         where: mergeProductListWhere({ userId, createdAt: createdInRange }),
         select: { createdAt: true },
         orderBy: { createdAt: "asc" },
+        take: RANGE_ANALYTICS_ROW_LIMIT,
       }),
       prisma.order.groupBy({
         by: ["status"],

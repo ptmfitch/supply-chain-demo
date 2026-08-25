@@ -30,8 +30,9 @@ export function useDashboard(
 }
 
 /**
- * SCD-11 — range-scoped Store Overview analytics. Only enabled for custom
- * ranges; the default last-12-months view derives from useDashboard data.
+ * SCD-11 — range-scoped Store Overview analytics (trends, status
+ * distributions, Top Products). Always fetched so the selected window is
+ * applied consistently — including the default last-12-months preset.
  */
 export function useDashboardRangeAnalytics(
   range: DashboardDateRange,

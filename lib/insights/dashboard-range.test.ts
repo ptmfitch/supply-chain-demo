@@ -3,8 +3,11 @@ import {
   buildDashboardRangeTrends,
   buildRangeBuckets,
   bucketKeyForDate,
+  DASHBOARD_RANGE_MAX_DAYS,
+  formatRangeDateLabel,
   getDashboardRangeForPreset,
   getDefaultDashboardRange,
+  isDashboardRangeWithinMax,
   isDefaultDashboardRange,
   rangeDayCount,
   resolveRangeGranularity,
@@ -27,6 +30,33 @@ describe("getDefaultDashboardRange", () => {
     expect(
       isDefaultDashboardRange({ from: "2026-08-01", to: "2026-08-25" }, NOW),
     ).toBe(false);
+  });
+});
+
+describe("formatRangeDateLabel", () => {
+  it("formats yyyy-mm-dd as that calendar day (no UTC midnight shift)", () => {
+    expect(formatRangeDateLabel("2026-08-25")).toBe("Aug 25, 2026");
+    expect(formatRangeDateLabel("2026-01-01")).toBe("Jan 1, 2026");
+  });
+});
+
+describe("isDashboardRangeWithinMax", () => {
+  it("allows the default and preset spans", () => {
+    for (const key of ["30d", "90d", "12m", "ytd"] as const) {
+      expect(
+        isDashboardRangeWithinMax(getDashboardRangeForPreset(key, NOW)),
+      ).toBe(true);
+    }
+  });
+
+  it("rejects spans longer than DASHBOARD_RANGE_MAX_DAYS", () => {
+    expect(
+      isDashboardRangeWithinMax({ from: "2024-01-01", to: "2026-08-25" }),
+    ).toBe(false);
+    expect(DASHBOARD_RANGE_MAX_DAYS).toBe(366);
+    expect(
+      isDashboardRangeWithinMax({ from: "2025-08-25", to: "2026-08-25" }),
+    ).toBe(true);
   });
 });
 

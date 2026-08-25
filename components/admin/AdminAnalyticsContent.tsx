@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ChartCard } from "@/components/ui/chart-card";
@@ -18,7 +18,7 @@ import {
 import { useDashboard, useDashboardRangeAnalytics } from "@/hooks/queries";
 import AdminDashboardRangeToolbar from "@/components/admin/AdminDashboardRangeToolbar";
 import {
-  deriveDefaultRangeAnalyticsFromStats,
+  formatRangeDateLabel,
   getDefaultDashboardRange,
   isDefaultDashboardRange,
   type DashboardDateRange,
@@ -75,7 +75,6 @@ import { ProductThumb } from "@/components/products/ProductOptionRow";
 import {
   formatStableCurrency,
   formatClientCurrency,
-  formatStableDate,
 } from "@/lib/format";
 import type { DashboardStats } from "@/types";
 import ForecastingSection from "@/components/admin/ForecastingSection";
@@ -126,26 +125,17 @@ export default function AdminAnalyticsContent({
   const [aiLoading, setAiLoading] = useState(false);
   const [aiUnavailable, setAiUnavailable] = useState(false);
 
-  // SCD-11 — date range for charts/top products; default derives from stats (no fetch)
+  // SCD-11 — date range for charts / Top Products / status distributions
   const [range, setRange] = useState<DashboardDateRange>(() =>
     getDefaultDashboardRange(),
   );
   const isDefaultRange = isDefaultDashboardRange(range);
-  const rangeQuery = useDashboardRangeAnalytics(range, {
-    enabled: !isDefaultRange,
-  });
-  const rangeAnalytics = useMemo(() => {
-    if (isDefaultRange) {
-      return stats ? deriveDefaultRangeAnalyticsFromStats(stats, range) : null;
-    }
-    return rangeQuery.data ?? null;
-  }, [isDefaultRange, range, rangeQuery.data, stats]);
-  const rangeLoading = isDefaultRange
-    ? dataLoading
-    : rangeQuery.isPending || rangeQuery.isFetching;
+  const rangeQuery = useDashboardRangeAnalytics(range);
+  const rangeAnalytics = rangeQuery.data ?? null;
+  const rangeLoading = rangeQuery.isPending || rangeQuery.isFetching;
   const rangeLabel = isDefaultRange
     ? "Last 12 months"
-    : `${formatStableDate(range.from)} – ${formatStableDate(range.to)}`;
+    : `${formatRangeDateLabel(range.from)} – ${formatRangeDateLabel(range.to)}`;
 
   const buildAiSummary = useCallback(() => {
     if (!stats) return "";
@@ -536,7 +526,7 @@ export default function AdminAnalyticsContent({
         />
 
         {/* Trending charts */}
-        {stats && rangeAnalytics && (
+        {stats && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
             <ChartCard
               variant="sky"
@@ -546,11 +536,11 @@ export default function AdminAnalyticsContent({
             >
               <DeferredChartSection
                 loading={dataLoading || rangeLoading}
-                hasData={(rangeAnalytics.trends?.length ?? 0) > 0}
+                hasData={(rangeAnalytics?.trends?.length ?? 0) > 0}
               >
                 <ResponsiveChartContainer>
                   <AreaChart
-                    data={rangeAnalytics.trends}
+                    data={rangeAnalytics?.trends ?? []}
                     margin={{
                       top: CHART_LABEL_TOP_MARGIN,
                       right: 8,
@@ -604,7 +594,7 @@ export default function AdminAnalyticsContent({
                       name="orders"
                       dot={{ r: 3 }}
                       label={createChartDotLabelRenderer(
-                        rangeAnalytics.trends?.length ?? 0,
+                        rangeAnalytics?.trends?.length ?? 0,
                         formatChartCountLabel,
                         false,
                       )}
@@ -618,7 +608,7 @@ export default function AdminAnalyticsContent({
                       name="revenue"
                       dot={{ r: 3 }}
                       label={createChartDotLabelRenderer(
-                        rangeAnalytics.trends?.length ?? 0,
+                        rangeAnalytics?.trends?.length ?? 0,
                         undefined,
                         false,
                       )}
@@ -635,11 +625,11 @@ export default function AdminAnalyticsContent({
             >
               <DeferredChartSection
                 loading={dataLoading || rangeLoading}
-                hasData={(rangeAnalytics.trends?.length ?? 0) > 0}
+                hasData={(rangeAnalytics?.trends?.length ?? 0) > 0}
               >
                 <ResponsiveChartContainer>
                   <BarChart
-                    data={rangeAnalytics.trends}
+                    data={rangeAnalytics?.trends ?? []}
                     margin={{
                       top: CHART_LABEL_TOP_MARGIN,
                       right: 8,

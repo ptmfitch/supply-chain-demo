@@ -14,9 +14,9 @@ import { Button } from "@/components/ui/button";
 import { ExportMenuButton } from "@/components/shared";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
-import { formatStableDate } from "@/lib/format";
 import {
   DASHBOARD_RANGE_PRESETS,
+  formatRangeDateLabel,
   getDashboardRangeForPreset,
   getDefaultDashboardRange,
   type DashboardDateRange,
@@ -118,8 +118,8 @@ export default function AdminDashboardRangeToolbar({
       const sections = [
         Papa.unparse([
           {
-            From: formatStableDate(rangeAnalytics.from),
-            To: formatStableDate(rangeAnalytics.to),
+            From: formatRangeDateLabel(rangeAnalytics.from),
+            To: formatRangeDateLabel(rangeAnalytics.to),
           },
         ]),
         Papa.unparse(buildTrendRows(rangeAnalytics)),
@@ -131,7 +131,7 @@ export default function AdminDashboardRangeToolbar({
       downloadBlob(blob, `dashboard_${range.from}_${range.to}.csv`);
       toast({
         title: "Export Successful",
-        description: `Dashboard data for ${formatStableDate(range.from)} – ${formatStableDate(range.to)} exported to CSV`,
+        description: `Dashboard data for ${formatRangeDateLabel(range.from)} – ${formatRangeDateLabel(range.to)} exported to CSV`,
       });
     } catch {
       toast({
@@ -200,7 +200,7 @@ export default function AdminDashboardRangeToolbar({
       downloadBlob(blob, `dashboard_${range.from}_${range.to}.xlsx`);
       toast({
         title: "Export Successful",
-        description: `Dashboard data for ${formatStableDate(range.from)} – ${formatStableDate(range.to)} exported to Excel`,
+        description: `Dashboard data for ${formatRangeDateLabel(range.from)} – ${formatRangeDateLabel(range.to)} exported to Excel`,
       });
     } catch {
       toast({
