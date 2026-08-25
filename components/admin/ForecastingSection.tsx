@@ -9,8 +9,7 @@
  * REQ-0173 — DenseCatalogProductCell shared with Top Products.
  */
 
-import React, { useLayoutEffect, useRef } from "react";
-import { writeAgentDebugLog } from "@/lib/debug/write-agent-log";
+import React from "react";
 import { Badge } from "@/components/ui/badge";
 import {
   Table,
@@ -104,44 +103,6 @@ export default function ForecastingSection({
   const dataLoading = isDataSlotUnsettled(forecastingQuery, initialForecasting);
 
   useSyncSsrQueryData(queryKeys.forecasting.summary(), initialForecasting);
-  const kpiGridRef = useRef<HTMLDivElement>(null);
-
-  // #region agent log
-  useLayoutEffect(() => {
-    const grid = kpiGridRef.current;
-    if (!grid) return;
-    const outer = grid.closest("article");
-    const cards = Array.from(
-      grid.querySelectorAll<HTMLElement>("[data-debug-compact-kpi]"),
-    );
-    const gridCs = getComputedStyle(grid);
-    void writeAgentDebugLog({
-      hypothesisId: "B",
-      location: "ForecastingSection.tsx:kpi-grid",
-      message: "nested ChartCard vs compact KPI grid widths",
-      runId: "post-fix",
-      data: {
-        viewportW: window.innerWidth,
-        outerArticleW: outer
-          ? Math.round(outer.getBoundingClientRect().width)
-          : null,
-        gridW: Math.round(grid.getBoundingClientRect().width),
-        gridCols: gridCs.gridTemplateColumns,
-        cardCount: cards.length,
-        cardWidths: cards.map((el) => ({
-          title: el.dataset.debugCompactKpi,
-          w: Math.round(el.getBoundingClientRect().width),
-        })),
-        nestedPaddingPx: outer
-          ? Math.round(
-              outer.getBoundingClientRect().width -
-                grid.getBoundingClientRect().width,
-            )
-          : null,
-      },
-    });
-  }, [summary?.totalProducts]);
-  // #endregion
 
   if (!dataLoading && (forecastingQuery.isError || !summary)) {
     return (
@@ -168,8 +129,6 @@ export default function ForecastingSection({
     <div className="flex flex-col gap-6">
       {/* REQ-0170 — StatisticsCard KPIs (single card padding; no nested CardHeader p-4) */}
       <div
-        ref={kpiGridRef}
-        data-debug-forecast-kpis=""
         className={cn(
           PAGE_STATS_GRID_IN_SHELL_CLASS,
           // Tablet: 4-col at md (768) + admin sidebar made ~105px cards
