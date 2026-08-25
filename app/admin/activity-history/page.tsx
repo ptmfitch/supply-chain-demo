@@ -15,7 +15,7 @@ export default async function AdminActivityHistoryPage() {
 
   const [initialHistory, initialActivityLogs] = await Promise.all([
     getHistoryForUser(user.id),
-    getActivityLogsForPage("7days", user.id),
+    getActivityLogsForPage("7days"),
   ]);
 
   return (

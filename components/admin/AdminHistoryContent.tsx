@@ -14,7 +14,8 @@ export type AdminHistoryContentProps = {
 };
 
 /**
- * Admin History section — import history list + activity log (CRUD) with period filter.
+ * Admin History section — import history list + activity log with
+ * SCD-10 action / entity / user / date filters and export.
  */
 export default function AdminHistoryContent({
   initialHistory,

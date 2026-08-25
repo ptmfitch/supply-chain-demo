@@ -51,12 +51,14 @@ export async function getHistoryForUser(
 }
 
 /**
- * Fetch audit logs for activity history section with date filter.
- * Only returns logs for the given user (self / product owner).
+ * Fetch audit logs for the activity history section (period window).
+ * userId is optional — omit it on the admin page so the SCD-10 user picker
+ * can filter actors in the loaded window. Server-side action/entity/date
+ * query params on the non-period GET path remain unused here.
  */
 export async function getActivityLogsForPage(
   period: ActivityLogPeriod = "7days",
-  userId: string,
+  userId?: string,
 ): Promise<AuditLog[]> {
   const logs = await getAuditLogsForActivity(period, userId);
   const userIds = [...new Set(logs.map((l) => l.userId))];

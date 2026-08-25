@@ -1,12 +1,13 @@
 "use client";
 
-import { FILTER_SEARCH_INPUT_SKY_CLASS } from "@/lib/ui/filter-toolbar-styles";
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import {
-  DeferredSelectGate,
   SectionCardHeader,
   ClientDateTime,
 } from "@/components/shared";
+import PaginationSelector, {
+  type PaginationType,
+} from "@/components/shared/PaginationSelector";
 import Link from "next/link";
 import {
   useAuditLogs,
@@ -15,22 +16,16 @@ import {
 import { isDataSlotLoading } from "@/lib/react-query";
 import { cn } from "@/lib/utils";
 import type { AuditLog } from "@/types";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { AuditActionBadge } from "@/lib/ui/semantic-badges";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, ScrollText } from "lucide-react";
-import { IoClose } from "react-icons/io5";
+import { ScrollText } from "lucide-react";
+import { GrFormPrevious, GrFormNext } from "react-icons/gr";
+import { BiFirstPage, BiLastPage } from "react-icons/bi";
 import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
+  getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import {
@@ -42,115 +37,26 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { TableBodyPulseRows } from "@/components/ui/table-data-skeleton";
-
-const PERIODS: { value: ActivityLogPeriod; label: string }[] = [
-  { value: "today", label: "Today" },
-  { value: "7days", label: "Last 7 days" },
-  { value: "month", label: "Last month" },
-];
+import { useClampPaginationIndex } from "@/hooks/use-clamp-pagination-index";
+import { getActivityDetailLines } from "@/lib/audit/activity-log-details";
+import {
+  activityLogHasActiveFilters,
+  filterActivityLogs,
+  listActivityLogUsers,
+} from "@/lib/audit/activity-log-filter";
+import { CARD_EMPTY_MESSAGE_CLASS } from "@/lib/ui/card-empty-styles";
+import { ActivityLogFilters } from "./ActivityLogFilters";
 
 const variantConfig = {
   border: "border-violet-400/20",
-  gradient:
-    "bg-violet-100 dark:bg-violet-950/45",
-  shadow:
-    "shadow-sm",
-  iconBg:
-    "border-violet-300/30 bg-violet-100/50 dark:border-violet-400/30 dark:bg-violet-500/20",
+  gradient: "bg-violet-100 dark:bg-violet-950/45",
+  shadow: "shadow-sm",
 };
 
-/** Build activity details: action + entity, then dynamic lines from details (status, tracking, product, fields updated, etc.). */
 function getActivityDetails(log: AuditLog): React.ReactNode {
-  const action =
-    log.action.charAt(0).toUpperCase() +
-    (log.action?.slice(1) ?? "").replace(/_/g, " ");
-  const entityLabel = log.entityType.replace(/_/g, " ");
-  const shortId = log.entityId ? ` …${log.entityId.slice(-6)}` : "";
-  const lines: string[] = [`${action} ${entityLabel}${shortId}`];
-
-  let detailsObj: Record<string, unknown> | null = null;
-  if (log.details != null) {
-    if (typeof log.details === "object" && !Array.isArray(log.details)) {
-      detailsObj = log.details as Record<string, unknown>;
-    } else if (typeof log.details === "string") {
-      try {
-        const parsed = JSON.parse(log.details) as unknown;
-        if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
-          detailsObj = parsed as Record<string, unknown>;
-        }
-      } catch {
-        // ignore invalid JSON
-      }
-    }
-  }
-  if (detailsObj) {
-    const d = detailsObj as Record<string, unknown> & {
-      message?: string;
-      summary?: string;
-      statusFrom?: string;
-      statusTo?: string;
-      trackingNumber?: string;
-      trackingCarrier?: string;
-      labelSource?: string;
-      productName?: string;
-      orderNumber?: string;
-      invoiceNumber?: string;
-      subject?: string;
-      fieldsUpdated?: string[];
-      name?: string;
-    };
-
-    if (d.statusFrom != null && d.statusTo != null) {
-      lines.push(`Status: ${String(d.statusFrom)} → ${String(d.statusTo)}`);
-    }
-    if (d.trackingNumber != null && String(d.trackingNumber).trim()) {
-      const carrier = d.trackingCarrier
-        ? ` (${String(d.trackingCarrier)})`
-        : "";
-      lines.push(`Tracking: ${String(d.trackingNumber)}${carrier}`);
-    }
-    if (d.labelSource != null && String(d.labelSource).trim()) {
-      lines.push(`Label: ${String(d.labelSource)}`);
-    }
-    if (d.productName != null && String(d.productName).trim()) {
-      lines.push(`Product: ${String(d.productName)}`);
-    }
-    if (d.orderNumber != null && String(d.orderNumber).trim()) {
-      lines.push(`Order: ${String(d.orderNumber)}`);
-    }
-    if (d.invoiceNumber != null && String(d.invoiceNumber).trim()) {
-      lines.push(`Invoice: ${String(d.invoiceNumber)}`);
-    }
-    if (d.subject != null && String(d.subject).trim()) {
-      lines.push(`Subject: ${String(d.subject)}`);
-    }
-    if (d.rating != null && d.rating !== "") {
-      lines.push(`Rating: ${d.rating}/5`);
-    }
-    if (Array.isArray(d.fieldsUpdated) && d.fieldsUpdated.length > 0) {
-      const labels = d.fieldsUpdated.map((f) =>
-        String(f)
-          .replace(/([A-Z])/g, " $1")
-          .replace(/^./, (s) => s.toUpperCase())
-          .trim(),
-      );
-      lines.push(`Fields updated: ${labels.join(", ")}`);
-    }
-    if (d.name != null && String(d.name).trim() && !d.productName) {
-      lines.push(`Name: ${String(d.name)}`);
-    }
-    if (d.sku != null && String(d.sku).trim()) {
-      lines.push(`SKU: ${String(d.sku)}`);
-    }
-    const msg = d.message ?? d.summary;
-    if (typeof msg === "string" && msg.trim()) {
-      lines.push(msg.trim());
-    }
-  }
-
   return (
     <span className="whitespace-pre-line text-gray-700 dark:text-gray-300">
-      {lines.join("\n")}
+      {getActivityDetailLines(log).join("\n")}
     </span>
   );
 }
@@ -196,6 +102,16 @@ export default function ActivityLogSection({
 }: ActivityLogSectionProps) {
   const [period, setPeriod] = useState<ActivityLogPeriod>(initialPeriod);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedActions, setSelectedActions] = useState<string[]>([]);
+  const [selectedEntities, setSelectedEntities] = useState<string[]>([]);
+  const [selectedUserId, setSelectedUserId] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [pagination, setPagination] = useState<PaginationType>({
+    pageIndex: 0,
+    pageSize: 8,
+  });
+
   const initialAuditData =
     initialLogs != null && period === initialPeriod
       ? { logs: initialLogs, pagination: null }
@@ -206,25 +122,50 @@ export default function ActivityLogSection({
 
   const rawLogs =
     data?.logs ?? (period === initialPeriod ? (initialLogs ?? []) : []);
-  const logs = useMemo(() => {
-    if (!searchTerm.trim()) return rawLogs;
-    const term = searchTerm.toLowerCase().trim();
-    return rawLogs.filter((log) => {
-      const name =
-        log.user?.name ?? log.user?.username ?? log.user?.email ?? "";
-      const email = log.user?.email ?? "";
-      const action = log.action ?? "";
-      const entityType = log.entityType ?? "";
-      const entityId = log.entityId ?? "";
-      return (
-        name.toLowerCase().includes(term) ||
-        email.toLowerCase().includes(term) ||
-        action.toLowerCase().includes(term) ||
-        entityType.toLowerCase().includes(term) ||
-        entityId.toLowerCase().includes(term)
-      );
-    });
-  }, [rawLogs, searchTerm]);
+
+  const clientFilters = useMemo(
+    () => ({
+      searchTerm,
+      actions: selectedActions,
+      entityTypes: selectedEntities,
+      userId: selectedUserId,
+      startDate,
+      endDate,
+    }),
+    [
+      searchTerm,
+      selectedActions,
+      selectedEntities,
+      selectedUserId,
+      startDate,
+      endDate,
+    ],
+  );
+
+  const logs = useMemo(
+    () => filterActivityLogs(rawLogs, clientFilters),
+    [rawLogs, clientFilters],
+  );
+
+  const userOptions = useMemo(() => listActivityLogUsers(rawLogs), [rawLogs]);
+  const hasActiveFilters = activityLogHasActiveFilters(clientFilters);
+
+  useClampPaginationIndex(logs.length, pagination, setPagination);
+
+  React.useEffect(() => {
+    setPagination((prev) =>
+      prev.pageIndex === 0 ? prev : { ...prev, pageIndex: 0 },
+    );
+  }, [searchTerm, selectedActions, selectedEntities, selectedUserId, startDate, endDate]);
+
+  const handlePeriodChange = useCallback((next: ActivityLogPeriod) => {
+    setPeriod(next);
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+  }, []);
+
+  const handleResetPage = useCallback(() => {
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+  }, []);
 
   const columns = useMemo<ColumnDef<AuditLog>[]>(
     () => [
@@ -307,8 +248,13 @@ export default function ActivityLogSection({
   const table = useReactTable({
     data: logs,
     columns,
+    state: { pagination },
+    onPaginationChange: setPagination,
     getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
   });
+
+  const pageCount = Math.max(1, table.getPageCount());
 
   return (
     <article
@@ -326,7 +272,8 @@ export default function ActivityLogSection({
         title="Activity Logs"
         description={
           <>
-            Your actions & activities (create, update, delete). Last{" "}
+            Store actions (create, update, delete) in the loaded period window.
+            Last{" "}
             {period === "today"
               ? "24 hours"
               : period === "7days"
@@ -337,78 +284,26 @@ export default function ActivityLogSection({
         }
         className="mb-4"
       />
-      {/* REQ-0168 — filter → table gap (match Import History / Orders list) */}
-      <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-        <div className="relative flex-1 sm:max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-600 dark:text-white/80 z-10" />
-          <Input
-            placeholder="Search by user, action, entity..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className={FILTER_SEARCH_INPUT_SKY_CLASS}
-          />
-          {searchTerm && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setSearchTerm("")}
-              className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 p-0 text-gray-700 dark:text-white/80 hover:text-gray-700 dark:hover:text-white hover:bg-white/10"
-            >
-              <IoClose className="h-4 w-4" />
-            </Button>
-          )}
-        </div>
-        <DeferredSelectGate
-          enabled={!dataLoading}
-          placeholder={
-            <div
-              className={cn(
-                "w-full sm:w-[180px] h-10 rounded-[28px] border border-sky-400/30 dark:border-sky-400/30",
-                "bg-sky-100 dark:bg-sky-950/45",
-                "text-gray-700 dark:text-white shadow-sm backdrop-blur-md",
-                "flex items-center px-2 text-sm",
-              )}
-              aria-hidden
-            >
-              {PERIODS.find((p) => p.value === period)?.label ?? "Last 7 days"}
-            </div>
-          }
-        >
-          {({ selectRemountKey }) => (
-            <Select
-              key={selectRemountKey}
-              value={period}
-              onValueChange={(v) => setPeriod(v as ActivityLogPeriod)}
-            >
-              <SelectTrigger
-                className={cn(
-                  "w-full sm:w-[180px] h-10 rounded-[28px] border border-sky-400/30 dark:border-sky-400/30",
-                  "bg-sky-100 dark:bg-sky-950/45",
-                  "text-gray-700 dark:text-white shadow-sm backdrop-blur-md",
-                  "transition duration-200 hover:border-sky-300/40 hover:bg-sky-200 dark:hover:bg-sky-900/50",
-                  "dark:hover:border-sky-300/40 hover:bg-sky-200 dark:hover:bg-sky-900/50",
-                )}
-              >
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent
-                className="rounded-xl border-sky-400/20 bg-white/95 dark:bg-popover/95 shadow-sm"
-                position="popper"
-              >
-                {PERIODS.map((p) => (
-                  <SelectItem
-                    key={p.value}
-                    value={p.value}
-                    className="cursor-pointer"
-                  >
-                    {p.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          )}
-        </DeferredSelectGate>
-      </div>
+      <ActivityLogFilters
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        selectedActions={selectedActions}
+        setSelectedActions={setSelectedActions}
+        selectedEntities={selectedEntities}
+        setSelectedEntities={setSelectedEntities}
+        selectedUserId={selectedUserId}
+        setSelectedUserId={setSelectedUserId}
+        userOptions={userOptions}
+        startDate={startDate}
+        endDate={endDate}
+        setStartDate={setStartDate}
+        setEndDate={setEndDate}
+        period={period}
+        setPeriod={handlePeriodChange}
+        dataLoading={dataLoading}
+        filteredLogs={logs}
+        onResetPage={handleResetPage}
+      />
       {dataLoading && logs.length === 0 ? (
         <div className="overflow-x-auto rounded-xl border border-violet-200/30 dark:border-white/10">
           <Table>
@@ -435,52 +330,104 @@ export default function ActivityLogSection({
           </Table>
         </div>
       ) : logs.length === 0 ? (
-        <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-300 py-6 text-center">
-          {searchTerm.trim()
+        <p className={CARD_EMPTY_MESSAGE_CLASS}>
+          {hasActiveFilters
             ? "No matching activity."
             : "No activity in this period."}
         </p>
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-violet-200/30 dark:border-white/10">
-          <Table>
-            <TableHeader>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow
-                  key={headerGroup.id}
-                  className="border-violet-200/30 dark:border-white/10 bg-white/40 dark:bg-white/5 hover:bg-transparent"
-                >
-                  {headerGroup.headers.map((header) => (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
-                    </TableHead>
-                  ))}
-                </TableRow>
-              ))}
-            </TableHeader>
-            <TableBody>
-              {table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  className="border-violet-100/30 dark:border-white/5 hover:bg-white/30 dark:hover:bg-white/5"
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="px-2 py-2">
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
+        <>
+          <div className="overflow-x-auto rounded-xl border border-violet-200/30 dark:border-white/10">
+            <Table>
+              <TableHeader>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <TableRow
+                    key={headerGroup.id}
+                    className="border-violet-200/30 dark:border-white/10 bg-white/40 dark:bg-white/5 hover:bg-transparent"
+                  >
+                    {headerGroup.headers.map((header) => (
+                      <TableHead key={header.id}>
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext(),
+                            )}
+                      </TableHead>
+                    ))}
+                  </TableRow>
+                ))}
+              </TableHeader>
+              <TableBody>
+                {table.getRowModel().rows.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    className="border-violet-100/30 dark:border-white/5 hover:bg-white/30 dark:hover:bg-white/5"
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id} className="px-2 py-2">
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 mt-4">
+            <PaginationSelector
+              pagination={pagination}
+              setPagination={setPagination}
+              variant="violet"
+              layout="inline"
+              enabled={!dataLoading}
+            />
+            <div className="flex items-center justify-center sm:justify-end gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => table.setPageIndex(0)}
+                disabled={!table.getCanPreviousPage()}
+                className="h-10 rounded-[28px] border border-violet-400/30 dark:border-violet-400/30 bg-violet-100 dark:bg-violet-950/45 text-gray-700 dark:text-white disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <BiFirstPage />
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => table.previousPage()}
+                disabled={!table.getCanPreviousPage()}
+                className="h-10 rounded-[28px] border border-violet-400/30 dark:border-violet-400/30 bg-violet-100 dark:bg-violet-950/45 text-gray-700 dark:text-white disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <GrFormPrevious />
+              </Button>
+              <span className="text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">
+                Page {pagination.pageIndex + 1} of {pageCount}
+              </span>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => table.nextPage()}
+                disabled={!table.getCanNextPage()}
+                className="h-10 rounded-[28px] border border-violet-400/30 dark:border-violet-400/30 bg-violet-100 dark:bg-violet-950/45 text-gray-700 dark:text-white disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <GrFormNext />
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => table.setPageIndex(pageCount - 1)}
+                disabled={!table.getCanNextPage()}
+                className="h-10 rounded-[28px] border border-violet-400/30 dark:border-violet-400/30 bg-violet-100 dark:bg-violet-950/45 text-gray-700 dark:text-white disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <BiLastPage />
+              </Button>
+            </div>
+          </div>
+        </>
       )}
     </article>
   );

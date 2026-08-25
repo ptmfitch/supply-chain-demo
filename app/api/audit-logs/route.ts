@@ -74,8 +74,8 @@ export async function GET(request: NextRequest) {
     const period = searchParams.get("period") as ActivityLogPeriod | null;
 
     if (period && ["today", "7days", "month"].includes(period)) {
-      // Activity feed: only show current admin's (product owner's) own actions
-      const resultLogs = await getAuditLogsForActivity(period, session.id);
+      // Admin activity window — all actors in the period (SCD-10 user filter).
+      const resultLogs = await getAuditLogsForActivity(period);
       const userIds = [...new Set(resultLogs.map((log) => log.userId))];
       const users = await prisma.user.findMany({
         where: { id: { in: userIds } },
