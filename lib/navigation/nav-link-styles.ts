@@ -29,17 +29,29 @@ export function navbarNavLinkClass(
   );
 }
 
+/** Admin sidebar active-route check. Prefix match unless `exact` is set. */
+export function isAdminSidebarPathActive(
+  pathname: string | null,
+  href: string,
+  options?: { exact?: boolean },
+): boolean {
+  if (!pathname) return false;
+  if (pathname === href) return true;
+  if (options?.exact || href === "/admin") return false;
+  return pathname.startsWith(href);
+}
+
 /** Admin sidebar link — pathname-aware active state. */
 export function adminSidebarLinkClass(
   pathname: string | null,
   href: string,
-  options?: { isSub?: boolean; collapsed?: boolean },
+  options?: { isSub?: boolean; collapsed?: boolean; exact?: boolean },
 ): string {
   const isSub = options?.isSub ?? false;
   const collapsed = options?.collapsed ?? false;
-  const isActive =
-    pathname === href ||
-    (href !== "/admin" && (pathname?.startsWith(href) ?? false));
+  const isActive = isAdminSidebarPathActive(pathname, href, {
+    exact: options?.exact,
+  });
 
   return cn(
     "flex items-center gap-2 rounded-lg px-2 py-2 text-sm font-normal transition-colors",

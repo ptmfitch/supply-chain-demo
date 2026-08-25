@@ -21,6 +21,11 @@ export type AdminNavItemConfig = {
     | "clients"
     | "users"
   >;
+  /**
+   * Match pathname exactly. Required when `href` is a prefix of another
+   * sidebar item (e.g. `/admin/settings` vs `/admin/settings/email-preferences`).
+   */
+  exact?: boolean;
 };
 
 export const ADMIN_MY_STORE_ITEMS: AdminNavItemConfig[] = [
@@ -89,7 +94,20 @@ export const ADMIN_MY_ACTIVITY_ITEMS: AdminNavItemConfig[] = [
   },
 ];
 
+export const ADMIN_SETTINGS_HREF = "/admin/settings";
 export const ADMIN_SETTINGS_EMAIL_HREF = "/admin/settings/email-preferences";
+
+export const ADMIN_SETTINGS_ITEMS: AdminNavItemConfig[] = [
+  {
+    href: ADMIN_SETTINGS_HREF,
+    label: "System Config",
+    exact: true,
+  },
+  {
+    href: ADMIN_SETTINGS_EMAIL_HREF,
+    label: "Email Preferences",
+  },
+];
 
 /** Flat deduped admin sidebar paths for idle RSC warm (admin/user roles). */
 export function getAdminSidebarWarmPaths(): string[] {
@@ -97,7 +115,7 @@ export function getAdminSidebarWarmPaths(): string[] {
     ...ADMIN_MY_STORE_ITEMS.map((item) => item.href),
     ...ADMIN_MANAGEMENT_ITEMS.map((item) => item.href),
     ...ADMIN_MY_ACTIVITY_ITEMS.map((item) => item.href),
-    ADMIN_SETTINGS_EMAIL_HREF,
+    ...ADMIN_SETTINGS_ITEMS.map((item) => item.href),
   ];
   return [...new Set(paths)];
 }

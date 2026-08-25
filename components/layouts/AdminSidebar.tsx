@@ -17,6 +17,7 @@ import {
   Mail,
   FileText,
   UserCircle,
+  Settings2,
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -28,6 +29,8 @@ import {
   ADMIN_MY_ACTIVITY_ITEMS,
   ADMIN_MY_STORE_ITEMS,
   ADMIN_SETTINGS_EMAIL_HREF,
+  ADMIN_SETTINGS_HREF,
+  ADMIN_SETTINGS_ITEMS,
   type AdminNavItemConfig,
 } from "@/lib/navigation/admin-nav-config";
 import { adminSidebarLinkClass } from "@/lib/navigation/nav-link-styles";
@@ -47,6 +50,7 @@ const ADMIN_NAV_ICONS: Record<string, LucideIcon> = {
   "/admin/user-management": Users,
   "/admin/activity-history": History,
   "/admin/my-activity": UserCircle,
+  [ADMIN_SETTINGS_HREF]: Settings2,
   [ADMIN_SETTINGS_EMAIL_HREF]: Mail,
 };
 
@@ -81,6 +85,7 @@ export default function AdminSidebar({
           className={adminSidebarLinkClass(pathname, item.href, {
             isSub,
             collapsed,
+            exact: item.exact,
           })}
           title={collapsed ? item.label : undefined}
         >
@@ -129,17 +134,7 @@ export default function AdminSidebar({
         <div className="w-6 border-t border-gray-200/50 dark:border-white/10 my-1" />
         {renderNavItems(ADMIN_MY_ACTIVITY_ITEMS)}
         <div className="w-6 border-t border-gray-200/50 dark:border-white/10 my-1" />
-        <Link
-          href={ADMIN_SETTINGS_EMAIL_HREF}
-          prefetch
-          className={adminSidebarLinkClass(pathname, ADMIN_SETTINGS_EMAIL_HREF, {
-            isSub: true,
-            collapsed,
-          })}
-          title="Email Preferences"
-        >
-          <Mail className="h-4 w-4 flex-shrink-0" />
-        </Link>
+        {renderNavItems(ADMIN_SETTINGS_ITEMS)}
       </nav>
     );
   }
@@ -164,16 +159,7 @@ export default function AdminSidebar({
       <p className="px-2 pt-2  text-xs font-normal uppercase tracking-wider text-muted-foreground">
         System Settings
       </p>
-      <Link
-        href={ADMIN_SETTINGS_EMAIL_HREF}
-        prefetch
-        className={adminSidebarLinkClass(pathname, ADMIN_SETTINGS_EMAIL_HREF, {
-          isSub: true,
-        })}
-      >
-        <Mail className="h-4 w-4 flex-shrink-0" />
-        Email Preferences
-      </Link>
+      {renderNavItems(ADMIN_SETTINGS_ITEMS)}
     </nav>
   );
 }

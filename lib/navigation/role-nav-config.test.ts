@@ -51,4 +51,11 @@ describe("role-nav-config (REQ-0094)", () => {
     );
     expect(new Set(adminWarm).size).toBe(adminWarm.length);
   });
+
+  it("warms /admin/settings for admin/user only (SCD-8)", () => {
+    expect(getWarmPathsForRole("admin")).toContain("/admin/settings");
+    expect(getWarmPathsForRole("user")).toContain("/admin/settings");
+    expect(getWarmPathsForRole("client")).not.toContain("/admin/settings");
+    expect(getWarmPathsForRole("supplier")).not.toContain("/admin/settings");
+  });
 });
