@@ -346,7 +346,6 @@ flowchart LR
 1. Confirm Vercel production = commit `9a2e37c` (REQ-0013; or later on `main`)
 2. Smoke: bell dropdown, create product w/o category (400, no Sentry), duplicate invoice (409 toast)
 3. Sentry **stock-inventory** — 24h: compare cases 1–7 vs `docs/SENTRY_ERRORS.md`
-4. Log result in `.agile-v/REVALIDATION_LOG.md`; CAPA if regression
 
 ## 8. Quality gates (audit 2026-07-26 REQ-0212)
 
