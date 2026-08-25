@@ -645,3 +645,7 @@
 
 | ART-0227a | REQ-0227 | SupportTicketsPageContent created_by_me | separate key from admin all |
 | TC-0227 | REQ-0227 | lint + tsc + invalidate | PASS |
+
+| ART-0229a | REQ-0229 | `.cursor/rules/project-quick-reference.mdc` | Replaces root CLAUDE.md |
+| ART-0229b | REQ-0229 | `.cursor/skills/*` | 24 Agile V skills + index + seed-dev-database |
+| ART-0229c | REQ-0229 | `.cursor/rules/agile-v-core.mdc` | Skill paths → `.cursor/skills/` |

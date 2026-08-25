@@ -11,8 +11,8 @@
 
 1. Read `STATE.md` → cycle, gate, resume token, open backlog
 2. Read `REQUIREMENTS.md` → map work to `REQ-XXXX` (halt if missing)
-3. Load skills: `skills/SKILLS_INDEX.md` → **01** always; **17** for Next.js build; **19** before done; **23** for Sentry
-4. Cursor rule: `.cursor/rules/agile-v-core.mdc` (`alwaysApply: true`)
+3. Load skills: `.cursor/skills/agile-v-skills-index/SKILL.md` → **agile-v-core** always; **build-js** for Next.js; **red-team-verifier** before done; **observability-planner** for Sentry
+4. Cursor rules: `.cursor/rules/agile-v-core.mdc` + `.cursor/rules/project-quick-reference.mdc` (`alwaysApply: true`)
 5. On material change: write-through `DECISION_LOG.md`, `BUILD_MANIFEST.md`, `VALIDATION_SUMMARY.md`
 
 ---
@@ -23,7 +23,7 @@
 Specify → Constrain → Orchestrate → Prove → Verify → Evolve
 ```
 
-| Stage | Agent skills | Artifacts |
+| Stage | Skills | Artifacts |
 |-------|--------------|-----------|
 | 1 Specify | 13, 14, 21, 22 | `REQUIREMENTS.md` |
 | 2 Constrain | 15, 09 | Logic validation, impact |
@@ -32,7 +32,7 @@ Specify → Constrain → Orchestrate → Prove → Verify → Evolve
 | 5 Verify | 19, 20, 07 | `VALIDATION_SUMMARY.md`, Red Team |
 | Evolve | 03, 06 | `CHANGE_LOG.md`, `DECISION_LOG.md` |
 
-**Red Team protocol:** Build agent does not self-verify. Run independently:
+**Red Team protocol:** Implementation does not self-verify. Run independently:
 
 ```bash
 npm run lint && npm run test && npm run test:invalidate && npm run build
@@ -104,6 +104,6 @@ Commands: lint, test, test:invalidate, build
 | `VALIDATION_SUMMARY.md` | Red Team + manual QA |
 | `DECISION_LOG.md` | Append-only decisions |
 | `POLICY.yaml` | Policy-as-code (git, secrets, REQ trace) |
-| `skills/SKILLS_INDEX.md` | 24 agent skills |
+| `.cursor/skills/agile-v-skills-index/SKILL.md` | 24 Agile V skills |
 
 **Upstream skills:** https://github.com/Agile-V/agile_v_skills

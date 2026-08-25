@@ -268,7 +268,7 @@ flowchart LR
 | Stock allocation sync (REQ-0102) | Catalog reconcile on product PUT; `enrichStockAllocationRows` unified API+SSR enrich; warehouse delete guards; archived rows |
 | Disjoint reservation (REQ-0103) | `order-stock-reservation.ts`; `committedQuantity` on product lists; catalog floor 20 not 40 |
 | committedQuantity parity (REQ-0104) | Category/supplier detail SSR enrich; forecasting card/API; supplier dashboard avail |
-| Product detail SSR (REQ-0105) | `product-detail-data.ts` committedQuantity enrich + cache guard; `ProductDetailPage` `getDisplayCommittedQuantity`; `CLAUDE.md` in git |
+| Product detail SSR (REQ-0105) | `product-detail-data.ts` committedQuantity enrich + cache guard; `ProductDetailPage` `getDisplayCommittedQuantity`; project notes in `.cursor/rules/project-quick-reference.mdc` |
 | Order stock UX (REQ-0106–0109) | Auto-assign greedy pick; catalog cap; product allocation summary; live reconcile preview; feedback layout tokens |
 | Stock gap closure (REQ-0110) | committedQty order cap; `prefetchStockByProduct`; `getAllocationQtyBounds`; dialog shells + tests |
 | Order workflow (REQ-0111) | `useOrderLineStockValidation`; `OrderDialogCreateLineItem`; `ensureStockAllocationsAndValidate`; server message parity |
@@ -373,7 +373,7 @@ flowchart LR
 - **New mutation hook:** `invalidateAllRelatedQueries`; delete → `cancelOrRemoveDetailQuery` first
 - **New API write route:** add to `API_WRITE_ROUTE_INVALIDATION_SPEC` in invalidate-coverage test (or exempt list)
 - **Sentry:** `SENTRY_TUNNEL_PATH` in sync (`sentry-config.ts`, `next.config.ts`)
-- **Env:** update `.env.example` + `CLAUDE.md` + this file
+- **Env:** update `.env.example` + `.cursor/rules/project-quick-reference.mdc` + this file
 - **Dates:** UI → `ClientDate*` + `semantic`; export/PDF → `formatStableDate`
 - **Cache coherence (REQ-0133):** SSR sync skip; Redis `__invAt` re-warm guard; catalog CRUD → `invalidateAfterCatalogChange`; persist auth/user only
 - **Session (REQ-0134):** `SESSION_JWT_EXPIRES` / cookie 1d; auth-only `refetchOnWindowFocus`; QR async → second product cache invalidate
@@ -382,7 +382,7 @@ flowchart LR
 
 ## 10. Related docs
 
-- `CLAUDE.md` — condensed agent rules
+- `.cursor/rules/project-quick-reference.mdc` — condensed Cursor project rules
 - `README.md` — learner setup, env, APIs, reuse, Diploi optional, SECURITY link (REQ-0213)
 - `docs/MANUAL_TEST_FIXTURES.md` — copy-paste catalog fixtures after demo DB reset
 - `docs/Redis_Sentry_PostHog_INTEGRATION_GUIDE.md` — step-by-step integrations

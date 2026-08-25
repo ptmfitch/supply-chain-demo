@@ -648,3 +648,4 @@ Format: `TIMESTAMP | AGENT | DECISION | RATIONALE | REQ-ID`
 
 2026-08-01T15:54:00Z | build-agent | Personal /support-tickets uses view created_by_me (not all) | Admin all = assigned; SSR was creator — stop leak after invalidate | REQ-0227
 2026-08-01T15:50:45+02:00 | agile-v-core | Resume and reconcile existing C2 control plane; do not re-bootstrap or change application code | Existing .agile-v has 24 skills and full runtime contracts; STATE was newer than PLAYBOOK/config/EVAL and Gate 2 lacked a durable pending checkpoint | REQ-0008,REQ-0009
+2026-08-25T11:24:00Z | build-js | Move rules/skills into `.cursor/`; replace CLAUDE.md with project-quick-reference rule | Cursor-native config; drop competitor agent root file | REQ-0229
