@@ -19,6 +19,7 @@ import { IoMdArrowDown, IoMdArrowUp } from "react-icons/io";
 import { cn } from "@/lib/utils";
 import { UserRoleBadge } from "@/lib/ui/semantic-badges";
 import { AvatarInlineLink, ClientDate } from "@/components/shared";
+import { getDisplayUsername } from "@/lib/users/filter-users-for-admin";
 import type { UserForAdmin } from "@/types";
 
 type SortableHeaderProps = {
@@ -68,14 +69,6 @@ const PROTECTED_EMAILS = [
   "test@supplier.com",
   "test@client.com",
 ];
-
-/** Derive display username from email when username is empty (e.g. Gmail login) */
-function getDisplayUsername(user: UserForAdmin): string {
-  if (user.username?.trim()) return user.username.trim();
-  const email = user.email ?? "";
-  const at = email.indexOf("@");
-  return at > 0 ? email.slice(0, at) : "—";
-}
 
 export function createUserManagementColumns(
   detailHrefBase?: string,

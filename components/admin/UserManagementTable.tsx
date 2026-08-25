@@ -30,6 +30,7 @@ import { useClampPaginationIndex } from "@/hooks/use-clamp-pagination-index";
 import { Button } from "@/components/ui/button";
 import { GrFormPrevious, GrFormNext } from "react-icons/gr";
 import { BiFirstPage, BiLastPage } from "react-icons/bi";
+import { filterUsersForAdmin } from "@/lib/users/filter-users-for-admin";
 import type { UserForAdmin } from "@/types";
 
 interface UserManagementTableProps {
@@ -55,20 +56,10 @@ export const UserManagementTable = React.memo(function UserManagementTable({
 }: UserManagementTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
 
-  const filteredData = useMemo(() => {
-    return data.filter((u) => {
-      const emailPrefix = (u.email ?? "").split("@")[0] ?? "";
-      const searchMatch =
-        !searchTerm ||
-        u.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        u.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (u.username ?? "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-        emailPrefix.toLowerCase().includes(searchTerm.toLowerCase());
-      const roleMatch =
-        selectedRoles.length === 0 || selectedRoles.includes(u.role ?? "user");
-      return searchMatch && roleMatch;
-    });
-  }, [data, searchTerm, selectedRoles]);
+  const filteredData = useMemo(
+    () => filterUsersForAdmin(data, searchTerm, selectedRoles),
+    [data, searchTerm, selectedRoles],
+  );
 
   useClampPaginationIndex(filteredData.length, pagination, setPagination);
 

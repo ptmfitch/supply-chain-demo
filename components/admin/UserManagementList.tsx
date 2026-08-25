@@ -145,6 +145,7 @@ export default function UserManagementList({
       <div className="pb-6 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2">
         <div className="flex-1">
           <UserManagementFilters
+            allUsers={allUsers}
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
             selectedRoles={selectedRoles}
