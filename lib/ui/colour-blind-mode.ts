@@ -146,6 +146,33 @@ export function statusCbmClass(
     : `cbm-status-${kind}`;
 }
 
+/**
+ * CSS contract for glass (non-solid) CBM status pills in `app/globals.css`.
+ * Tailwind glass badges keep `bg-emerald-100` / `dark:bg-emerald-950/50`. Those
+ * utilities set `background-color`. A translucent `background-image` gradient
+ * does not replace that fill, so remap must set `background-color` from
+ * `--cbm-*` (pastel mix on light, translucent mix on dark) and clear
+ * `background-image`. `color` / `border-color` use `!important` because this
+ * Turbopack build emits unlayered utilities after the CBM block.
+ */
+export const CBM_GLASS_STATUS_FILL_CONTRACT = {
+  setsBackgroundColor: true,
+  clearsBackgroundImage: true,
+  lightMix: "pastel-with-white",
+  darkMix: "translucent-with-transparent",
+  colorAndBorderUseImportant: true,
+} as const;
+
+export function cbmGlassBackgroundColor(
+  kind: StatusCbmKind,
+  dark: boolean,
+): string {
+  const token = `var(--cbm-${kind})`;
+  return dark
+    ? `color-mix(in srgb, ${token} 22%, transparent)`
+    : `color-mix(in srgb, ${token} 18%, white)`;
+}
+
 export function statusCbmTextClass(kind: StatusCbmKind): string {
   return `cbm-status-text-${kind}`;
 }

@@ -282,40 +282,46 @@ html[data-colour-blind] .cbm-status-text-crit {
   color: var(--cbm-crit) !important;
 }
 
+/*
+ * Glass (non-solid) pills keep Tailwind bg-emerald-100 etc. Those set
+ * background-color. A translucent background-image gradient does not replace
+ * that fill, and unlayered utilities later in the sheet can still win without
+ * !important. See CBM_GLASS_STATUS_FILL_CONTRACT.
+ */
 html[data-colour-blind] .cbm-status-ok:not(.cbm-status-solid) {
-  color: var(--cbm-ok);
-  border-color: color-mix(in srgb, var(--cbm-ok) 40%, transparent);
-  background-image: linear-gradient(
-    to right,
-    color-mix(in srgb, var(--cbm-ok) 22%, transparent),
-    color-mix(in srgb, var(--cbm-ok) 10%, transparent),
-    color-mix(in srgb, var(--cbm-ok) 5%, transparent)
-  );
+  color: var(--cbm-ok) !important;
+  border-color: color-mix(in srgb, var(--cbm-ok) 40%, transparent) !important;
+  background-image: none;
+  background-color: color-mix(in srgb, var(--cbm-ok) 18%, white) !important;
   box-shadow: 0 10px 28px color-mix(in srgb, var(--cbm-ok) 18%, transparent);
 }
 
 html[data-colour-blind] .cbm-status-warn:not(.cbm-status-solid) {
-  color: var(--cbm-warn);
-  border-color: color-mix(in srgb, var(--cbm-warn) 40%, transparent);
-  background-image: linear-gradient(
-    to right,
-    color-mix(in srgb, var(--cbm-warn) 22%, transparent),
-    color-mix(in srgb, var(--cbm-warn) 10%, transparent),
-    color-mix(in srgb, var(--cbm-warn) 5%, transparent)
-  );
+  color: var(--cbm-warn) !important;
+  border-color: color-mix(in srgb, var(--cbm-warn) 40%, transparent) !important;
+  background-image: none;
+  background-color: color-mix(in srgb, var(--cbm-warn) 18%, white) !important;
   box-shadow: 0 10px 28px color-mix(in srgb, var(--cbm-warn) 18%, transparent);
 }
 
 html[data-colour-blind] .cbm-status-crit:not(.cbm-status-solid) {
-  color: var(--cbm-crit);
-  border-color: color-mix(in srgb, var(--cbm-crit) 40%, transparent);
-  background-image: linear-gradient(
-    to right,
-    color-mix(in srgb, var(--cbm-crit) 22%, transparent),
-    color-mix(in srgb, var(--cbm-crit) 10%, transparent),
-    color-mix(in srgb, var(--cbm-crit) 5%, transparent)
-  );
+  color: var(--cbm-crit) !important;
+  border-color: color-mix(in srgb, var(--cbm-crit) 40%, transparent) !important;
+  background-image: none;
+  background-color: color-mix(in srgb, var(--cbm-crit) 18%, white) !important;
   box-shadow: 0 10px 28px color-mix(in srgb, var(--cbm-crit) 18%, transparent);
+}
+
+html.dark[data-colour-blind] .cbm-status-ok:not(.cbm-status-solid) {
+  background-color: color-mix(in srgb, var(--cbm-ok) 22%, transparent) !important;
+}
+
+html.dark[data-colour-blind] .cbm-status-warn:not(.cbm-status-solid) {
+  background-color: color-mix(in srgb, var(--cbm-warn) 22%, transparent) !important;
+}
+
+html.dark[data-colour-blind] .cbm-status-crit:not(.cbm-status-solid) {
+  background-color: color-mix(in srgb, var(--cbm-crit) 22%, transparent) !important;
 }
 
 html[data-colour-blind] .cbm-status-ok.cbm-status-solid {
