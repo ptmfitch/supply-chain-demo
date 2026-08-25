@@ -6,8 +6,8 @@
   "terminals": [
     {
       "name": "dev",
-      "command": "bash .cursor/start.sh --wait && npm run dev",
-      "description": "Next.js dev server (Turbopack) on http://localhost:3000 — waits for start.sh (MongoDB + seed)"
+      "command": "bash .cursor/start.sh && npm run dev",
+      "description": "Ensures MongoDB + seed via start.sh (flock-serialized), then runs Next.js dev server (Turbopack) on http://localhost:3000"
     }
   ],
   "ports": [
