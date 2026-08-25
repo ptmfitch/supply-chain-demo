@@ -64,7 +64,7 @@ import { Supplier } from "@/types";
 import { createSupplierColumns } from "./SupplierTableColumns";
 import { Plus, Truck, X, FileText, StickyNote } from "lucide-react";
 
-const SUPPLIER_DIALOG_CONTENT_CLASS = `${DIALOG_EDGE_SCROLL_SHELL} poppins border-emerald-400/30 dark:border-emerald-400/30 shadow-[0_30px_80px_rgba(16,185,129,0.35)] dark:shadow-[0_30px_80px_rgba(16,185,129,0.25)]`;
+const SUPPLIER_DIALOG_CONTENT_CLASS = `${DIALOG_EDGE_SCROLL_SHELL} poppins border-emerald-400/30 dark:border-emerald-400/30 shadow-sm`;
 
 interface AddSupplierDialogProps {
   children?: React.ReactNode;

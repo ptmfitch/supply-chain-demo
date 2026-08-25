@@ -7,14 +7,14 @@ import { glassFormFieldClasses } from "@/lib/ui/focus-ring-styles";
 const DIALOG_FORM_FIELD_BASE =
   "bg-white/10 dark:bg-white/5 backdrop-blur-md text-white placeholder:text-white/40";
 
-const roseShell = `${DIALOG_FORM_FIELD_BASE} border border-rose-400/30 dark:border-white/20 shadow-[0_10px_30px_rgba(225,29,72,0.15)]`;
-const skyShell = `${DIALOG_FORM_FIELD_BASE} border border-sky-400/30 dark:border-white/20 shadow-[0_10px_30px_rgba(2,132,199,0.15)]`;
-const emeraldShell = `${DIALOG_FORM_FIELD_BASE} border border-emerald-400/30 dark:border-white/20 shadow-[0_10px_30px_rgba(16,185,129,0.15)]`;
-const violetShell = `${DIALOG_FORM_FIELD_BASE} border border-violet-400/30 dark:border-white/20 shadow-[0_10px_30px_rgba(139,92,246,0.15)]`;
-const indigoShell = `${DIALOG_FORM_FIELD_BASE} border border-indigo-400/30 dark:border-white/20 shadow-[0_10px_30px_rgba(99,102,241,0.15)]`;
-const amberShell = `${DIALOG_FORM_FIELD_BASE} border border-amber-400/30 dark:border-white/20 shadow-[0_10px_30px_rgba(245,158,11,0.15)]`;
-const tealShell = `${DIALOG_FORM_FIELD_BASE} border border-teal-400/30 dark:border-white/20 shadow-[0_10px_30px_rgba(20,184,166,0.15)]`;
-const cyanShell = `${DIALOG_FORM_FIELD_BASE} border border-cyan-400/30 dark:border-white/20 shadow-[0_10px_30px_rgba(6,182,212,0.15)]`;
+const roseShell = `${DIALOG_FORM_FIELD_BASE} border border-rose-400/30 dark:border-white/20 shadow-sm`;
+const skyShell = `${DIALOG_FORM_FIELD_BASE} border border-sky-400/30 dark:border-white/20 shadow-sm`;
+const emeraldShell = `${DIALOG_FORM_FIELD_BASE} border border-emerald-400/30 dark:border-white/20 shadow-sm`;
+const violetShell = `${DIALOG_FORM_FIELD_BASE} border border-violet-400/30 dark:border-white/20 shadow-sm`;
+const indigoShell = `${DIALOG_FORM_FIELD_BASE} border border-indigo-400/30 dark:border-white/20 shadow-sm`;
+const amberShell = `${DIALOG_FORM_FIELD_BASE} border border-amber-400/30 dark:border-white/20 shadow-sm`;
+const tealShell = `${DIALOG_FORM_FIELD_BASE} border border-teal-400/30 dark:border-white/20 shadow-sm`;
+const cyanShell = `${DIALOG_FORM_FIELD_BASE} border border-cyan-400/30 dark:border-white/20 shadow-sm`;
 
 /** Product / shared rose dialogs */
 export const DIALOG_FORM_FIELD_ROSE = glassFormFieldClasses("rose", roseShell);
@@ -37,7 +37,7 @@ export const DIALOG_FORM_FIELD_AMBER = glassFormFieldClasses("amber", amberShell
 /** Shipping / warehouse teal dialogs */
 export const DIALOG_FORM_FIELD_TEAL = glassFormFieldClasses("teal", tealShell);
 
-const blueShell = `${DIALOG_FORM_FIELD_BASE} border border-blue-400/30 dark:border-white/20 shadow-[0_10px_30px_rgba(59,130,246,0.15)]`;
+const blueShell = `${DIALOG_FORM_FIELD_BASE} border border-blue-400/30 dark:border-white/20 shadow-sm`;
 
 /** Warehouse cyan dialogs */
 export const DIALOG_FORM_FIELD_CYAN = glassFormFieldClasses("cyan", cyanShell);

@@ -1,10 +1,19 @@
 import { withSentryConfig } from "@sentry/nextjs";
 import type { NextConfig } from "next";
 import { SENTRY_TUNNEL_PATH } from "./lib/monitoring/sentry-config";
+import { DEV_STATIC_ASSET_PREFIX } from "./lib/vercel/dev-static-prefix";
 import { buildNextProductionHeaderRules } from "./lib/vercel/production-headers";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+
+  // Turbopack chunk names are stable; leftover `immutable` /_next/static
+  // entries from before production-headers.ts gated that rule will hydrate
+  // a stale Navbar unless the public URL changes.
+  assetPrefix:
+    process.env.NODE_ENV === "production"
+      ? undefined
+      : DEV_STATIC_ASSET_PREFIX,
 
   images: {
     remotePatterns: [
@@ -35,9 +44,22 @@ const nextConfig: NextConfig = {
     optimizePackageImports: ["@/components", "@/lib"],
   },
 
-  // Security + /_next/static immutable cache — see lib/vercel/production-headers.ts
+  // Security headers always; immutable /_next/static cache in production only
+  // (dev: hashed-less chunks + immutable = stale client JS vs fresh SSR HTML).
   async headers() {
     return buildNextProductionHeaderRules();
+  },
+
+  async rewrites() {
+    if (process.env.NODE_ENV === "production") {
+      return [];
+    }
+    return [
+      {
+        source: `${DEV_STATIC_ASSET_PREFIX}/_next/:path*`,
+        destination: "/_next/:path*",
+      },
+    ];
   },
 };
 

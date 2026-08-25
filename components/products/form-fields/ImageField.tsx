@@ -172,7 +172,7 @@ export default function ImageField() {
             variant="secondary"
             onClick={() => fileInputRef.current?.click()}
             disabled={isUploading}
-            className="h-11 w-full rounded-xl border border-rose-400/30 dark:border-rose-400/30 bg-gradient-to-r from-rose-500/30 via-rose-500/20 to-rose-500/15 dark:from-rose-500/30 dark:via-rose-500/20 dark:to-rose-500/15 text-gray-700 dark:text-white shadow-[0_10px_30px_rgba(225,29,72,0.2)] backdrop-blur-md transition duration-200 hover:border-rose-300/40 hover:from-rose-500/40 hover:via-rose-500/30 hover:to-rose-500/20 dark:hover:border-rose-300/40 dark:hover:from-rose-500/40 dark:hover:via-rose-500/30 dark:hover:to-rose-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="h-11 w-full rounded-xl border border-rose-400/30 dark:border-rose-400/30 bg-rose-100 dark:bg-rose-950/45 text-gray-700 dark:text-white shadow-sm backdrop-blur-md transition duration-200 hover:border-rose-300/40 hover:bg-rose-200 dark:hover:bg-rose-900/50 dark:hover:border-rose-300/40 hover:bg-rose-200 dark:hover:bg-rose-900/50 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isUploading ? (
               <>

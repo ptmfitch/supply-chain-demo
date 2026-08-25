@@ -38,13 +38,13 @@ export {
 
 /** REQ-0114 — dialog field labels; table frame for category dialog — light opaque island + dark glass (REQ-0049). */
 export const DIALOG_TABLE_FRAME_SKY =
-  "rounded-md border border-white/10 bg-white/60 bg-gradient-to-br from-white/20 via-white/15 to-white/10 dark:from-white/5 dark:via-white/5 dark:to-white/5 backdrop-blur-md ring-1 ring-sky-400/25 shadow-sm";
+  "rounded-md border border-white/10 bg-white/60 bg-white/90 dark:bg-stone-900/80 backdrop-blur-md ring-1 ring-sky-400/25 shadow-sm";
 
 /**
  * Table frame for supplier dialog — light opaque island + dark glass (REQ-0049).
  */
 export const DIALOG_TABLE_FRAME_EMERALD =
-  "rounded-md border border-white/10 bg-white/60 bg-gradient-to-br from-white/20 via-white/15 to-white/10 dark:from-white/5 dark:via-white/5 dark:to-white/5 backdrop-blur-md ring-1 ring-emerald-400/25 shadow-sm";
+  "rounded-md border border-white/10 bg-white/60 bg-white/90 dark:bg-stone-900/80 backdrop-blur-md ring-1 ring-emerald-400/25 shadow-sm";
 
 /**
  * REQ-0049 — embedded dialog tables: list-page parity in light mode; dark glass in dark mode.

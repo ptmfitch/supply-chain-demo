@@ -95,16 +95,16 @@ export function createProductReviewColumns(
               size="md"
             />
             <div className="flex min-w-0 flex-col gap-0.5">
-              <Link
-                href={productHref}
-                prefetch
-                className={cn("truncate", TABLE_CATALOG_LINK_CLASS)}
-                title={r.productName}
-              >
-                <CopyableText value={r.productName}>
+              <CopyableText value={r.productName} className="min-w-0">
+                <Link
+                  href={productHref}
+                  prefetch
+                  className={cn("truncate min-w-0", TABLE_CATALOG_LINK_CLASS)}
+                  title={r.productName}
+                >
                   {r.productName}
-                </CopyableText>
-              </Link>
+                </Link>
+              </CopyableText>
               {sku ? (
                 <CopyableText
                   value={sku}

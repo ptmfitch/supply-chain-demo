@@ -512,8 +512,8 @@ export default function AdminMyActivityContent({
         <article
           className={cn(
             "rounded-[28px] border border-teal-400/30 dark:border-teal-400/30",
-            "bg-gradient-to-br from-teal-500/25 via-teal-500/10 to-teal-500/5 dark:from-teal-500/25 dark:via-teal-500/10 dark:to-teal-500/5",
-            "shadow-[0_30px_80px_rgba(20,184,166,0.35)] dark:shadow-[0_30px_80px_rgba(20,184,166,0.25)]",
+            "bg-teal-100 dark:bg-teal-950/45",
+            "shadow-sm",
             "p-2 sm:p-4 backdrop-blur-md overflow-hidden",
           )}
         >

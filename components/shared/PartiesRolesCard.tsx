@@ -90,8 +90,8 @@ function PartyFieldRow({
     <div
       className={cn(
         "flex flex-wrap items-center gap-x-3 gap-y-2 p-3 rounded-xl border border-teal-200/30 dark:border-teal-400/20",
-        "bg-gradient-to-br from-teal-100/40 via-white/30 to-transparent",
-        "dark:from-teal-500/10 dark:via-white/5 dark:to-transparent",
+        "bg-teal-100 dark:bg-teal-950/45",
+        "",
         "shadow-[0_8px_24px_rgba(20,184,166,0.12)] dark:shadow-[0_8px_24px_rgba(20,184,166,0.08)]",
         className,
       )}

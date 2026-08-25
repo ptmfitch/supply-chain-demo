@@ -10,19 +10,13 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { DataSlotPulse } from "@/components/shared/DataSlotPulse";
 import { TYPO_STAT_VALUE, TYPO_SUBTITLE } from "@/lib/ui/typography-scale";
+import { PASTEL_SURFACE } from "@/lib/ui/pastel-surface-styles";
 
 /**
  * Color variant types for statistics cards
  */
 type CardVariant =
-  | "sky"
-  | "emerald"
-  | "amber"
-  | "rose"
-  | "violet"
-  | "blue"
-  | "orange"
-  | "teal";
+  "sky" | "emerald" | "amber" | "rose" | "violet" | "blue" | "orange" | "teal";
 
 /**
  * Badge data structure
@@ -79,81 +73,25 @@ interface StatisticsCardProps {
   compact?: boolean;
 }
 
-/**
- * Color configuration for each variant
- */
-const variantConfig: Record<
-  CardVariant,
-  {
-    border: string;
-    gradient: string;
-    shadow: string;
-    hoverBorder: string;
-  }
-> = {
-  sky: {
-    border: "border-sky-400/30",
-    gradient: "bg-gradient-to-br from-sky-500/25 via-sky-500/10 to-sky-500/5",
-    shadow:
-      "shadow-[0_30px_80px_rgba(2,132,199,0.35)] dark:shadow-[0_30px_80px_rgba(2,132,199,0.25)]",
-    hoverBorder: "hover:border-sky-300/50",
-  },
-  emerald: {
-    border: "border-emerald-400/30",
-    gradient:
-      "bg-gradient-to-br from-emerald-500/25 via-emerald-500/10 to-emerald-500/5",
-    shadow:
-      "shadow-[0_30px_80px_rgba(16,185,129,0.35)] dark:shadow-[0_30px_80px_rgba(16,185,129,0.25)]",
-    hoverBorder: "hover:border-emerald-300/50",
-  },
-  amber: {
-    border: "border-amber-400/30",
-    gradient:
-      "bg-gradient-to-br from-amber-500/30 via-amber-500/15 to-amber-500/5",
-    shadow:
-      "shadow-[0_30px_80px_rgba(245,158,11,0.25)] dark:shadow-[0_30px_80px_rgba(245,158,11,0.2)]",
-    hoverBorder: "hover:border-amber-300/60",
-  },
-  rose: {
-    border: "border-rose-400/30",
-    gradient:
-      "bg-gradient-to-br from-rose-500/25 via-rose-500/10 to-rose-500/5",
-    shadow:
-      "shadow-[0_30px_80px_rgba(225,29,72,0.35)] dark:shadow-[0_30px_80px_rgba(225,29,72,0.25)]",
-    hoverBorder: "hover:border-rose-300/50",
-  },
-  violet: {
-    border: "border-violet-400/30",
-    gradient:
-      "bg-gradient-to-br from-violet-500/25 via-violet-500/10 to-violet-500/5",
-    shadow:
-      "shadow-[0_30px_80px_rgba(139,92,246,0.35)] dark:shadow-[0_30px_80px_rgba(139,92,246,0.25)]",
-    hoverBorder: "hover:border-violet-300/50",
-  },
-  blue: {
-    border: "border-blue-400/30",
-    gradient:
-      "bg-gradient-to-br from-blue-500/25 via-blue-500/10 to-blue-500/5",
-    shadow:
-      "shadow-[0_30px_80px_rgba(59,130,246,0.35)] dark:shadow-[0_30px_80px_rgba(59,130,246,0.25)]",
-    hoverBorder: "hover:border-blue-300/50",
-  },
-  orange: {
-    border: "border-orange-400/30",
-    gradient:
-      "bg-gradient-to-br from-orange-500/25 via-orange-500/10 to-orange-500/5",
-    shadow:
-      "shadow-[0_30px_80px_rgba(249,115,22,0.35)] dark:shadow-[0_30px_80px_rgba(249,115,22,0.25)]",
-    hoverBorder: "hover:border-orange-300/50",
-  },
-  teal: {
-    border: "border-teal-400/30",
-    gradient:
-      "bg-gradient-to-br from-teal-500/25 via-teal-500/10 to-teal-500/5",
-    shadow:
-      "shadow-[0_30px_80px_rgba(20,184,166,0.35)] dark:shadow-[0_30px_80px_rgba(20,184,166,0.25)]",
-    hoverBorder: "hover:border-teal-300/50",
-  },
+function pastelCard(hue: CardVariant) {
+  const surface = PASTEL_SURFACE[hue];
+  return {
+    border: surface.border,
+    fill: surface.fill,
+    shadow: surface.shadow,
+    hoverBorder: surface.hoverBorder,
+  };
+}
+
+const variantConfig: Record<CardVariant, ReturnType<typeof pastelCard>> = {
+  sky: pastelCard("sky"),
+  emerald: pastelCard("emerald"),
+  amber: pastelCard("amber"),
+  rose: pastelCard("rose"),
+  violet: pastelCard("violet"),
+  blue: pastelCard("blue"),
+  orange: pastelCard("orange"),
+  teal: pastelCard("teal"),
 };
 
 /**
@@ -182,11 +120,11 @@ export function StatisticsCard({
   return (
     <article
       className={cn(
-        "group rounded-[28px] border h-full flex flex-col p-2 sm:p-4 backdrop-blur-md transition min-w-0 overflow-visible",
+        "group rounded-[28px] border h-full flex flex-col p-2 sm:p-4 transition min-w-0 overflow-visible",
         // REQ-0171 — compact omits tall min-height (forecast KPIs)
         !compact && "min-h-[210px]",
         config.border,
-        config.gradient,
+        config.fill,
         config.shadow,
         config.hoverBorder,
         className,
@@ -223,7 +161,7 @@ export function StatisticsCard({
               <Badge
                 key={index}
                 variant={badge.variant || "outline"}
-                className="text-xs border-gray-300/50 bg-gray-100/80 text-gray-700 backdrop-blur-md shadow-[0_10px_30px_rgba(0,0,0,0.1)] dark:border-white/10 dark:bg-white/5 dark:text-white/80"
+                className="text-xs border-gray-300/50 bg-gray-100/80 text-gray-700 backdrop-blur-md shadow-sm dark:border-white/10 dark:bg-white/5 dark:text-white/80"
               >
                 <span className="font-normal">{badge.label}:</span>{" "}
                 <span className="ml-1">

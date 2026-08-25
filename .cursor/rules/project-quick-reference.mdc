@@ -1558,7 +1558,7 @@ Gates: lint ✓ test **498** ✓ invalidate **208** ✓ build ✓. **No invalida
 | Order totals empty | `OrderDialog.tsx` — hide fees when no valid lines; `Package` empty state; Receipt/Percent/Truck/Tag row icons |
 | Invoice picker | `OrderPickerCommand.tsx` — `w-[var(--radix-popover-trigger-width)]` |
 | Admin tables | `AdminEmbedDataTable.tsx` — Client/Supplier portal + My Activity Recent Orders |
-| Network audit | VS-045 in `VALIDATION_SUMMARY.md` — defer prefetch cuts to REQ-0118 |
+| Network audit | VS-045 — defer prefetch cuts to REQ-0118 |
 
 **No TanStack/invalidation changes** — CSS/UI + read-only audit doc only.
 
@@ -1595,4 +1595,4 @@ Gates: lint ✓ test **498** ✓ invalidate **208** ✓ build ✓. **No invalida
 - Minimize scope; match existing patterns; strict TypeScript
 - Do not delete working code without reason
 - Sentry DSN never hardcoded — use env only
-- No `.md` summary files unless user asks; update `.cursor/rules/project-quick-reference.mdc` + walkthrough when architecture changes
+- No `.md` summary files unless the user asks; update this rule + `docs/PROJECT_WALKTHROUGH.md` when architecture changes

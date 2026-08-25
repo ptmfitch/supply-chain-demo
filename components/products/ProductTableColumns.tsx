@@ -120,14 +120,16 @@ export function createProductColumns(
               </div>
             )}
             <div className="flex min-w-0 flex-col ">
-              <Link
-                href={detailHref(detailBase, "products", product.id)}
-                prefetch
-                className={cn("truncate", TABLE_CATALOG_LINK_CLASS)}
-                title={product.name}
-              >
-                <CopyableText value={product.name}>{product.name}</CopyableText>
-              </Link>
+              <CopyableText value={product.name} className="min-w-0">
+                <Link
+                  href={detailHref(detailBase, "products", product.id)}
+                  prefetch
+                  className={cn("truncate min-w-0", TABLE_CATALOG_LINK_CLASS)}
+                  title={product.name}
+                >
+                  {product.name}
+                </Link>
+              </CopyableText>
               <CopyableText
                 value={product.sku}
                 className="truncate text-muted-foreground"

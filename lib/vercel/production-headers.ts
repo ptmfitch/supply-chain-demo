@@ -3,9 +3,10 @@
  * @see docs/VERCEL_PRODUCTION_GUARDRAILS.md
  *
  * Security headers are mirrored in vercel.json (edge). Keep keys/values in sync.
- * Immutable Cache-Control for /_next/static lives ONLY here (not vercel.json) to avoid
- * duplicate rules and the Next.js build warning about custom static Cache-Control.
- * It is production-only — see buildNextProductionHeaderRules.
+ * Immutable Cache-Control for /_next/static lives ONLY here (not vercel.json) and
+ * only in production. Turbopack `next dev` chunk URLs are not content-hashed the
+ * same way — `immutable` keeps a stale Navbar/client bundle while SSR HTML is
+ * fresh (hydration mismatch, "module factory is not available", Cache-Control warning).
  */
 
 export type HeaderEntry = { key: string; value: string };
@@ -28,10 +29,18 @@ export type NextHeaderRule = {
   headers: HeaderEntry[];
 };
 
+export type NextHeaderRuleOptions = {
+  /** Default: true when NODE_ENV is production. Never enable in `next dev`. */
+  includeStaticAssetCache?: boolean;
+};
+
 /** Rules passed to Next.js `async headers()` in next.config.ts. */
 export function buildNextProductionHeaderRules(
-  isProduction = process.env.NODE_ENV === "production",
+  options?: NextHeaderRuleOptions,
 ): NextHeaderRule[] {
+  const includeStaticAssetCache =
+    options?.includeStaticAssetCache ?? process.env.NODE_ENV === "production";
+
   const rules: NextHeaderRule[] = [
     {
       source: "/(.*)",
@@ -39,9 +48,7 @@ export function buildNextProductionHeaderRules(
     },
   ];
 
-  // Turbopack dev chunk filenames are not content-hashed, so an immutable rule makes the
-  // browser keep a pre-edit chunk body and throw "module factory is not available".
-  if (isProduction) {
+  if (includeStaticAssetCache) {
     rules.push({
       source: "/_next/static/(.*)",
       headers: [{ key: "Cache-Control", value: NEXT_STATIC_CACHE_CONTROL }],

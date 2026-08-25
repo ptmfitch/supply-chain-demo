@@ -285,7 +285,7 @@ export function ProductLineItemsList({
         return (
           <div
             key={item.id}
-            className="p-4 rounded-xl border border-sky-200/40 dark:border-sky-400/20 bg-gradient-to-r from-sky-100/40 via-sky-50/20 to-transparent dark:from-sky-500/10 dark:via-sky-500/5 dark:to-transparent"
+            className="p-4 rounded-xl border border-sky-200/40 dark:border-sky-400/20 bg-sky-100 dark:bg-sky-950/45"
           >
             <div className="flex gap-3 items-start">
               <ProductThumb

@@ -964,7 +964,7 @@ export default function ProductDetailPage({
                       return (
                         <div
                           key={row.id}
-                          className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-xl border border-teal-200/30 dark:border-teal-400/10 bg-gradient-to-r from-teal-100/40 via-teal-50/20 to-transparent dark:from-teal-500/10 dark:via-teal-500/5 dark:to-transparent"
+                          className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-xl border border-teal-200/30 dark:border-teal-400/10 bg-teal-100 dark:bg-teal-950/45"
                         >
                           <div className="flex items-start gap-3 min-w-0 flex-1">
                             <div className="p-2 rounded-xl border border-teal-400/30 bg-teal-500/20 shrink-0">

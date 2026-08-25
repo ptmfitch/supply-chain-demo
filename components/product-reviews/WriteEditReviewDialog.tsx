@@ -298,7 +298,7 @@ export default function WriteEditReviewDialog({
       <DialogContent
         className={cn(
           "p-2 sm:p-4 sm:px-8 poppins max-h-[90vh] overflow-y-auto",
-          "bg-gradient-to-br from-slate-800/98 to-slate-900/98 dark:from-slate-800/98 dark:to-slate-900/98",
+          "bg-slate-100 dark:bg-slate-950/45",
           "border-amber-400/30 dark:border-amber-400/30",
           "shadow-[0_25px_60px_rgba(245,158,11,0.25)] dark:shadow-[0_25px_60px_rgba(245,158,11,0.2)]",
         )}

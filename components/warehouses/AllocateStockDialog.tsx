@@ -57,7 +57,7 @@ import { getAllocationQtyBounds } from "@/lib/stock-allocation/validate-allocati
 import type { Product, StockAllocation } from "@/types";
 import { cn } from "@/lib/utils";
 
-const ALLOCATE_DIALOG_CONTENT_CLASS = `${DIALOG_EDGE_SCROLL_SHELL} poppins border-violet-400/30 dark:border-violet-400/30 shadow-[0_30px_80px_rgba(139,92,246,0.35)] dark:shadow-[0_30px_80px_rgba(139,92,246,0.25)]`;
+const ALLOCATE_DIALOG_CONTENT_CLASS = `${DIALOG_EDGE_SCROLL_SHELL} poppins border-violet-400/30 dark:border-violet-400/30 shadow-sm`;
 
 export type AllocateStockDialogProps = {
   open: boolean;

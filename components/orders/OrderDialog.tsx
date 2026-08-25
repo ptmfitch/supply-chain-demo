@@ -732,13 +732,13 @@ export default function OrderDialog({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {children || (
-          <Button className="h-10 font-medium inline-flex items-center justify-center rounded-xl border border-violet-400/30 dark:border-violet-400/30 bg-gradient-to-r from-violet-500/40 via-violet-500/30 to-violet-500/20 dark:from-violet-500/40 dark:via-violet-500/30 dark:to-violet-500/20 text-white shadow-[0_15px_35px_rgba(139,92,246,0.35)] backdrop-blur-md transition duration-200 hover:border-violet-300/50 hover:from-violet-500/50 hover:via-violet-500/40 hover:to-violet-500/30 dark:hover:border-violet-300/50 dark:hover:from-violet-500/50 dark:hover:via-violet-500/40 dark:hover:to-violet-500/30">
+          <Button className="h-10 font-medium inline-flex items-center justify-center rounded-xl border border-violet-400/30 dark:border-violet-400/30 bg-violet-100 dark:bg-violet-950/45 text-white shadow-sm backdrop-blur-md transition duration-200 hover:border-violet-300/50 hover:bg-violet-200 dark:hover:bg-violet-900/50 dark:hover:border-violet-300/50 hover:bg-violet-200 dark:hover:bg-violet-900/50">
             + Create Order
           </Button>
         )}
       </DialogTrigger>
       <DialogContent
-        className="p-2 sm:p-4 sm:px-8 poppins max-h-[90vh] overflow-y-auto border-violet-400/30 dark:border-violet-400/30 shadow-[0_30px_80px_rgba(139,92,246,0.45)] dark:shadow-[0_30px_80px_rgba(139,92,246,0.25)]"
+        className="p-2 sm:p-4 sm:px-8 poppins max-h-[90vh] overflow-y-auto border-violet-400/30 dark:border-violet-400/30 shadow-sm"
         onOpenAutoFocus={(e) => e.preventDefault()}
       >
         <DialogHeaderBrand
@@ -1090,7 +1090,7 @@ export default function OrderDialog({
                       type="button"
                       onClick={handleAddItem}
                       variant="secondary"
-                      className="h-10 rounded-[28px] border border-violet-400/30 dark:border-violet-400/30 bg-gradient-to-r from-violet-500/30 via-violet-500/15 to-violet-500/5 dark:from-violet-500/30 dark:via-violet-500/15 dark:to-violet-500/5 text-gray-700 dark:text-white shadow-[0_10px_30px_rgba(139,92,246,0.2)] backdrop-blur-md transition duration-200 hover:border-violet-300/60 hover:from-violet-500/35 hover:via-violet-500/25 hover:to-violet-500/15 dark:hover:border-violet-300/60 dark:hover:from-violet-500/35 dark:hover:via-violet-500/25 dark:hover:to-violet-500/15"
+                      className="h-10 rounded-[28px] border border-violet-400/30 dark:border-violet-400/30 bg-violet-100 dark:bg-violet-950/45 text-gray-700 dark:text-white shadow-sm backdrop-blur-md transition duration-200 hover:border-violet-300/60 hover:bg-violet-200 dark:hover:bg-violet-900/50 dark:hover:border-violet-300/60 hover:bg-violet-200 dark:hover:bg-violet-900/50"
                     >
                       <Plus className="h-4 w-4 mr-1" />
                       Add Item

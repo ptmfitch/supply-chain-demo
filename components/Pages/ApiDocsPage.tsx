@@ -1084,9 +1084,9 @@ export default function ApiDocsPage() {
   const getFetchExample = (method: string, path: string): string => {
     const url = `${baseUrl}${path}`;
     if (method === "GET") {
-      return `fetch(\`${url}\`, {\n  credentials: "include",\n})\n  .then((res) => res.json())\n  .then((data) => console.log(data));`;
+      return `fetch(\`${url}\`, {\n credentials: "include",\n})\n .then((res) => res.json())\n .then((data) => console.log(data));`;
     }
-    return `fetch(\`${url}\`, {\n  method: "${method}",\n  credentials: "include",\n  headers: { "Content-Type": "application/json" },\n  body: JSON.stringify({ /* your payload */ }),\n})\n  .then((res) => res.json())\n  .then((data) => console.log(data));`;
+    return `fetch(\`${url}\`, {\n method: "${method}",\n credentials: "include",\n headers: { "Content-Type": "application/json" },\n body: JSON.stringify({ /* your payload */ }),\n})\n .then((res) => res.json())\n .then((data) => console.log(data));`;
   };
 
   return (
@@ -1370,13 +1370,13 @@ export default function ApiDocsPage() {
                           className={cn(
                             "rounded-xl border p-4 backdrop-blur-md",
                             typeVariant === "emerald" &&
-                              "border-emerald-400/20 bg-gradient-to-br from-emerald-500/10 via-emerald-500/5 to-transparent",
+                              "border-emerald-400/20 bg-emerald-100 dark:bg-emerald-950/45",
                             typeVariant === "violet" &&
-                              "border-violet-400/20 bg-gradient-to-br from-violet-500/10 via-violet-500/5 to-transparent",
+                              "border-violet-400/20 bg-violet-100 dark:bg-violet-950/45",
                             typeVariant === "orange" &&
-                              "border-orange-400/20 bg-gradient-to-br from-orange-500/10 via-orange-500/5 to-transparent",
+                              "border-orange-400/20 bg-orange-100 dark:bg-orange-950/45",
                             typeVariant === "teal" &&
-                              "border-teal-400/20 bg-gradient-to-br from-teal-500/10 via-teal-500/5 to-transparent",
+                              "border-teal-400/20 bg-teal-100 dark:bg-teal-950/45",
                           )}
                         >
                           <h4 className="font-medium mb-3 text-gray-700 dark:text-white">
@@ -1424,7 +1424,7 @@ export default function ApiDocsPage() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                     {/* Success Codes */}
-                    <div className="rounded-xl border border-emerald-400/20 bg-gradient-to-br from-emerald-500/10 via-emerald-500/5 to-transparent p-4 backdrop-blur-md space-y-2">
+                    <div className="rounded-xl border border-emerald-400/20 bg-emerald-100 dark:bg-emerald-950/45 p-4 backdrop-blur-md space-y-2">
                       <h4 className="font-medium text-emerald-700 dark:text-emerald-300 text-sm">
                         Success Codes
                       </h4>
@@ -1449,7 +1449,7 @@ export default function ApiDocsPage() {
                     </div>
 
                     {/* Error Codes */}
-                    <div className="rounded-xl border border-rose-400/20 bg-gradient-to-br from-rose-500/10 via-rose-500/5 to-transparent p-4 backdrop-blur-md space-y-2">
+                    <div className="rounded-xl border border-rose-400/20 bg-rose-100 dark:bg-rose-950/45 p-4 backdrop-blur-md space-y-2">
                       <h4 className="font-medium text-rose-700 dark:text-rose-300 text-sm">
                         Error Codes
                       </h4>

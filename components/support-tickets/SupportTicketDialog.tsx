@@ -342,8 +342,8 @@ export default function SupportTicketDialog({
     ? "border-violet-400/30 dark:border-violet-400/30"
     : "border-sky-400/30 dark:border-sky-400/30";
   const shadowClass = isViolet
-    ? "shadow-[0_30px_80px_rgba(139,92,246,0.35)] dark:shadow-[0_30px_80px_rgba(139,92,246,0.25)]"
-    : "shadow-[0_30px_80px_rgba(2,132,199,0.35)] dark:shadow-[0_30px_80px_rgba(2,132,199,0.25)]";
+    ? "shadow-sm"
+    : "shadow-sm";
   const inputClass = isViolet
     ? DIALOG_FORM_FIELD_VIOLET
     : DIALOG_FORM_FIELD_SKY;
@@ -355,7 +355,7 @@ export default function SupportTicketDialog({
       <DialogContent
         className={cn(
           "p-2 sm:p-4 sm:px-8 poppins max-h-[90vh] overflow-y-auto",
-          "bg-gradient-to-br from-slate-800/98 to-slate-900/98 dark:from-slate-800/98 dark:to-slate-900/98",
+          "bg-slate-100 dark:bg-slate-950/45",
           borderClass,
           shadowClass,
         )}

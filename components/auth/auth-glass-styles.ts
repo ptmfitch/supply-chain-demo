@@ -6,15 +6,14 @@ import {
   GLASS_FOCUS_RING,
   glassFormFieldClasses,
 } from "@/lib/ui/focus-ring-styles";
+import { PASTEL_PRIMARY, PASTEL_SURFACE } from "@/lib/ui/pastel-surface-styles";
 
 export type AuthGlassVariant = "login" | "register";
 
 /** Right form card — navbar-intensity frosted glass. */
 export const AUTH_FORM_GLASS: Record<AuthGlassVariant, string> = {
-  login:
-    "border border-sky-400/30 dark:border-white/10 bg-gradient-to-br from-sky-500/20 via-sky-500/10 to-sky-500/5 dark:from-white/10 dark:via-white/8 dark:to-white/5 backdrop-blur-2xl shadow-[0_30px_80px_rgba(2,132,199,0.35)] dark:shadow-lg transition-all duration-300 hover:shadow-[0_40px_100px_rgba(2,132,199,0.5)] dark:hover:shadow-[0_40px_100px_rgba(2,132,199,0.4)] hover:border-sky-300/50 dark:hover:border-sky-300/30",
-  register:
-    "border border-emerald-400/30 dark:border-white/10 bg-gradient-to-br from-emerald-500/20 via-emerald-500/10 to-emerald-500/5 dark:from-white/10 dark:via-white/8 dark:to-white/5 backdrop-blur-2xl shadow-[0_30px_80px_rgba(16,185,129,0.35)] dark:shadow-lg transition-all duration-300 hover:shadow-[0_40px_100px_rgba(16,185,129,0.5)] dark:hover:shadow-[0_40px_100px_rgba(16,185,129,0.4)] hover:border-emerald-300/50 dark:hover:border-emerald-300/30",
+  login: `border ${PASTEL_SURFACE.sky.border} ${PASTEL_SURFACE.sky.fill} ${PASTEL_SURFACE.sky.shadow} transition-all duration-300 ${PASTEL_SURFACE.sky.hoverBorder}`,
+  register: `border ${PASTEL_SURFACE.emerald.border} ${PASTEL_SURFACE.emerald.fill} ${PASTEL_SURFACE.emerald.shadow} transition-all duration-300 ${PASTEL_SURFACE.emerald.hoverBorder}`,
 };
 
 /** Per-row micro-glass on flat left list (not a parent card). REQ-0033: py-2 for tighter rhythm. */
@@ -26,16 +25,11 @@ export const AUTH_LIST_ROW_GLASS =
  * Applied on login + register list rows in AuthInfoListItem.
  */
 export const AUTH_LIST_ICON_GLASS: Record<AuthListHue, string> = {
-  sky:
-    "border-sky-400/35 bg-gradient-to-br from-sky-500/30 via-sky-500/15 to-sky-500/8 shadow-[0_5px_20px_rgba(14,165,233,0.3)] dark:border-sky-400/30 dark:from-sky-500/25 dark:via-sky-500/12 dark:to-sky-500/6 dark:shadow-[0_5px_20px_rgba(14,165,233,0.25)] backdrop-blur-md",
-  emerald:
-    "border-emerald-400/35 bg-gradient-to-br from-emerald-500/30 via-emerald-500/15 to-emerald-500/8 shadow-[0_5px_20px_rgba(16,185,129,0.3)] dark:border-emerald-400/30 dark:from-emerald-500/25 dark:via-emerald-500/12 dark:to-emerald-500/6 dark:shadow-[0_5px_20px_rgba(16,185,129,0.25)] backdrop-blur-md",
-  amber:
-    "border-amber-400/35 bg-gradient-to-br from-amber-500/30 via-amber-500/15 to-amber-500/8 shadow-[0_5px_20px_rgba(245,158,11,0.3)] dark:border-amber-400/30 dark:from-amber-500/25 dark:via-amber-500/12 dark:to-amber-500/6 dark:shadow-[0_5px_20px_rgba(245,158,11,0.25)] backdrop-blur-md",
-  violet:
-    "border-violet-400/35 bg-gradient-to-br from-violet-500/30 via-violet-500/15 to-violet-500/8 shadow-[0_5px_20px_rgba(139,92,246,0.3)] dark:border-violet-400/30 dark:from-violet-500/25 dark:via-violet-500/12 dark:to-violet-500/6 dark:shadow-[0_5px_20px_rgba(139,92,246,0.25)] backdrop-blur-md",
-  blue:
-    "border-blue-400/35 bg-gradient-to-br from-blue-500/30 via-blue-500/15 to-blue-500/8 shadow-[0_5px_20px_rgba(59,130,246,0.3)] dark:border-blue-400/30 dark:from-blue-500/25 dark:via-blue-500/12 dark:to-blue-500/6 dark:shadow-[0_5px_20px_rgba(59,130,246,0.25)] backdrop-blur-md",
+  sky: `border ${PASTEL_SURFACE.sky.border} ${PASTEL_SURFACE.sky.fill} ${PASTEL_SURFACE.sky.shadow}`,
+  emerald: `border ${PASTEL_SURFACE.emerald.border} ${PASTEL_SURFACE.emerald.fill} ${PASTEL_SURFACE.emerald.shadow}`,
+  amber: `border ${PASTEL_SURFACE.amber.border} ${PASTEL_SURFACE.amber.fill} ${PASTEL_SURFACE.amber.shadow}`,
+  violet: `border ${PASTEL_SURFACE.violet.border} ${PASTEL_SURFACE.violet.fill} ${PASTEL_SURFACE.violet.shadow}`,
+  blue: `border ${PASTEL_SURFACE.blue.border} ${PASTEL_SURFACE.blue.fill} ${PASTEL_SURFACE.blue.shadow}`,
 };
 
 /**
@@ -45,8 +39,8 @@ export const AUTH_LIST_ICON_GLASS: Record<AuthListHue, string> = {
 const AUTH_FORM_FIELD_BASE =
   "bg-white/70 dark:bg-white/5 backdrop-blur-md text-gray-700 dark:text-white placeholder:text-gray-500 dark:placeholder:text-white/40";
 
-const authSkyShell = `${AUTH_FORM_FIELD_BASE} border border-sky-400/30 dark:border-white/20 shadow-[0_10px_30px_rgba(2,132,199,0.15)]`;
-const authEmeraldShell = `${AUTH_FORM_FIELD_BASE} border border-emerald-400/30 dark:border-white/20 shadow-[0_10px_30px_rgba(16,185,129,0.15)]`;
+const authSkyShell = `${AUTH_FORM_FIELD_BASE} border border-sky-400/30 dark:border-white/20 shadow-sm`;
+const authEmeraldShell = `${AUTH_FORM_FIELD_BASE} border border-emerald-400/30 dark:border-white/20 shadow-sm`;
 
 /** Login page inputs + role Select trigger */
 export const AUTH_FORM_FIELD_SKY = glassFormFieldClasses("sky", authSkyShell);
@@ -66,10 +60,6 @@ export const AUTH_GOOGLE_BUTTON: Record<AuthGlassVariant, string> = {
 };
 
 const AUTH_SUBMIT_LAYOUT =
-  "h-11 w-full inline-flex items-center justify-center rounded-xl backdrop-blur-md transition duration-200 text-white font-normal";
+  "h-11 w-full inline-flex items-center justify-center rounded-xl transition duration-200 font-normal";
 
-/**
- * Register submit — richer opaque gradient on pale emerald glass (matches login CTA punch).
- * Login keeps GLASS_PRIMARY_BUTTON.sky (user-verified).
- */
-export const AUTH_SUBMIT_BUTTON_EMERALD = `${FOCUS_NO_LAYOUT_SHIFT_CLASS} ${GLASS_FOCUS_RING.emerald} ${AUTH_SUBMIT_LAYOUT} border border-emerald-400/40 bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-700 shadow-[0_15px_35px_rgba(16,185,129,0.5)] hover:border-emerald-300/50 hover:from-emerald-500 hover:via-emerald-400 hover:to-teal-600 hover:shadow-[0_20px_45px_rgba(16,185,129,0.6)] dark:from-emerald-500/80 dark:via-emerald-500/60 dark:to-teal-600/70`;
+export const AUTH_SUBMIT_BUTTON_EMERALD = `${FOCUS_NO_LAYOUT_SHIFT_CLASS} ${GLASS_FOCUS_RING.emerald} ${AUTH_SUBMIT_LAYOUT} border ${PASTEL_SURFACE.emerald.border} ${PASTEL_PRIMARY.emerald}`;

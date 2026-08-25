@@ -9,7 +9,7 @@ description: >-
 
 # Seed dev database
 
-Parent: REQ-0137 (explore catalog), REQ-0088 / REQ-0092 (accounts). Do not invent a second seeder.
+Parent: REQ-0137 (explore catalog), REQ-0088 / REQ-0092 (accounts). Do not invent a second seeder; use the existing demo reset/seed scripts.
 
 ## Default command
 

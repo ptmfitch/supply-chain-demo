@@ -39,13 +39,13 @@ const HUE_BORDER: Record<PopoverHue, string> = {
 };
 
 const HUE_SHADOW: Record<PopoverHue, string> = {
-  sky: "shadow-[0_10px_30px_rgba(2,132,199,0.15)]",
-  violet: "shadow-[0_10px_30px_rgba(139,92,246,0.15)]",
-  rose: "shadow-[0_10px_30px_rgba(225,29,72,0.15)]",
-  teal: "shadow-[0_10px_30px_rgba(20,184,166,0.15)]",
-  amber: "shadow-[0_10px_30px_rgba(245,158,11,0.15)]",
-  emerald: "shadow-[0_10px_30px_rgba(16,185,129,0.15)]",
-  cyan: "shadow-[0_10px_30px_rgba(6,182,212,0.15)]",
+  sky: "shadow-sm",
+  violet: "shadow-sm",
+  rose: "shadow-sm",
+  teal: "shadow-sm",
+  amber: "shadow-sm",
+  emerald: "shadow-sm",
+  cyan: "shadow-sm",
 };
 
 export type CatalogEntityPopover = "category" | "supplier" | "warehouse";

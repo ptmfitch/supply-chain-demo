@@ -300,8 +300,8 @@ export function ForecastingCard({ products, className }: ForecastingCardProps) {
       className={cn(
         "group rounded-[20px] border backdrop-blur-md transition overflow-hidden",
         "border-violet-400/20",
-        "bg-gradient-to-br from-violet-500/15 via-violet-500/5 to-transparent",
-        "shadow-[0_15px_40px_rgba(139,92,246,0.15)] dark:shadow-[0_15px_40px_rgba(139,92,246,0.1)]",
+        "bg-violet-100 dark:bg-violet-950/45",
+        "shadow-sm",
         "hover:border-violet-300/40",
         className,
       )}
@@ -317,7 +317,7 @@ export function ForecastingCard({ products, className }: ForecastingCardProps) {
       <div className="px-4 sm:px-5 pb-4 sm:pb-5 space-y-4">
         {/* Key Metrics */}
         <div className="grid grid-cols-3 gap-2">
-          <div className="text-center p-2 rounded-xl border border-blue-400/20 bg-gradient-to-br from-blue-500/15 via-blue-500/5 to-transparent">
+          <div className="text-center p-2 rounded-xl border border-blue-400/20 bg-blue-100 dark:bg-blue-950/45">
             <div className="text-sm sm:text-lg font-medium text-sky-600 dark:text-sky-400">
               {forecastData.totalProducts}
             </div>
@@ -325,7 +325,7 @@ export function ForecastingCard({ products, className }: ForecastingCardProps) {
               Total Products
             </div>
           </div>
-          <div className="text-center p-2 rounded-xl border border-amber-400/20 bg-gradient-to-br from-amber-500/15 via-amber-500/5 to-transparent">
+          <div className="text-center p-2 rounded-xl border border-amber-400/20 bg-amber-100 dark:bg-amber-950/45">
             <div className="text-sm sm:text-lg font-medium text-amber-600 dark:text-amber-400">
               {forecastData.lowStockProducts}
             </div>
@@ -333,7 +333,7 @@ export function ForecastingCard({ products, className }: ForecastingCardProps) {
               Low Stock
             </div>
           </div>
-          <div className="text-center p-2 rounded-xl border border-rose-400/20 bg-gradient-to-br from-rose-500/15 via-rose-500/5 to-transparent">
+          <div className="text-center p-2 rounded-xl border border-rose-400/20 bg-rose-100 dark:bg-rose-950/45">
             <div className="text-sm sm:text-base font-medium text-rose-600 dark:text-rose-400">
               {forecastData.outOfStockProducts}
             </div>
@@ -354,7 +354,7 @@ export function ForecastingCard({ products, className }: ForecastingCardProps) {
               forecastData.reorderSuggestions.map((suggestion, index) => (
                 <div
                   key={index}
-                  className="flex items-start justify-between gap-3 p-2 rounded-xl border border-gray-300/30 bg-gradient-to-r from-gray-100/50 to-transparent dark:border-white/10 dark:from-white/5 backdrop-blur-md"
+                  className="flex items-start justify-between gap-3 p-2 rounded-xl border border-gray-300/30 bg-gray-100 dark:bg-gray-950/45 dark:border-white/10 dark:from-white/5 backdrop-blur-md"
                 >
                   <div className="flex-1 min-w-0">
                     <DenseCatalogProductCell
@@ -417,7 +417,7 @@ export function ForecastingCard({ products, className }: ForecastingCardProps) {
             {forecastData.demandForecast.map((forecast, index) => (
               <div
                 key={index}
-                className="space-y-2 p-2 rounded-xl border border-gray-300/20 bg-gradient-to-r from-gray-100/30 to-transparent dark:border-white/10 dark:from-white/5"
+                className="space-y-2 p-2 rounded-xl border border-gray-300/20 bg-gray-100 dark:bg-gray-950/45 dark:border-white/10 dark:from-white/5"
               >
                 <div className="flex justify-between items-center gap-2">
                   {forecast.categoryId ? (
@@ -470,7 +470,7 @@ export function ForecastingCard({ products, className }: ForecastingCardProps) {
               <div
                 key={index}
                 className={cn(
-                  "text-center p-2 rounded-xl border border-gray-300/20 bg-gradient-to-b from-gray-100/30 to-transparent dark:border-white/10 dark:from-white/5",
+                  "text-center p-2 rounded-xl border border-gray-300/20 bg-gray-100 dark:bg-gray-950/45 dark:border-white/10 dark:from-white/5",
                   trend.isFutureMonth && "opacity-60",
                 )}
               >
@@ -492,7 +492,7 @@ export function ForecastingCard({ products, className }: ForecastingCardProps) {
         <div className="flex flex-col sm:flex-row gap-2 pt-4">
           <Button
             variant="outline"
-            className="flex-1 rounded-xl border-emerald-400/30 bg-gradient-to-r from-emerald-500/10 to-transparent hover:from-emerald-500/20 hover:border-emerald-300/50"
+            className="flex-1 rounded-xl border-emerald-400/30 bg-emerald-100 dark:bg-emerald-950/45 hover:border-emerald-300/50"
             onClick={handleGenerateReport}
           >
             <Package className="mr-2 h-4 w-4" />
@@ -500,7 +500,7 @@ export function ForecastingCard({ products, className }: ForecastingCardProps) {
           </Button>
           <Button
             variant="outline"
-            className="flex-1 rounded-xl border-blue-400/30 bg-gradient-to-r from-blue-500/10 to-transparent hover:from-blue-500/20 hover:border-blue-300/50"
+            className="flex-1 rounded-xl border-blue-400/30 bg-blue-100 dark:bg-blue-950/45 hover:border-blue-300/50"
             onClick={handleViewDetails}
           >
             <TrendingUp className="mr-2 h-4 w-4" />
