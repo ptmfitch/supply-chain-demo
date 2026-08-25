@@ -1,16 +1,19 @@
+"use client";
+
 /**
  * Statistics Card Component
  * Glassmorphism card component for displaying warehouse statistics
  * Supports light/dark mode with colored variants (sky, emerald, amber, rose)
  */
 
-import React from "react";
+import React, { useLayoutEffect, useRef } from "react";
 import { LucideIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { DataSlotPulse } from "@/components/shared/DataSlotPulse";
 import { TYPO_STAT_VALUE, TYPO_SUBTITLE } from "@/lib/ui/typography-scale";
 import { PASTEL_SURFACE } from "@/lib/ui/pastel-surface-styles";
+import { writeAgentDebugLog } from "@/lib/debug/write-agent-log";
 
 /**
  * Color variant types for statistics cards
@@ -111,18 +114,74 @@ export function StatisticsCard({
   compact = false,
 }: StatisticsCardProps) {
   const config = variantConfig[variant];
+  const cardRef = useRef<HTMLElement>(null);
+  const titleRef = useRef<HTMLParagraphElement>(null);
+  const rowRef = useRef<HTMLDivElement>(null);
+  const iconRef = useRef<HTMLDivElement>(null);
   const displayValue = valueLoading ? (
     <DataSlotPulse variant="metric" />
   ) : (
     value
   );
 
+  // #region agent log
+  useLayoutEffect(() => {
+    if (!compact) return;
+    const card = cardRef.current;
+    const titleEl = titleRef.current;
+    const row = rowRef.current;
+    const icon = iconRef.current;
+    if (!card || !titleEl) return;
+    const titleCs = getComputedStyle(titleEl);
+    const cardRect = card.getBoundingClientRect();
+    const titleRect = titleEl.getBoundingClientRect();
+    const rowRect = row?.getBoundingClientRect();
+    const iconRect = icon?.getBoundingClientRect();
+    const parentArticle = card.parentElement?.closest("article");
+    const overflowScroll = titleEl.scrollWidth > titleEl.clientWidth + 1;
+    const overflowRect = titleRect.right > cardRect.right + 1;
+    const rowOverflow = Boolean(rowRect && rowRect.right > cardRect.right + 1);
+    void writeAgentDebugLog({
+      hypothesisId: "A",
+      location: "StatisticsCard.tsx:compact-title",
+      message: "compact KPI title overflow probe",
+      runId: "post-fix",
+      data: {
+        title,
+        viewportW: window.innerWidth,
+        cardW: Math.round(cardRect.width),
+        cardPadX: Math.round(cardRect.width - titleEl.clientWidth - (iconRect?.width ?? 0)),
+        titleClientW: titleEl.clientWidth,
+        titleScrollW: titleEl.scrollWidth,
+        titleH: Math.round(titleRect.height),
+        overflowScroll,
+        overflowRect,
+        rowOverflow,
+        rowW: rowRect ? Math.round(rowRect.width) : null,
+        rowMinWidth: row ? getComputedStyle(row).minWidth : null,
+        iconW: iconRect ? Math.round(iconRect.width) : null,
+        letterSpacing: titleCs.letterSpacing,
+        whiteSpace: titleCs.whiteSpace,
+        overflowX: titleCs.overflowX,
+        overflowWrap: titleCs.overflowWrap,
+        cardOverflow: getComputedStyle(card).overflow,
+        parentArticleW: parentArticle
+          ? Math.round(parentArticle.getBoundingClientRect().width)
+          : null,
+      },
+    });
+  }, [compact, title]);
+  // #endregion
+
   return (
     <article
+      ref={cardRef}
+      data-debug-compact-kpi={compact ? title : undefined}
       className={cn(
-        "group rounded-[28px] border h-full flex flex-col p-2 sm:p-4 transition min-w-0 overflow-visible",
+        "group rounded-[28px] border h-full flex flex-col p-2 sm:p-4 transition min-w-0",
         // REQ-0171 — compact omits tall min-height (forecast KPIs)
         !compact && "min-h-[210px]",
+        compact ? "overflow-hidden" : "overflow-visible",
         config.border,
         config.fill,
         config.shadow,
@@ -132,11 +191,23 @@ export function StatisticsCard({
     >
       <div className="flex flex-1 flex-col min-h-0 min-w-0 w-full overflow-visible">
         {/* Title and icon inline so badges get full width below */}
-        <div className="flex items-center justify-between gap-2 shrink-0">
-          <p className="text-xs uppercase tracking-[0.45em] text-gray-700 dark:text-white/80 min-w-0">
+        <div
+          ref={rowRef}
+          className="flex items-center justify-between gap-2 shrink-0 min-w-0"
+        >
+          <p
+            ref={titleRef}
+            className={cn(
+              "text-xs uppercase text-gray-700 dark:text-white/80 min-w-0 flex-1",
+              compact
+                ? "tracking-[0.2em] leading-snug overflow-hidden break-words"
+                : "tracking-[0.45em]",
+            )}
+          >
             {title}
           </p>
           <div
+            ref={iconRef}
             className={cn(
               "flex shrink-0 items-center justify-center rounded-xl border border-gray-300/30 bg-gray-100/50 shadow-inner shadow-primary/30 backdrop-blur dark:border-white/15 dark:bg-white/10",
               compact ? "h-8 w-8" : "h-10 w-10",

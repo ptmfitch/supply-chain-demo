@@ -1734,15 +1734,17 @@ export default function AdminAnalyticsContent({
           </div>
         </ChartCard>
 
-        {/* Demand Forecasting — sibling of AI insights; parent gap-6 owns section spacing */}
-        <ChartCard
-          variant="emerald"
-          title="Demand Forecasting & Predictions"
-          icon={TrendingUp}
-          description="Store-wide"
-        >
+        {/* Demand Forecasting — heading only; inner ChartCards must not sit in a nested article */}
+        <div className="flex flex-col gap-6">
+          <PageSectionHeader
+            icon={TrendingUp}
+            tone="emerald"
+            title="Demand Forecasting & Predictions"
+            description="Store-wide"
+            className={DETAIL_PAGE_HEADER_SPACING_CLASS}
+          />
           <ForecastingSection initialForecasting={initialForecasting} />
-        </ChartCard>
+        </div>
       </div>
     </PageContentWrapper>
   );
