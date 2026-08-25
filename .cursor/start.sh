@@ -2,9 +2,31 @@
 # Cloud Agent start phase — per-boot reconciliation of runtime services.
 # Must be idempotent, avoid duplicate processes, reach readiness, then return.
 # Long-running foreground processes (the dev server) live in `terminals`, not here.
+#
+# Cursor launches `start` detached and does not block `terminals`. The dev
+# terminal runs `bash .cursor/start.sh --wait` so Next.js starts only after
+# this script writes its exit code (env, Docker, MongoDB PRIMARY, Prisma, seed).
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
+
+STATUS_FILE="/tmp/stockly-start.status"
+
+if [ "${1:-}" = "--wait" ]; then
+  echo "==> [dev] Waiting for start.sh (Docker, MongoDB, Prisma, seed)"
+  until [ -f "$STATUS_FILE" ]; do sleep 1; done
+  while [ "$(cat "$STATUS_FILE" 2>/dev/null || true)" = "pending" ]; do sleep 1; done
+  status="$(tr -dc '0-9' < "$STATUS_FILE" || true)"
+  if [ "${status}" != "0" ]; then
+    echo "start.sh failed with status ${status:-unknown}; not starting Next.js"
+    exit 1
+  fi
+  exit 0
+fi
+
+# Claim the boot immediately so a stale status cannot release the terminal.
+printf 'pending\n' > "$STATUS_FILE"
+trap 'printf "%s\n" "$?" > "$STATUS_FILE"' EXIT
 
 MONGO_CONTAINER="stockly-mongo"
 MONGO_VOLUME="stockly-mongo-data"
