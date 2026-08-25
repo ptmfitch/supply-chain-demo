@@ -9,8 +9,6 @@ description: Add a denser pivot-style stock or order grid with filters on a dash
 
 Adding or densifying a **filterable stock/order grid** on Business Insights or the admin Store Dashboard. Prefer this over mocked AI/ML or Grafana.
 
-Parent REQ for the first pivot: **REQ-0228**. New work needs its own `REQ-XXXX`.
-
 ## Do
 
 1. Reuse existing data — `WarehouseStockSummary` via `useWarehouseStockSummary` / `getWarehouseStockSummary`, or existing order/dashboard lists. No new API or cache domain.
