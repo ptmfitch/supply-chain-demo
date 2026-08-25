@@ -23,13 +23,21 @@ echo "==> [install] npm ci (postinstall runs prisma generate)"
 npm ci
 
 echo "==> [install] Pre-pull mongo:7 so boots are fast and do not require the registry"
-# dockerd is not running during the build; start it briefly to cache the image
-# into /var/lib/docker, which is part of the snapshot.
-if ! sudo docker info >/dev/null 2>&1; then
-  sudo bash -c 'nohup dockerd --storage-driver=fuse-overlayfs >/var/log/dockerd-install.log 2>&1 &'
-  for _ in $(seq 1 30); do sudo docker info >/dev/null 2>&1 && break; sleep 1; done
-fi
-sudo docker info >/dev/null 2>&1 || { echo "dockerd failed to start during install"; exit 1; }
-sudo docker pull mongo:7
+# Best-effort: dockerd is not running during the build, so start it briefly to
+# cache the image into /var/lib/docker (part of the snapshot). If a build pod
+# cannot run dockerd, start.sh pulls the image on first boot instead, so this
+# must not fail the install.
+pull_mongo_image() {
+  if ! sudo docker info >/dev/null 2>&1; then
+    sudo bash -c 'nohup dockerd --storage-driver=fuse-overlayfs >/var/log/dockerd-install.log 2>&1 &'
+    for _ in $(seq 1 30); do sudo docker info >/dev/null 2>&1 && break; sleep 1; done
+  fi
+  if sudo docker info >/dev/null 2>&1; then
+    sudo docker pull mongo:7
+  else
+    echo "   WARN: dockerd unavailable during install; start.sh will pull mongo:7 on first boot"
+  fi
+}
+pull_mongo_image || echo "   WARN: mongo:7 pre-pull skipped; start.sh will pull on first boot"
 
 echo "==> [install] Done"
