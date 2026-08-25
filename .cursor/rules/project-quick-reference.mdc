@@ -1,5 +1,5 @@
 ---
-description: Stock-inventory stack, commands, Sentry, TanStack/SSR conventions, and REQ implementation notes. Always apply in this repo.
+description: Stock-inventory stack, commands, Sentry, TanStack/SSR conventions, and implementation notes. Always apply in this repo.
 alwaysApply: true
 ---
 
@@ -164,20 +164,6 @@ All user-facing POST/PUT JSON bodies use `safeParse` + `logger.warn` on fail. Ne
 - Routes: `app/api/**/route.ts`
 - Shared responses: `lib/api/response-helpers.ts`
 - Repositories: `prisma/*.ts`
-
-## Agile V (Infinity Loop) — C1 active
-
-| Artifact | Path |
-|----------|------|
-| Resume | `.agile-v/STATE.md` |
-| REQs | `.agile-v/REQUIREMENTS.md` (REQ-0001…0046) |
-| Skills (24) | `.cursor/skills/` (index: `agile-v-skills-index`) |
-| Gates | `.agile-v/VALIDATION_SUMMARY.md`, `REVALIDATION_LOG.md` |
-| Cursor rule | `.cursor/rules/agile-v-core.mdc` (`alwaysApply: true`) |
-
-**Every session:** STATE → REQ map → skill 01+17 → Red Team → write-through DECISION/BUILD/VALIDATION.
-
-**C1 open:** Gate 2 PENDING (Sentry 24h). **Done:** REQ-0220…0224. **Next:** Vercel Ready → smoke → Sentry 24h (**REQ-0009**).
 
 ## REQ-0136 cache / badges / hydration (2026-07-27)
 
@@ -1560,7 +1546,7 @@ Gates: lint ✓ test **498** ✓ invalidate **208** ✓ build ✓. **No invalida
 | Order totals empty | `OrderDialog.tsx` — hide fees when no valid lines; `Package` empty state; Receipt/Percent/Truck/Tag row icons |
 | Invoice picker | `OrderPickerCommand.tsx` — `w-[var(--radix-popover-trigger-width)]` |
 | Admin tables | `AdminEmbedDataTable.tsx` — Client/Supplier portal + My Activity Recent Orders |
-| Network audit | VS-045 in `VALIDATION_SUMMARY.md` — defer prefetch cuts to REQ-0118 |
+| Network audit | VS-045 — defer prefetch cuts to REQ-0118 |
 
 **No TanStack/invalidation changes** — CSS/UI + read-only audit doc only.
 
@@ -1597,4 +1583,4 @@ Gates: lint ✓ test **498** ✓ invalidate **208** ✓ build ✓. **No invalida
 - Minimize scope; match existing patterns; strict TypeScript
 - Do not delete working code without reason
 - Sentry DSN never hardcoded — use env only
-- No `.md` summary files unless user asks; update `.cursor/rules/project-quick-reference.mdc` + walkthrough when architecture changes
+- No `.md` summary files unless the user asks; update this rule + `docs/PROJECT_WALKTHROUGH.md` when architecture changes
