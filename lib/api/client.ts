@@ -62,6 +62,8 @@ import type {
   CreateUserAdminInput,
   ClientPortalStats,
   SupplierPortalStats,
+  ClientDirectoryRow,
+  SupplierDirectoryRow,
   StockAllocation,
   CreateStockAllocationInput,
   StockTransfer,
@@ -882,6 +884,17 @@ class ApiClient {
         statusText: response.statusText,
       };
     },
+    // SCD-15 — full client directory rows
+    getDirectory: async (): Promise<ApiResponse<ClientDirectoryRow[]>> => {
+      const response = await this.client.get<ClientDirectoryRow[]>(
+        `${API_ENDPOINTS.clientPortal.base}/directory`,
+      );
+      return {
+        data: response.data,
+        status: response.status,
+        statusText: response.statusText,
+      };
+    },
   };
 
   /**
@@ -891,6 +904,17 @@ class ApiClient {
     getOverview: async (): Promise<ApiResponse<SupplierPortalStats>> => {
       const response = await this.client.get<SupplierPortalStats>(
         API_ENDPOINTS.supplierPortal.base,
+      );
+      return {
+        data: response.data,
+        status: response.status,
+        statusText: response.statusText,
+      };
+    },
+    // SCD-15 — full supplier directory rows
+    getDirectory: async (): Promise<ApiResponse<SupplierDirectoryRow[]>> => {
+      const response = await this.client.get<SupplierDirectoryRow[]>(
+        `${API_ENDPOINTS.supplierPortal.base}/directory`,
       );
       return {
         data: response.data,

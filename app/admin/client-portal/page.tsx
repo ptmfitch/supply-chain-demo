@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth-server";
 import { getClientPortalForAdmin } from "@/lib/server/client-portal-data";
+import { getClientDirectoryForAdmin } from "@/lib/server/client-directory-data";
 import AdminClientPortalContent from "@/components/admin/AdminClientPortalContent";
 
 /** REQ-0025 — blocking SSR prefetch (no Suspense shell flash). */
@@ -11,6 +12,14 @@ export default async function AdminClientPortalPage() {
   if (!user) redirect("/login");
   if (user.role !== "admin") redirect("/admin");
 
-  const initialStats = await getClientPortalForAdmin();
-  return <AdminClientPortalContent initialStats={initialStats} />;
+  const [initialStats, initialDirectory] = await Promise.all([
+    getClientPortalForAdmin(),
+    getClientDirectoryForAdmin(),
+  ]);
+  return (
+    <AdminClientPortalContent
+      initialStats={initialStats}
+      initialDirectory={initialDirectory}
+    />
+  );
 }

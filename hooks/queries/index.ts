@@ -119,10 +119,16 @@ export {
 } from "./use-user-management";
 
 // Admin Client Portal hooks
-export { useClientPortal } from "./use-client-portal";
+export {
+  useClientPortal,
+  useClientPortalDirectory,
+} from "./use-client-portal";
 
 // Admin Supplier Portal hooks
-export { useSupplierPortal } from "./use-supplier-portal";
+export {
+  useSupplierPortal,
+  useSupplierPortalDirectory,
+} from "./use-supplier-portal";
 
 // Stock Allocation hooks
 export {

@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth-server";
 import { getSupplierPortalForAdmin } from "@/lib/server/supplier-portal-data";
+import { getSupplierDirectoryForAdmin } from "@/lib/server/supplier-directory-data";
 import AdminSupplierPortalContent from "@/components/admin/AdminSupplierPortalContent";
 
 /** REQ-0025 — blocking SSR prefetch (no Suspense shell flash). */
@@ -11,6 +12,14 @@ export default async function AdminSupplierPortalPage() {
   if (!user) redirect("/login");
   if (user.role !== "admin") redirect("/admin");
 
-  const initialStats = await getSupplierPortalForAdmin(user.id);
-  return <AdminSupplierPortalContent initialStats={initialStats} />;
+  const [initialStats, initialDirectory] = await Promise.all([
+    getSupplierPortalForAdmin(user.id),
+    getSupplierDirectoryForAdmin(user.id),
+  ]);
+  return (
+    <AdminSupplierPortalContent
+      initialStats={initialStats}
+      initialDirectory={initialDirectory}
+    />
+  );
 }

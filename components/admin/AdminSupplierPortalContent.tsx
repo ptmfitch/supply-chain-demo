@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import type { ColumnDef } from "@tanstack/react-table";
 import { ProductStockStatusBadge } from "@/lib/ui/semantic-badges";
 import {
   CARD_LIST_DIVIDE_CLASS,
@@ -20,6 +21,8 @@ import {
   SectionCardHeader,
   AvatarInlineLink,
   ClientCompactDateTime,
+  ClientDate,
+  PersonNameEmailCell,
   RecentOrderStatusColumn,
 } from "@/components/shared";
 import { DETAIL_PAGE_HEADER_SPACING_CLASS } from "@/lib/ui/shell-layout-styles";
@@ -30,7 +33,12 @@ import {
   GLASS_BUTTON_SHELL_RESET,
 } from "@/lib/ui/glass-button-styles";
 import { getDisplayCommittedQuantity } from "@/lib/products/enrich-product-committed-quantity";
-import { useSupplierPortal } from "@/hooks/queries";
+import { useSupplierPortal, useSupplierPortalDirectory } from "@/hooks/queries";
+import {
+  AdminPortalDirectory,
+  DirectorySortableHeader,
+} from "@/components/admin/AdminPortalDirectory";
+import { formatStableCurrency, formatStableDate } from "@/lib/format";
 import {
   isDataSlotUnsettled,
   queryKeys,
@@ -48,74 +56,144 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ProductThumb } from "@/components/products/ProductOptionRow";
-import type { SupplierPortalStats, SupplierPortalSupplier } from "@/types";
-import {
-  AdminEmbedDataTable,
-  type AdminEmbedColumn,
-} from "@/components/admin/AdminEmbedDataTable";
+import type { SupplierDirectoryRow, SupplierPortalStats } from "@/types";
 
 export type AdminSupplierPortalContentProps = {
   initialStats?: SupplierPortalStats | null;
+  /** SCD-15 — SSR-prefetched directory rows */
+  initialDirectory?: SupplierDirectoryRow[] | null;
 };
 
 export default function AdminSupplierPortalContent({
   initialStats,
+  initialDirectory,
 }: AdminSupplierPortalContentProps = {}) {
   const portalQuery = useSupplierPortal(initialStats ?? undefined);
   const stats = portalQuery.data ?? initialStats ?? null;
   const dataLoading = isDataSlotUnsettled(portalQuery, initialStats);
 
+  const directoryQuery = useSupplierPortalDirectory(
+    initialDirectory ?? undefined,
+  );
+  const directoryRows =
+    directoryQuery.data ?? initialDirectory ?? ([] as SupplierDirectoryRow[]);
+  const directoryLoading = isDataSlotUnsettled(
+    directoryQuery,
+    initialDirectory,
+  );
+
   useSyncSsrQueryData(
     queryKeys.supplierPortal.overview(),
     initialStats ?? undefined,
   );
+  useSyncSsrQueryData(
+    queryKeys.supplierPortal.directory(),
+    initialDirectory ?? undefined,
+  );
 
-  const supplierColumns = useMemo<AdminEmbedColumn<SupplierPortalSupplier>[]>(
+  // SCD-15 — full directory columns (sortable numerics, semantic dates)
+  const directoryColumns = useMemo<ColumnDef<SupplierDirectoryRow>[]>(
     () => [
       {
-        id: "name",
-        header: "Name",
-        render: (s) => (
-          <AvatarInlineLink
-            label={s.name}
-            seed={s.userId ?? s.id}
-            image={s.image}
-            href={`/admin/suppliers/${s.id}`}
-            size={28}
-            linkClassName="text-sm font-normal"
+        accessorKey: "name",
+        header: ({ column }) => (
+          <DirectorySortableHeader column={column} label="Supplier" />
+        ),
+        cell: ({ row }) => (
+          <PersonNameEmailCell
+            seed={row.original.userId ?? row.original.supplierId}
+            name={row.original.name}
+            email={row.original.email}
+            image={row.original.image}
+            href={
+              row.original.userId
+                ? `/admin/user-management/${row.original.userId}`
+                : `/admin/suppliers/${row.original.supplierId}`
+            }
           />
         ),
       },
       {
-        id: "email",
-        header: "Email",
-        headerClassName: "hidden sm:table-cell",
-        cellClassName:
-          "hidden sm:table-cell text-gray-600 dark:text-gray-300 truncate max-w-[200px]",
-        render: (s) => s.email,
+        accessorKey: "joinedAt",
+        header: ({ column }) => (
+          <DirectorySortableHeader column={column} label="Joined" />
+        ),
+        cell: ({ getValue }) => (
+          <ClientDate date={getValue<string>()} semantic="created" />
+        ),
       },
       {
-        id: "products",
-        header: "Products",
-        headerClassName: "text-right",
-        cellClassName: "text-right text-gray-700 dark:text-white",
-        render: (s) => s.productCount,
+        accessorKey: "productCount",
+        header: ({ column }) => (
+          <DirectorySortableHeader
+            column={column}
+            label="Products"
+            align="right"
+          />
+        ),
+        cell: ({ getValue }) => (
+          <span className="block text-right text-gray-700 dark:text-white">
+            {getValue<number>()}
+          </span>
+        ),
       },
       {
-        id: "orders",
-        header: "Orders",
-        headerClassName: "text-right",
-        cellClassName: "text-right text-gray-700 dark:text-white",
-        render: (s) => s.orderCount,
+        accessorKey: "orderCount",
+        header: ({ column }) => (
+          <DirectorySortableHeader column={column} label="Orders" align="right" />
+        ),
+        cell: ({ getValue }) => (
+          <span className="block text-right text-gray-700 dark:text-white">
+            {getValue<number>()}
+          </span>
+        ),
       },
       {
-        id: "inventory",
-        header: "Inventory Value",
-        headerClassName: "text-right",
-        cellClassName: "text-right text-gray-700 dark:text-white",
-        render: (s) => `$${s.totalValue.toLocaleString()}`,
+        accessorKey: "inventoryValue",
+        header: ({ column }) => (
+          <DirectorySortableHeader
+            column={column}
+            label="Inventory Value"
+            align="right"
+          />
+        ),
+        cell: ({ getValue }) => (
+          <span className="block text-right text-gray-700 dark:text-white">
+            {formatStableCurrency(getValue<number>())}
+          </span>
+        ),
+      },
+      {
+        accessorKey: "lastActivityAt",
+        header: ({ column }) => (
+          <DirectorySortableHeader column={column} label="Last Activity" />
+        ),
+        cell: ({ getValue }) => {
+          const value = getValue<string | null>();
+          return value ? (
+            <ClientDate date={value} semantic="updated" />
+          ) : (
+            <span className="text-muted-foreground">—</span>
+          );
+        },
       },
     ],
+    [],
+  );
+
+  const buildDirectoryExportRows = useCallback(
+    (rows: SupplierDirectoryRow[]) =>
+      rows.map((s) => ({
+        Name: s.name,
+        Email: s.email ?? "-",
+        Joined: s.joinedAt ? formatStableDate(s.joinedAt) : "-",
+        Products: s.productCount,
+        "Inventory Value": s.inventoryValue,
+        Orders: s.orderCount,
+        "Last Activity": s.lastActivityAt
+          ? formatStableDate(s.lastActivityAt)
+          : "-",
+      })),
     [],
   );
 
@@ -485,24 +563,22 @@ export default function AdminSupplierPortalContent({
           </GlassCard>
         </div>
 
-        {/* Suppliers table — glassmorphic card */}
-        <GlassCard padding="body" variant="violet">
-          <SectionCardHeader
-            title="Suppliers"
-            description="Supplier entities and their product/order summary"
-            icon={Truck}
-            tone="violet"
-            className="mb-4"
-          />
-          <AdminEmbedDataTable
-            columns={supplierColumns}
-            data={stats?.suppliers ?? []}
-            loading={dataLoading}
-            emptyMessage="No suppliers yet. Add suppliers from the Suppliers page."
-            emptyIcon={Truck}
-            getRowKey={(s) => s.id}
-          />
-          {stats && stats.suppliers.length > 0 && (
+        {/* Supplier Directory — SCD-15 search/filter/sort/export */}
+        <AdminPortalDirectory
+          title="Supplier Directory"
+          description="Supplier entities — products, inventory value, orders, and last activity"
+          icon={Truck}
+          tone="emerald"
+          rows={directoryRows}
+          loading={directoryLoading}
+          columns={directoryColumns}
+          getRowKey={(s) => s.supplierId}
+          searchPlaceholder="Search by name or email..."
+          emptyMessage="No matching suppliers. Add suppliers from the Suppliers page."
+          exportLabel="Export Suppliers"
+          exportFileStem="supplier_directory"
+          buildExportRows={buildDirectoryExportRows}
+          footer={
             <Button
               variant="ghost"
               size="sm"
@@ -511,7 +587,7 @@ export default function AdminSupplierPortalContent({
                 "mt-4 group w-full gap-2",
                 GLASS_BUTTON_ICON_HOVER,
                 GLASS_BUTTON_SHELL_RESET,
-                GLASS_ACTION_BUTTON.violet,
+                GLASS_ACTION_BUTTON.emerald,
               )}
             >
               <Link href="/suppliers">
@@ -519,8 +595,8 @@ export default function AdminSupplierPortalContent({
                 Manage Suppliers
               </Link>
             </Button>
-          )}
-        </GlassCard>
+          }
+        />
       </div>
     </PageContentWrapper>
   );
