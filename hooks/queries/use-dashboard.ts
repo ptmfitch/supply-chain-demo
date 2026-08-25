@@ -7,7 +7,10 @@ import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api";
 import { queryKeys, withInitialData } from "@/lib/react-query";
 import { useAuth } from "@/contexts";
-import type { DashboardDateRange } from "@/lib/insights/dashboard-range";
+import {
+  isDashboardRangeWithinMax,
+  type DashboardDateRange,
+} from "@/lib/insights/dashboard-range";
 import type { DashboardStats } from "@/types";
 
 export function useDashboard(
@@ -51,6 +54,11 @@ export function useDashboardRangeAnalytics(
       );
       return response.data;
     },
-    enabled: !!userId && enabled && !!range.from && !!range.to,
+    enabled:
+      !!userId &&
+      enabled &&
+      !!range.from &&
+      !!range.to &&
+      isDashboardRangeWithinMax(range),
   });
 }

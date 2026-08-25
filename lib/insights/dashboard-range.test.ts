@@ -1,9 +1,11 @@
 import { describe, expect, it } from "vitest";
 import {
+  addRangeDays,
   buildDashboardRangeTrends,
   buildRangeBuckets,
   bucketKeyForDate,
   DASHBOARD_RANGE_MAX_DAYS,
+  DASHBOARD_RANGE_ROW_LIMIT,
   formatRangeDateLabel,
   getDashboardRangeForPreset,
   getDefaultDashboardRange,
@@ -11,6 +13,7 @@ import {
   isDefaultDashboardRange,
   rangeDayCount,
   resolveRangeGranularity,
+  tryDashboardRangeChange,
 } from "./dashboard-range";
 
 const NOW = new Date(2026, 7, 25); // Aug 25, 2026 (local)
@@ -57,6 +60,40 @@ describe("isDashboardRangeWithinMax", () => {
     expect(
       isDashboardRangeWithinMax({ from: "2025-08-25", to: "2026-08-25" }),
     ).toBe(true);
+  });
+});
+
+describe("tryDashboardRangeChange", () => {
+  const current = { from: "2025-08-25", to: "2026-08-25" };
+
+  it("applies an in-bounds From/To patch", () => {
+    expect(tryDashboardRangeChange(current, { from: "2026-01-01" })).toEqual({
+      from: "2026-01-01",
+      to: "2026-08-25",
+    });
+  });
+
+  it("rejects a span past DASHBOARD_RANGE_MAX_DAYS", () => {
+    expect(tryDashboardRangeChange(current, { from: "2024-01-01" })).toBeNull();
+  });
+
+  it("rejects from after to", () => {
+    expect(tryDashboardRangeChange(current, { from: "2026-09-01" })).toBeNull();
+  });
+});
+
+describe("addRangeDays", () => {
+  it("shifts a calendar day without UTC midnight drift", () => {
+    expect(addRangeDays("2026-08-25", -(DASHBOARD_RANGE_MAX_DAYS - 1))).toBe(
+      "2025-08-25",
+    );
+    expect(addRangeDays("2025-08-25", DASHBOARD_RANGE_MAX_DAYS - 1)).toBe(
+      "2026-08-25",
+    );
+  });
+
+  it("keeps the newest-first analytics row cap at 10k", () => {
+    expect(DASHBOARD_RANGE_ROW_LIMIT).toBe(10_000);
   });
 });
 

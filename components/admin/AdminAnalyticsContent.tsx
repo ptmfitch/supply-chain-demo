@@ -18,8 +18,10 @@ import {
 import { useDashboard, useDashboardRangeAnalytics } from "@/hooks/queries";
 import AdminDashboardRangeToolbar from "@/components/admin/AdminDashboardRangeToolbar";
 import {
+  DASHBOARD_RANGE_MAX_DAYS,
   formatRangeDateLabel,
   getDefaultDashboardRange,
+  isDashboardRangeWithinMax,
   isDefaultDashboardRange,
   type DashboardDateRange,
 } from "@/lib/insights/dashboard-range";
@@ -131,8 +133,18 @@ export default function AdminAnalyticsContent({
   );
   const isDefaultRange = isDefaultDashboardRange(range);
   const rangeQuery = useDashboardRangeAnalytics(range);
+  const rangeValid = isDashboardRangeWithinMax(range);
   const rangeAnalytics = rangeQuery.data ?? null;
-  const rangeLoading = rangeQuery.isPending || rangeQuery.isFetching;
+  const rangeLoading =
+    rangeValid && (rangeQuery.isPending || rangeQuery.isFetching);
+  const rangeChartEmpty = !rangeValid
+    ? `Choose a window of ${DASHBOARD_RANGE_MAX_DAYS} days or less.`
+    : rangeQuery.isError
+      ? "Couldn't load analytics for this date range."
+      : undefined;
+  const rangeEmptyMessage = rangeChartEmpty ? (
+    <p className="text-muted-foreground text-center py-8">{rangeChartEmpty}</p>
+  ) : undefined;
   const rangeLabel = isDefaultRange
     ? "Last 12 months"
     : `${formatRangeDateLabel(range.from)} – ${formatRangeDateLabel(range.to)}`;
@@ -537,6 +549,7 @@ export default function AdminAnalyticsContent({
               <DeferredChartSection
                 loading={dataLoading || rangeLoading}
                 hasData={(rangeAnalytics?.trends?.length ?? 0) > 0}
+                emptyMessage={rangeEmptyMessage}
               >
                 <ResponsiveChartContainer>
                   <AreaChart
@@ -626,6 +639,7 @@ export default function AdminAnalyticsContent({
               <DeferredChartSection
                 loading={dataLoading || rangeLoading}
                 hasData={(rangeAnalytics?.trends?.length ?? 0) > 0}
+                emptyMessage={rangeEmptyMessage}
               >
                 <ResponsiveChartContainer>
                   <BarChart
@@ -815,6 +829,7 @@ export default function AdminAnalyticsContent({
                 <DeferredChartSection
                   loading={dataLoading || rangeLoading}
                   hasData={!!rangeAnalytics}
+                  emptyMessage={rangeEmptyMessage}
                 >
                   <ResponsiveChartContainer>
                     <BarChart
@@ -922,6 +937,10 @@ export default function AdminAnalyticsContent({
                     <DataSlotPulse variant="text-md" className="w-full" />
                     <DataSlotPulse variant="text-md" className="w-full" />
                   </div>
+                ) : rangeChartEmpty ? (
+                  <p className="text-sm text-muted-foreground text-center py-8">
+                    {rangeChartEmpty}
+                  </p>
                 ) : (rangeAnalytics?.topProducts.length ?? 0) === 0 ? (
                   <p className="text-sm text-muted-foreground text-center py-8">
                     No order data yet
@@ -1124,6 +1143,7 @@ export default function AdminAnalyticsContent({
               <DeferredChartSection
                 loading={dataLoading || rangeLoading}
                 hasData={!!rangeAnalytics}
+                emptyMessage={rangeEmptyMessage}
               >
                 <ResponsiveChartContainer>
                   <BarChart

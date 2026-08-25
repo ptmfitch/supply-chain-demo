@@ -41,6 +41,12 @@ const WEEK_BUCKET_MAX_DAYS = 182;
 /** Inclusive max span for /api/dashboard/range (covers last-12-months + leap day). */
 export const DASHBOARD_RANGE_MAX_DAYS = 366;
 
+/**
+ * Newest-first findMany cap for range trends / Top Products / status bars.
+ * Status charts use the same slice so the dashboard cannot disagree with itself.
+ */
+export const DASHBOARD_RANGE_ROW_LIMIT = 10_000;
+
 function toDateOnlyString(d: Date): string {
   const y = d.getFullYear();
   const m = String(d.getMonth() + 1).padStart(2, "0");
@@ -129,6 +135,28 @@ export function isDashboardRangeWithinMax(range: DashboardDateRange): boolean {
   return (
     range.from <= range.to && rangeDayCount(range) <= DASHBOARD_RANGE_MAX_DAYS
   );
+}
+
+/** Shift a yyyy-mm-dd value by a whole number of local calendar days. */
+export function addRangeDays(value: string, days: number): string {
+  const d = parseRangeDate(value);
+  d.setDate(d.getDate() + days);
+  return toDateOnlyString(d);
+}
+
+/**
+ * Apply a From/To patch only when the result is ordered and within
+ * DASHBOARD_RANGE_MAX_DAYS. Returns null so the picker can keep the last
+ * valid range instead of firing a 400.
+ */
+export function tryDashboardRangeChange(
+  current: DashboardDateRange,
+  patch: Partial<DashboardDateRange>,
+): DashboardDateRange | null {
+  const next = { ...current, ...patch };
+  if (!next.from || !next.to) return null;
+  if (!isDashboardRangeWithinMax(next)) return null;
+  return next;
 }
 
 export function resolveRangeGranularity(

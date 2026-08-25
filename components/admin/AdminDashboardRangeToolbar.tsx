@@ -15,10 +15,14 @@ import { ExportMenuButton } from "@/components/shared";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import {
+  addRangeDays,
+  DASHBOARD_RANGE_MAX_DAYS,
   DASHBOARD_RANGE_PRESETS,
+  DASHBOARD_RANGE_ROW_LIMIT,
   formatRangeDateLabel,
   getDashboardRangeForPreset,
   getDefaultDashboardRange,
+  tryDashboardRangeChange,
   type DashboardDateRange,
 } from "@/lib/insights/dashboard-range";
 import { DIALOG_NATIVE_DATE_HIDE_INDICATOR } from "@/components/shared/dialog-form-field";
@@ -104,6 +108,24 @@ export default function AdminDashboardRangeToolbar({
   const { toast } = useToast();
   const fromInputRef = useRef<HTMLInputElement | null>(null);
   const toInputRef = useRef<HTMLInputElement | null>(null);
+  const fromMin = addRangeDays(range.to, -(DASHBOARD_RANGE_MAX_DAYS - 1));
+  const toMax = addRangeDays(range.from, DASHBOARD_RANGE_MAX_DAYS - 1);
+
+  const commitRange = useCallback(
+    (patch: Partial<DashboardDateRange>) => {
+      const next = tryDashboardRangeChange(range, patch);
+      if (!next) {
+        toast({
+          title: "Range too long",
+          description: `Choose a window of ${DASHBOARD_RANGE_MAX_DAYS} days or less.`,
+          variant: "destructive",
+        });
+        return;
+      }
+      onRangeChange(next);
+    },
+    [onRangeChange, range, toast],
+  );
 
   const exportToCSV = useCallback(() => {
     try {
@@ -225,6 +247,13 @@ export default function AdminDashboardRangeToolbar({
             <span className="text-xs text-gray-500 dark:text-white/60">
               Applies to charts &amp; Top Products. KPI cards stay all-time.
             </span>
+            {rangeAnalytics?.truncated ? (
+              <span className="text-xs text-amber-700 dark:text-amber-300">
+                Showing the latest{" "}
+                {DASHBOARD_RANGE_ROW_LIMIT.toLocaleString()} rows in this
+                range.
+              </span>
+            ) : null}
           </div>
         </div>
 
@@ -243,10 +272,10 @@ export default function AdminDashboardRangeToolbar({
                 type="date"
                 value={range.from}
                 onChange={(e) =>
-                  e.target.value &&
-                  onRangeChange({ ...range, from: e.target.value })
+                  e.target.value && commitRange({ from: e.target.value })
                 }
                 className={DASHBOARD_RANGE_DATE_INPUT_CLASS}
+                min={fromMin}
                 max={range.to || undefined}
               />
               <button
@@ -279,11 +308,11 @@ export default function AdminDashboardRangeToolbar({
                 type="date"
                 value={range.to}
                 onChange={(e) =>
-                  e.target.value &&
-                  onRangeChange({ ...range, to: e.target.value })
+                  e.target.value && commitRange({ to: e.target.value })
                 }
                 className={DASHBOARD_RANGE_DATE_INPUT_CLASS}
                 min={range.from || undefined}
+                max={toMax}
               />
               <button
                 type="button"

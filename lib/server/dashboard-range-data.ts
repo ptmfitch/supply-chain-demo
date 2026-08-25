@@ -14,6 +14,7 @@ import { mergeProductListWhere } from "@/lib/products/product-query";
 import { getStoreOrderIds } from "@/lib/invoices/store-order-ids";
 import {
   buildDashboardRangeTrends,
+  DASHBOARD_RANGE_ROW_LIMIT,
   parseRangeDate,
   rangeEndOfDay,
   type DashboardDateRange,
@@ -24,9 +25,6 @@ import type {
   DashboardOrderStatusDist,
   DashboardInvoiceStatusDist,
 } from "@/types";
-
-/** Hard cap so a cache-miss range cannot load unbounded rows. */
-const RANGE_ANALYTICS_ROW_LIMIT = 10_000;
 
 export async function getDashboardRangeAnalyticsForAdmin(
   userId: string,
@@ -55,37 +53,32 @@ export async function getDashboardRangeAnalyticsForAdmin(
     createdAt: createdInRange,
   };
 
-  const [ordersRaw, invoicesRaw, productsRaw, orderStatusGroups, invoiceStatusGroups] =
-    await Promise.all([
-      prisma.order.findMany({
-        where: whereRangeOrders,
-        select: { id: true, createdAt: true, total: true, status: true },
-        orderBy: { createdAt: "asc" },
-        take: RANGE_ANALYTICS_ROW_LIMIT,
-      }),
-      prisma.invoice.findMany({
-        where: whereRangeInvoices,
-        select: { createdAt: true, total: true },
-        orderBy: { createdAt: "asc" },
-        take: RANGE_ANALYTICS_ROW_LIMIT,
-      }),
-      prisma.product.findMany({
-        where: mergeProductListWhere({ userId, createdAt: createdInRange }),
-        select: { createdAt: true },
-        orderBy: { createdAt: "asc" },
-        take: RANGE_ANALYTICS_ROW_LIMIT,
-      }),
-      prisma.order.groupBy({
-        by: ["status"],
-        where: whereRangeOrders,
-        _count: { id: true },
-      }),
-      prisma.invoice.groupBy({
-        by: ["status"],
-        where: whereRangeInvoices,
-        _count: { id: true },
-      }),
-    ]);
+  // Newest-first take: bound memory, keep recent buckets/bestsellers, and
+  // derive status bars from the same rows so charts cannot disagree.
+  const [ordersRaw, invoicesRaw, productsRaw] = await Promise.all([
+    prisma.order.findMany({
+      where: whereRangeOrders,
+      select: { id: true, createdAt: true, total: true, status: true },
+      orderBy: { createdAt: "desc" },
+      take: DASHBOARD_RANGE_ROW_LIMIT,
+    }),
+    prisma.invoice.findMany({
+      where: whereRangeInvoices,
+      select: { createdAt: true, total: true, status: true },
+      orderBy: { createdAt: "desc" },
+      take: DASHBOARD_RANGE_ROW_LIMIT,
+    }),
+    prisma.product.findMany({
+      where: mergeProductListWhere({ userId, createdAt: createdInRange }),
+      select: { createdAt: true },
+      orderBy: { createdAt: "desc" },
+      take: DASHBOARD_RANGE_ROW_LIMIT,
+    }),
+  ]);
+  const truncated =
+    ordersRaw.length >= DASHBOARD_RANGE_ROW_LIMIT ||
+    invoicesRaw.length >= DASHBOARD_RANGE_ROW_LIMIT ||
+    productsRaw.length >= DASHBOARD_RANGE_ROW_LIMIT;
 
   const rangeOrderIds = ordersRaw.map((o) => o.id);
   const topProductsRaw =
@@ -122,10 +115,10 @@ export async function getDashboardRangeAnalyticsForAdmin(
     delivered: 0,
     cancelled: 0,
   };
-  for (const g of orderStatusGroups) {
-    const status = g.status as keyof DashboardOrderStatusDist;
+  for (const o of ordersRaw) {
+    const status = o.status as keyof DashboardOrderStatusDist;
     if (status in orderStatusDistribution) {
-      orderStatusDistribution[status] = g._count.id;
+      orderStatusDistribution[status] += 1;
     }
   }
 
@@ -136,10 +129,10 @@ export async function getDashboardRangeAnalyticsForAdmin(
     overdue: 0,
     cancelled: 0,
   };
-  for (const g of invoiceStatusGroups) {
-    const status = g.status as keyof DashboardInvoiceStatusDist;
+  for (const inv of invoicesRaw) {
+    const status = inv.status as keyof DashboardInvoiceStatusDist;
     if (status in invoiceStatusDistribution) {
-      invoiceStatusDistribution[status] = g._count.id;
+      invoiceStatusDistribution[status] += 1;
     }
   }
 
@@ -151,6 +144,7 @@ export async function getDashboardRangeAnalyticsForAdmin(
     orderStatusDistribution,
     invoiceStatusDistribution,
     topProducts,
+    truncated,
   };
   await setCache(cacheKey, result, 300, { fetchedAt: cacheReadStartedAt });
   return result;

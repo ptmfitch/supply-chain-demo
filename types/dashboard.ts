@@ -295,6 +295,8 @@ export interface DashboardRangeAnalytics {
   orderStatusDistribution: DashboardOrderStatusDist;
   invoiceStatusDistribution: DashboardInvoiceStatusDist;
   topProducts: DashboardTopProduct[];
+  /** True when a series hit DASHBOARD_RANGE_ROW_LIMIT (newest rows kept). */
+  truncated?: boolean;
 }
 
 export interface DashboardStats {
