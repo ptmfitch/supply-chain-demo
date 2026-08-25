@@ -41,6 +41,7 @@ for _ in $(seq 1 60); do
   sudo docker exec "$MONGO_CONTAINER" mongosh --quiet --eval 'db.runCommand({ ping: 1 }).ok' 2>/dev/null | grep -q 1 && break
   sleep 1
 done
+sudo docker exec "$MONGO_CONTAINER" mongosh --quiet --eval 'db.runCommand({ ping: 1 }).ok' 2>/dev/null | grep -q 1 || { echo "mongod failed to accept connections"; exit 1; }
 
 echo "==> [start] Ensure replica set initiated (transactions require a replica set)"
 sudo docker exec "$MONGO_CONTAINER" mongosh --quiet --eval \
@@ -51,6 +52,7 @@ for _ in $(seq 1 60); do
   sudo docker exec "$MONGO_CONTAINER" mongosh --quiet --eval 'db.hello().isWritablePrimary' 2>/dev/null | grep -q true && break
   sleep 1
 done
+sudo docker exec "$MONGO_CONTAINER" mongosh --quiet --eval 'db.hello().isWritablePrimary' 2>/dev/null | grep -q true || { echo "MongoDB replica set failed to reach PRIMARY"; exit 1; }
 
 echo "==> [start] Sync Prisma schema (indexes) to MongoDB"
 npx prisma db push --skip-generate
