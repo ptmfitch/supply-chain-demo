@@ -19,6 +19,7 @@ import {
   MessageSquare,
   FileCode,
   Activity,
+  Check,
 } from "lucide-react";
 import { AiFillProduct } from "react-icons/ai";
 
@@ -27,6 +28,8 @@ import { setPostLogoutGoodbye } from "@/lib/auth/post-logout-goodbye";
 import { clearAuthToastMarkers } from "@/components/shared/AuthSessionToasts";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import { useColourBlindModeControls } from "@/hooks/use-colour-blind-mode";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -74,11 +77,35 @@ const PROFILE_MENU_LINKS = [
   { path: PROFILE_MENU_PATHS[3], label: "API Status", Icon: Activity },
 ] as const;
 
+function ThemeMenuRow({
+  label,
+  selected,
+  onSelect,
+}: {
+  label: string;
+  selected: boolean;
+  onSelect: () => void;
+}) {
+  return (
+    <DropdownMenuItem
+      onClick={onSelect}
+      className={`${DROPDOWN_NAV_ITEM_CLASS} justify-between gap-2`}
+    >
+      <span>{label}</span>
+      {selected ? (
+        <Check className="h-4 w-4 shrink-0 text-sky-600 dark:text-sky-400" />
+      ) : null}
+    </DropdownMenuItem>
+  );
+}
+
 /**
- * Theme toggle component (inline ModeToggle)
+ * Theme toggle (Light / Dark / System) plus colour-blind switch (REQ-0230).
  */
 function ModeToggle() {
-  const { setTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
+  const { enabled: colourBlind, setEnabled: setColourBlind } =
+    useColourBlindModeControls();
 
   return (
     <DropdownMenu>
@@ -96,26 +123,42 @@ function ModeToggle() {
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="end"
-        className={`w-48 ${DROPDOWN_NAV_CONTENT_CLASS}`}
+        className={`w-56 ${DROPDOWN_NAV_CONTENT_CLASS}`}
       >
-        <DropdownMenuItem
-          onClick={() => setTheme("light")}
-          className={DROPDOWN_NAV_ITEM_CLASS}
+        <ThemeMenuRow
+          label="Light"
+          selected={theme === "light"}
+          onSelect={() => setTheme("light")}
+        />
+        <ThemeMenuRow
+          label="Dark"
+          selected={theme === "dark"}
+          onSelect={() => setTheme("dark")}
+        />
+        <ThemeMenuRow
+          label="System"
+          selected={theme === "system"}
+          onSelect={() => setTheme("system")}
+        />
+        <DropdownMenuSeparator className="bg-gray-200 dark:bg-gray-700" />
+        <div
+          className="flex items-center gap-2 overflow-hidden px-2 pb-1.5 pt-2"
+          onPointerDown={(event) => event.stopPropagation()}
         >
-          Light
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => setTheme("dark")}
-          className={DROPDOWN_NAV_ITEM_CLASS}
-        >
-          Dark
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => setTheme("system")}
-          className={DROPDOWN_NAV_ITEM_CLASS}
-        >
-          System
-        </DropdownMenuItem>
+          <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+            <p className="text-sm font-medium text-gray-700 dark:text-white">
+              Colour-blind mode
+            </p>
+            <p className="text-xs font-normal text-gray-500 dark:text-gray-400">
+              Adjusts status hues
+            </p>
+          </div>
+          <Switch
+            checked={colourBlind}
+            onCheckedChange={setColourBlind}
+            aria-label="Colour-blind mode"
+          />
+        </div>
       </DropdownMenuContent>
     </DropdownMenu>
   );

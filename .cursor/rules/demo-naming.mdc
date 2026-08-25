@@ -1,0 +1,12 @@
+---
+description: Industry stem is supply-chain-demo only. Never use customer names in titles, UI, commits, or docs.
+alwaysApply: true
+---
+
+# Demo naming (supply-chain-demo)
+
+- The industry stem is **supply-chain-demo** only.
+- Never put a customer name (or a lookalike) in titles, UI copy, commits, branch names, PR text, or docs.
+- Do not invent customer facts, logos, or account names.
+- GitHub owner for this demo is `ptmfitch`. Jira project name is `supply-chain-demo`.
+- Collaboration later: Figma and Microsoft Teams. There is no Slack channel — do not add one.

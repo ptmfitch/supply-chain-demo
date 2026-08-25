@@ -88,7 +88,6 @@ import {
 import {
   buildSalesChartData,
   buildWarehouseAllocationStockChartData,
-  WAREHOUSE_STOCK_PIE_COLORS,
 } from "@/lib/ui/catalog-insights-chart-data";
 import { DetailInfoRow } from "@/components/orders/detail";
 import {
@@ -887,8 +886,8 @@ export default function ProductDetailPage({
               stockChartTrailing={warehouseStockChartTrailing}
               salesChartData={salesChartData}
               stockChartData={stockChartData}
-              stockPieColors={
-                insights.warehouseStock ? WAREHOUSE_STOCK_PIE_COLORS : undefined
+              stockPieKind={
+                insights.warehouseStock ? "warehouse" : "catalog"
               }
               productForecast={productForecast}
               productHref={productHref}

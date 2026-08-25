@@ -4,9 +4,9 @@
  *
  * Security headers are mirrored in vercel.json (edge). Keep keys/values in sync.
  * Immutable Cache-Control for /_next/static lives ONLY here (not vercel.json) and
- * only in production. In `next dev` those chunk URLs are not content-hashed the
- * same way — `immutable` makes the browser keep a stale Navbar/client bundle
- * while SSR HTML is fresh (hydration mismatch + Next.js Cache-Control warning).
+ * only in production. Turbopack `next dev` chunk URLs are not content-hashed the
+ * same way — `immutable` keeps a stale Navbar/client bundle while SSR HTML is
+ * fresh (hydration mismatch, "module factory is not available", Cache-Control warning).
  */
 
 export type HeaderEntry = { key: string; value: string };

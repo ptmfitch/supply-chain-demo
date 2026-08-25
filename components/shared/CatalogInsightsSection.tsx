@@ -27,7 +27,11 @@ import {
   createChartBarLabelRenderer,
   formatChartCurrencyLabel,
 } from "@/lib/ui/chart-point-label";
-import { CATALOG_STOCK_PIE_COLORS } from "@/lib/ui/catalog-insights-chart-data";
+import {
+  getCatalogStockPieColors,
+  getWarehouseStockPieColors,
+} from "@/lib/ui/colour-blind-mode";
+import { useColourBlindChartOptions } from "@/hooks/use-colour-blind-mode";
 import { DetailInfoRow } from "@/components/orders/detail";
 import { GlassCard, GlassCardBody } from "@/components/shared";
 import { UrgentReorderForecastTable } from "@/components/shared/catalog-detail/UrgentReorderForecastTable";
@@ -69,6 +73,8 @@ export type CatalogInsightsSectionProps = {
   salesChartData: Array<{ label: string; revenue: number; units: number }>;
   stockChartData: Array<{ name: string; value: number }>;
   stockPieColors?: string[];
+  /** Default catalog (available/low/out). Warehouse = available/reserved/unallocated. */
+  stockPieKind?: "catalog" | "warehouse";
   /** Multi-product rollup (category/supplier/warehouse). */
   urgentReorderCount?: number;
   predictedDailyDemand?: number;
@@ -112,7 +118,8 @@ export function CatalogInsightsSection({
   stockChartTrailing,
   salesChartData,
   stockChartData,
-  stockPieColors = CATALOG_STOCK_PIE_COLORS,
+  stockPieColors,
+  stockPieKind = "catalog",
   urgentReorderCount,
   predictedDailyDemand,
   productForecast,
@@ -124,6 +131,12 @@ export function CatalogInsightsSection({
   catalogAllocationSummary,
   className,
 }: CatalogInsightsSectionProps) {
+  const chartOptions = useColourBlindChartOptions();
+  const resolvedStockPieColors =
+    stockPieColors ??
+    (stockPieKind === "warehouse"
+      ? getWarehouseStockPieColors(chartOptions)
+      : getCatalogStockPieColors(chartOptions));
   const showUrgentTable =
     isAdminRole &&
     productHref &&
@@ -395,7 +408,11 @@ export function CatalogInsightsSection({
                 {stockChartData.map((_, index) => (
                   <Cell
                     key={`cell-${index}`}
-                    fill={stockPieColors[index % stockPieColors.length]}
+                    fill={
+                      resolvedStockPieColors[
+                        index % resolvedStockPieColors.length
+                      ]
+                    }
                   />
                 ))}
               </Pie>

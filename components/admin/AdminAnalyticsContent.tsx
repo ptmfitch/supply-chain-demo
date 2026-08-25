@@ -1220,13 +1220,13 @@ export default function AdminAnalyticsContent({
                   />
                 </div>
 
-                {/* Warehouse Type Distribution */}
+                {/* Warehouse Type Distribution — REQ-0228 unit label */}
                 {stats.warehouseAnalytics.typeDistribution.length > 0 && (
                   <ChartCard
                     variant="teal"
                     title="Warehouses by Type"
                     icon={Warehouse}
-                    description="Store-wide"
+                    description="Location count by type"
                   >
                     <DeferredChartSection
                       loading={dataLoading}
