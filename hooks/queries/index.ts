@@ -104,7 +104,7 @@ export {
 } from "./use-product-reviews";
 
 // Dashboard (admin overview) hooks
-export { useDashboard } from "./use-dashboard";
+export { useDashboard, useDashboardRangeAnalytics } from "./use-dashboard";
 
 // Admin sidebar counts hooks
 export { useAdminCounts } from "./use-admin-counts";

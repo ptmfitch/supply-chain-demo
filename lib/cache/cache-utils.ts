@@ -375,6 +375,9 @@ export const cacheKeys = {
       userId
         ? `dashboard:overview:v7:${userId}`
         : "dashboard:overview:v7",
+    // SCD-11 — range-scoped trends/distributions/top products; cleared by dashboard:* pattern
+    rangeAnalytics: (userId: string, from: string, to: string) =>
+      `dashboard:range:v1:${userId}:${from}:${to}`,
     pattern: "dashboard:*",
   },
 

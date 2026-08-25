@@ -275,6 +275,28 @@ export interface DashboardSelfOthersBreakdown {
   revenueOthers: number;
 }
 
+/**
+ * SCD-11 — trend bucket granularity for the Store Overview date range.
+ * Short ranges bucket by day, medium by ISO week, long by month.
+ */
+export type DashboardRangeGranularity = "day" | "week" | "month";
+
+/**
+ * SCD-11 — range-scoped slice of the Store Overview dashboard.
+ * Covers only the surfaces the date-range picker recomputes: trend charts,
+ * order/invoice status distributions, and the Top Products table.
+ * All-time KPI cards keep reading DashboardStats.
+ */
+export interface DashboardRangeAnalytics {
+  from: string;
+  to: string;
+  granularity: DashboardRangeGranularity;
+  trends: DashboardTrendPoint[];
+  orderStatusDistribution: DashboardOrderStatusDist;
+  invoiceStatusDistribution: DashboardInvoiceStatusDist;
+  topProducts: DashboardTopProduct[];
+}
+
 export interface DashboardStats {
   counts: DashboardCounts;
   revenue: DashboardRevenue;

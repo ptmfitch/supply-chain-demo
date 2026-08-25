@@ -778,118 +778,7 @@ export async function getDashboardForAdmin(
     }
   }
 
-  // Build top products (REQ-0173 — catalog enrich for denser Product cell)
-  const topProductIds = [
-    ...new Set(topProductsRaw.map((p) => p.productId).filter(Boolean)),
-  ];
-  const topProductRows =
-    topProductIds.length > 0
-      ? await prisma.product.findMany({
-          where: { id: { in: topProductIds } },
-          select: {
-            id: true,
-            name: true,
-            sku: true,
-            imageUrl: true,
-            categoryId: true,
-            supplierId: true,
-          },
-        })
-      : [];
-  const topProductById = new Map(topProductRows.map((p) => [p.id, p]));
-  const topCategoryIds = [
-    ...new Set(
-      topProductRows
-        .map((p) => p.categoryId)
-        .filter((id): id is string => Boolean(id)),
-    ),
-  ];
-  const topSupplierIds = [
-    ...new Set(
-      topProductRows
-        .map((p) => p.supplierId)
-        .filter((id): id is string => Boolean(id)),
-    ),
-  ];
-  const [topCategories, topSuppliers] = await Promise.all([
-    topCategoryIds.length > 0
-      ? prisma.category.findMany({
-          where: { id: { in: topCategoryIds } },
-          select: { id: true, name: true },
-        })
-      : Promise.resolve([] as { id: string; name: string }[]),
-    topSupplierIds.length > 0
-      ? prisma.supplier.findMany({
-          where: { id: { in: topSupplierIds } },
-          select: { id: true, name: true, userId: true },
-        })
-      : Promise.resolve(
-          [] as { id: string; name: string; userId: string | null }[],
-        ),
-  ]);
-  const topCategoryNameById = new Map(topCategories.map((c) => [c.id, c.name]));
-  const topSupplierById = new Map(topSuppliers.map((s) => [s.id, s]));
-  const topSupplierUserIds = [
-    ...new Set(
-      topSuppliers
-        .map((s) => s.userId)
-        .filter((id): id is string => Boolean(id)),
-    ),
-  ];
-  const topSupplierUsers =
-    topSupplierUserIds.length > 0
-      ? await prisma.user.findMany({
-          where: { id: { in: topSupplierUserIds } },
-          select: { id: true, image: true },
-        })
-      : [];
-  const topUserImageById = new Map(
-    topSupplierUsers.map((u) => [u.id, u.image]),
-  );
-
-  const topProductsMerged: DashboardTopProduct[] = topProductsRaw.map((p) => {
-    const catalog = topProductById.get(p.productId);
-    const supplier = catalog?.supplierId
-      ? topSupplierById.get(catalog.supplierId)
-      : undefined;
-    return {
-      productId: p.productId,
-      // Prefer live catalog name/sku; groupBy is productId-only (unique keys)
-      productName: catalog?.name ?? "Unknown product",
-      sku: catalog?.sku ?? "",
-      orderCount: p._count.id,
-      totalQuantity: p._sum.quantity ?? 0,
-      totalRevenue: p._sum.subtotal ?? 0,
-      imageUrl: catalog?.imageUrl ?? null,
-      categoryId: catalog?.categoryId ?? null,
-      categoryName: catalog?.categoryId
-        ? (topCategoryNameById.get(catalog.categoryId) ?? null)
-        : null,
-      supplierId: catalog?.supplierId ?? null,
-      supplierName: supplier?.name ?? null,
-      supplierImage: supplier?.userId
-        ? (topUserImageById.get(supplier.userId) ?? null)
-        : null,
-    };
-  });
-  // Collapse any stale Redis rows still split by name/sku snapshot (pre-fix)
-  const topProductsById = new Map<string, DashboardTopProduct>();
-  for (const row of topProductsMerged) {
-    const prev = topProductsById.get(row.productId);
-    if (!prev) {
-      topProductsById.set(row.productId, row);
-      continue;
-    }
-    topProductsById.set(row.productId, {
-      ...prev,
-      orderCount: prev.orderCount + row.orderCount,
-      totalQuantity: prev.totalQuantity + row.totalQuantity,
-      totalRevenue: prev.totalRevenue + row.totalRevenue,
-    });
-  }
-  const topProducts = [...topProductsById.values()].sort(
-    (a, b) => b.orderCount - a.orderCount,
-  );
+  const topProducts = await enrichDashboardTopProducts(topProductsRaw);
 
   // Calculate average order value (all orders for backward compatibility)
   const totalOrderRevenue = Number(orderSum._sum.total ?? 0);
@@ -1007,4 +896,132 @@ export async function getDashboardForAdmin(
   };
   await setCache(cacheKey, result, 300, { fetchedAt: cacheReadStartedAt });
   return result;
+}
+
+/** orderItem groupBy(productId) row shape shared by the all-time and range paths. */
+export type TopProductGroupRow = {
+  productId: string;
+  _count: { id: number };
+  _sum: { quantity: number | null; subtotal: number | null };
+};
+
+/**
+ * REQ-0173 / SCD-11 — catalog enrich for the Top Products table (image,
+ * category/supplier names, supplier avatar). Shared by getDashboardForAdmin
+ * and the range-scoped analytics (lib/server/dashboard-range-data.ts).
+ */
+export async function enrichDashboardTopProducts(
+  topProductsRaw: TopProductGroupRow[],
+): Promise<DashboardTopProduct[]> {
+  const topProductIds = [
+    ...new Set(topProductsRaw.map((p) => p.productId).filter(Boolean)),
+  ];
+  const topProductRows =
+    topProductIds.length > 0
+      ? await prisma.product.findMany({
+          where: { id: { in: topProductIds } },
+          select: {
+            id: true,
+            name: true,
+            sku: true,
+            imageUrl: true,
+            categoryId: true,
+            supplierId: true,
+          },
+        })
+      : [];
+  const topProductById = new Map(topProductRows.map((p) => [p.id, p]));
+  const topCategoryIds = [
+    ...new Set(
+      topProductRows
+        .map((p) => p.categoryId)
+        .filter((id): id is string => Boolean(id)),
+    ),
+  ];
+  const topSupplierIds = [
+    ...new Set(
+      topProductRows
+        .map((p) => p.supplierId)
+        .filter((id): id is string => Boolean(id)),
+    ),
+  ];
+  const [topCategories, topSuppliers] = await Promise.all([
+    topCategoryIds.length > 0
+      ? prisma.category.findMany({
+          where: { id: { in: topCategoryIds } },
+          select: { id: true, name: true },
+        })
+      : Promise.resolve([] as { id: string; name: string }[]),
+    topSupplierIds.length > 0
+      ? prisma.supplier.findMany({
+          where: { id: { in: topSupplierIds } },
+          select: { id: true, name: true, userId: true },
+        })
+      : Promise.resolve(
+          [] as { id: string; name: string; userId: string | null }[],
+        ),
+  ]);
+  const topCategoryNameById = new Map(topCategories.map((c) => [c.id, c.name]));
+  const topSupplierById = new Map(topSuppliers.map((s) => [s.id, s]));
+  const topSupplierUserIds = [
+    ...new Set(
+      topSuppliers
+        .map((s) => s.userId)
+        .filter((id): id is string => Boolean(id)),
+    ),
+  ];
+  const topSupplierUsers =
+    topSupplierUserIds.length > 0
+      ? await prisma.user.findMany({
+          where: { id: { in: topSupplierUserIds } },
+          select: { id: true, image: true },
+        })
+      : [];
+  const topUserImageById = new Map(
+    topSupplierUsers.map((u) => [u.id, u.image]),
+  );
+
+  const topProductsMerged: DashboardTopProduct[] = topProductsRaw.map((p) => {
+    const catalog = topProductById.get(p.productId);
+    const supplier = catalog?.supplierId
+      ? topSupplierById.get(catalog.supplierId)
+      : undefined;
+    return {
+      productId: p.productId,
+      // Prefer live catalog name/sku; groupBy is productId-only (unique keys)
+      productName: catalog?.name ?? "Unknown product",
+      sku: catalog?.sku ?? "",
+      orderCount: p._count.id,
+      totalQuantity: p._sum.quantity ?? 0,
+      totalRevenue: p._sum.subtotal ?? 0,
+      imageUrl: catalog?.imageUrl ?? null,
+      categoryId: catalog?.categoryId ?? null,
+      categoryName: catalog?.categoryId
+        ? (topCategoryNameById.get(catalog.categoryId) ?? null)
+        : null,
+      supplierId: catalog?.supplierId ?? null,
+      supplierName: supplier?.name ?? null,
+      supplierImage: supplier?.userId
+        ? (topUserImageById.get(supplier.userId) ?? null)
+        : null,
+    };
+  });
+  // Collapse any stale Redis rows still split by name/sku snapshot (pre-fix)
+  const topProductsById = new Map<string, DashboardTopProduct>();
+  for (const row of topProductsMerged) {
+    const prev = topProductsById.get(row.productId);
+    if (!prev) {
+      topProductsById.set(row.productId, row);
+      continue;
+    }
+    topProductsById.set(row.productId, {
+      ...prev,
+      orderCount: prev.orderCount + row.orderCount,
+      totalQuantity: prev.totalQuantity + row.totalQuantity,
+      totalRevenue: prev.totalRevenue + row.totalRevenue,
+    });
+  }
+  return [...topProductsById.values()].sort(
+    (a, b) => b.orderCount - a.orderCount,
+  );
 }

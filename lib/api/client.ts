@@ -57,6 +57,7 @@ import type {
   UpdateProductReviewInput,
   ReviewEligibilitySlot,
   DashboardStats,
+  DashboardRangeAnalytics,
   UserForAdmin,
   UpdateUserAdminInput,
   CreateUserAdminInput,
@@ -792,6 +793,21 @@ class ApiClient {
     getOverview: async (): Promise<ApiResponse<DashboardStats>> => {
       const response = await this.client.get<DashboardStats>(
         API_ENDPOINTS.dashboard.base,
+      );
+      return {
+        data: response.data,
+        status: response.status,
+        statusText: response.statusText,
+      };
+    },
+    // SCD-11 — range-scoped trends/distributions/top products
+    getRangeAnalytics: async (
+      from: string,
+      to: string,
+    ): Promise<ApiResponse<DashboardRangeAnalytics>> => {
+      const response = await this.client.get<DashboardRangeAnalytics>(
+        `${API_ENDPOINTS.dashboard.base}/range`,
+        { params: { from, to } },
       );
       return {
         data: response.data,

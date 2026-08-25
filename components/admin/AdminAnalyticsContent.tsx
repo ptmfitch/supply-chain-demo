@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ChartCard } from "@/components/ui/chart-card";
@@ -15,7 +15,15 @@ import {
   GLASS_BUTTON_SHELL_RESET,
   GLASS_PRIMARY_BUTTON,
 } from "@/lib/ui/glass-button-styles";
-import { useDashboard } from "@/hooks/queries";
+import { useDashboard, useDashboardRangeAnalytics } from "@/hooks/queries";
+import AdminDashboardRangeToolbar from "@/components/admin/AdminDashboardRangeToolbar";
+import {
+  deriveDefaultRangeAnalyticsFromStats,
+  getDefaultDashboardRange,
+  isDefaultDashboardRange,
+  type DashboardDateRange,
+} from "@/lib/insights/dashboard-range";
+import { DataSlotPulse } from "@/components/shared/DataSlotPulse";
 import {
   isDataSlotUnsettled,
   queryKeys,
@@ -64,7 +72,11 @@ import {
   RecentOrderStatusColumn,
 } from "@/components/shared";
 import { ProductThumb } from "@/components/products/ProductOptionRow";
-import { formatStableCurrency, formatClientCurrency } from "@/lib/format";
+import {
+  formatStableCurrency,
+  formatClientCurrency,
+  formatStableDate,
+} from "@/lib/format";
 import type { DashboardStats } from "@/types";
 import ForecastingSection from "@/components/admin/ForecastingSection";
 import {
@@ -113,6 +125,27 @@ export default function AdminAnalyticsContent({
   const [aiText, setAiText] = useState<string | null>(null);
   const [aiLoading, setAiLoading] = useState(false);
   const [aiUnavailable, setAiUnavailable] = useState(false);
+
+  // SCD-11 — date range for charts/top products; default derives from stats (no fetch)
+  const [range, setRange] = useState<DashboardDateRange>(() =>
+    getDefaultDashboardRange(),
+  );
+  const isDefaultRange = isDefaultDashboardRange(range);
+  const rangeQuery = useDashboardRangeAnalytics(range, {
+    enabled: !isDefaultRange,
+  });
+  const rangeAnalytics = useMemo(() => {
+    if (isDefaultRange) {
+      return stats ? deriveDefaultRangeAnalyticsFromStats(stats, range) : null;
+    }
+    return rangeQuery.data ?? null;
+  }, [isDefaultRange, range, rangeQuery.data, stats]);
+  const rangeLoading = isDefaultRange
+    ? dataLoading
+    : rangeQuery.isPending || rangeQuery.isFetching;
+  const rangeLabel = isDefaultRange
+    ? "Last 12 months"
+    : `${formatStableDate(range.from)} – ${formatStableDate(range.to)}`;
 
   const buildAiSummary = useCallback(() => {
     if (!stats) return "";
@@ -494,22 +527,30 @@ export default function AdminAnalyticsContent({
           />
         </div>
 
+        {/* SCD-11 — range picker + export; scopes the chart sections below */}
+        <AdminDashboardRangeToolbar
+          range={range}
+          onRangeChange={setRange}
+          isDefaultRange={isDefaultRange}
+          rangeAnalytics={rangeAnalytics}
+        />
+
         {/* Trending charts */}
-        {stats && stats.trends?.length > 0 && (
+        {stats && rangeAnalytics && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
             <ChartCard
               variant="sky"
               title="Orders & revenue over time"
               icon={BarChart3}
-              description="Last 12 months. Revenue = order totals (excl. cancelled)."
+              description={`${rangeLabel}. Revenue = order totals (excl. cancelled).`}
             >
               <DeferredChartSection
-                loading={dataLoading}
-                hasData={(stats.trends?.length ?? 0) > 0}
+                loading={dataLoading || rangeLoading}
+                hasData={(rangeAnalytics.trends?.length ?? 0) > 0}
               >
                 <ResponsiveChartContainer>
                   <AreaChart
-                    data={stats.trends}
+                    data={rangeAnalytics.trends}
                     margin={{
                       top: CHART_LABEL_TOP_MARGIN,
                       right: 8,
@@ -563,7 +604,7 @@ export default function AdminAnalyticsContent({
                       name="orders"
                       dot={{ r: 3 }}
                       label={createChartDotLabelRenderer(
-                        stats.trends?.length ?? 0,
+                        rangeAnalytics.trends?.length ?? 0,
                         formatChartCountLabel,
                         false,
                       )}
@@ -577,7 +618,7 @@ export default function AdminAnalyticsContent({
                       name="revenue"
                       dot={{ r: 3 }}
                       label={createChartDotLabelRenderer(
-                        stats.trends?.length ?? 0,
+                        rangeAnalytics.trends?.length ?? 0,
                         undefined,
                         false,
                       )}
@@ -590,15 +631,15 @@ export default function AdminAnalyticsContent({
               variant="violet"
               title="New products & invoices"
               icon={TrendingUp}
-              description="Last 12 months"
+              description={rangeLabel}
             >
               <DeferredChartSection
-                loading={dataLoading}
-                hasData={(stats.trends?.length ?? 0) > 0}
+                loading={dataLoading || rangeLoading}
+                hasData={(rangeAnalytics.trends?.length ?? 0) > 0}
               >
                 <ResponsiveChartContainer>
                   <BarChart
-                    data={stats.trends}
+                    data={rangeAnalytics.trends}
                     margin={{
                       top: CHART_LABEL_TOP_MARGIN,
                       right: 8,
@@ -774,51 +815,60 @@ export default function AdminAnalyticsContent({
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-              {/* Order Status Distribution */}
+              {/* Order Status Distribution — range-scoped (SCD-11) */}
               <ChartCard
                 variant="sky"
                 title="Order Status Distribution"
                 icon={BarChart3}
-                description="Store-wide"
+                description={rangeLabel}
               >
-                <DeferredChartSection loading={dataLoading} hasData={!!stats}>
+                <DeferredChartSection
+                  loading={dataLoading || rangeLoading}
+                  hasData={!!rangeAnalytics}
+                >
                   <ResponsiveChartContainer>
                     <BarChart
                       data={[
                         {
                           status: "Pending",
                           count:
-                            stats.orderAnalytics.statusDistribution.pending,
+                            rangeAnalytics?.orderStatusDistribution.pending ??
+                            0,
                           fill: "hsl(45, 93%, 47%)",
                         },
                         {
                           status: "Confirmed",
                           count:
-                            stats.orderAnalytics.statusDistribution.confirmed,
+                            rangeAnalytics?.orderStatusDistribution.confirmed ??
+                            0,
                           fill: "hsl(142, 76%, 36%)",
                         },
                         {
                           status: "Processing",
                           count:
-                            stats.orderAnalytics.statusDistribution.processing,
+                            rangeAnalytics?.orderStatusDistribution
+                              .processing ?? 0,
                           fill: "hsl(217, 91%, 60%)",
                         },
                         {
                           status: "Shipped",
                           count:
-                            stats.orderAnalytics.statusDistribution.shipped,
+                            rangeAnalytics?.orderStatusDistribution.shipped ??
+                            0,
                           fill: "hsl(199, 89%, 48%)",
                         },
                         {
                           status: "Delivered",
                           count:
-                            stats.orderAnalytics.statusDistribution.delivered,
+                            rangeAnalytics?.orderStatusDistribution.delivered ??
+                            0,
                           fill: "hsl(142, 71%, 45%)",
                         },
                         {
                           status: "Cancelled",
                           count:
-                            stats.orderAnalytics.statusDistribution.cancelled,
+                            rangeAnalytics?.orderStatusDistribution.cancelled ??
+                            0,
                           fill: "hsl(0, 84%, 60%)",
                         },
                       ]}
@@ -872,9 +922,17 @@ export default function AdminAnalyticsContent({
                 variant="teal"
                 title="Top 5 Products by Orders"
                 icon={Package}
-                description="Store-wide. Revenue = sum of order line subtotals."
+                description={`${rangeLabel}. Revenue = sum of order line subtotals.`}
               >
-                {stats.orderAnalytics.topProducts.length === 0 ? (
+                {rangeLoading ? (
+                  <div className="flex flex-col gap-3 py-4">
+                    <DataSlotPulse variant="text-md" className="w-full" />
+                    <DataSlotPulse variant="text-md" className="w-full" />
+                    <DataSlotPulse variant="text-md" className="w-full" />
+                    <DataSlotPulse variant="text-md" className="w-full" />
+                    <DataSlotPulse variant="text-md" className="w-full" />
+                  </div>
+                ) : (rangeAnalytics?.topProducts.length ?? 0) === 0 ? (
                   <p className="text-sm text-muted-foreground text-center py-8">
                     No order data yet
                   </p>
@@ -901,7 +959,7 @@ export default function AdminAnalyticsContent({
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-border">
-                        {stats.orderAnalytics.topProducts
+                        {(rangeAnalytics?.topProducts ?? [])
                           .slice(0, 5)
                           .map((p, i) => (
                             // Index suffix guards stale Redis rows that still split by name/sku
@@ -1066,42 +1124,50 @@ export default function AdminAnalyticsContent({
               />
             </div>
 
-            {/* Invoice Status Distribution */}
+            {/* Invoice Status Distribution — range-scoped (SCD-11) */}
             <ChartCard
               variant="amber"
               title="Invoice Status Distribution"
               icon={FileText}
-              description="Store-wide"
+              description={rangeLabel}
             >
-              <DeferredChartSection loading={dataLoading} hasData={!!stats}>
+              <DeferredChartSection
+                loading={dataLoading || rangeLoading}
+                hasData={!!rangeAnalytics}
+              >
                 <ResponsiveChartContainer>
                   <BarChart
                     data={[
                       {
                         status: "Draft",
-                        count: stats.invoiceAnalytics.statusDistribution.draft,
+                        count:
+                          rangeAnalytics?.invoiceStatusDistribution.draft ?? 0,
                         fill: "hsl(220, 9%, 46%)",
                       },
                       {
                         status: "Sent",
-                        count: stats.invoiceAnalytics.statusDistribution.sent,
+                        count:
+                          rangeAnalytics?.invoiceStatusDistribution.sent ?? 0,
                         fill: "hsl(217, 91%, 60%)",
                       },
                       {
                         status: "Paid",
-                        count: stats.invoiceAnalytics.statusDistribution.paid,
+                        count:
+                          rangeAnalytics?.invoiceStatusDistribution.paid ?? 0,
                         fill: "hsl(142, 71%, 45%)",
                       },
                       {
                         status: "Overdue",
                         count:
-                          stats.invoiceAnalytics.statusDistribution.overdue,
+                          rangeAnalytics?.invoiceStatusDistribution.overdue ??
+                          0,
                         fill: "hsl(0, 84%, 60%)",
                       },
                       {
                         status: "Cancelled",
                         count:
-                          stats.invoiceAnalytics.statusDistribution.cancelled,
+                          rangeAnalytics?.invoiceStatusDistribution.cancelled ??
+                          0,
                         fill: "hsl(0, 0%, 45%)",
                       },
                     ]}

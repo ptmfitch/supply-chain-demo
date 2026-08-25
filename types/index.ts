@@ -133,6 +133,8 @@ export type {
   DashboardTicketStatusBreakdown,
   DashboardReviewStatusBreakdown,
   DashboardSelfOthersBreakdown,
+  DashboardRangeGranularity,
+  DashboardRangeAnalytics,
 } from "./dashboard";
 
 // Stock Allocation types

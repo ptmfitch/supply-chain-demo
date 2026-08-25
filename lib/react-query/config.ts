@@ -203,6 +203,9 @@ export const queryKeys = {
     // v2 — REQ-0173 topProducts catalog meta (drop stale warm-prefetch snapshots)
     overview: (userId?: string) =>
       [...queryKeys.dashboard.all, "overview", "v2", userId ?? ""] as const,
+    // SCD-11 — range-scoped analytics; under dashboard.all so existing invalidation clears it
+    rangeAnalytics: (userId: string, from: string, to: string) =>
+      [...queryKeys.dashboard.all, "range", "v1", userId, from, to] as const,
   },
 
   // Admin sidebar counts (client orders, client invoices, support tickets, product reviews)
