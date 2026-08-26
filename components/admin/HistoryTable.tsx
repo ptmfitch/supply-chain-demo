@@ -65,11 +65,12 @@ export const HistoryTable = React.memo(function HistoryTable({
   const [sorting, setSorting] = useState<SortingState>([]);
 
   const filteredData = useMemo(() => {
+    const term = searchTerm.trim().toLowerCase();
     return data.filter((record) => {
       const searchMatch =
-        !searchTerm ||
-        record.fileName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        record.importType.toLowerCase().includes(searchTerm.toLowerCase());
+        !term ||
+        record.fileName.toLowerCase().includes(term) ||
+        record.importType.toLowerCase().includes(term);
       const importTypeMatch =
         selectedImportTypes.length === 0 ||
         selectedImportTypes.includes(record.importType);

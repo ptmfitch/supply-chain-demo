@@ -67,11 +67,12 @@ export const SupportTicketTable = React.memo(function SupportTicketTable({
   const [sorting, setSorting] = useState<SortingState>([]);
 
   const filteredData = useMemo(() => {
+    const term = searchTerm.trim().toLowerCase();
     return data.filter((t) => {
       const searchMatch =
-        !searchTerm ||
-        t.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        t.description.toLowerCase().includes(searchTerm.toLowerCase());
+        !term ||
+        t.subject.toLowerCase().includes(term) ||
+        t.description.toLowerCase().includes(term);
       const statusMatch =
         selectedStatuses.length === 0 || selectedStatuses.includes(t.status);
       const priorityMatch =

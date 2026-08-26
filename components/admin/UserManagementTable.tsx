@@ -64,14 +64,15 @@ export const UserManagementTable = React.memo(function UserManagementTable({
   const [sorting, setSorting] = useState<SortingState>([]);
 
   const filteredData = useMemo(() => {
+    const term = searchTerm.trim().toLowerCase();
     return data.filter((u) => {
       const emailPrefix = (u.email ?? "").split("@")[0] ?? "";
       const searchMatch =
-        !searchTerm ||
-        u.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        u.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (u.username ?? "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-        emailPrefix.toLowerCase().includes(searchTerm.toLowerCase());
+        !term ||
+        u.name.toLowerCase().includes(term) ||
+        u.email.toLowerCase().includes(term) ||
+        (u.username ?? "").toLowerCase().includes(term) ||
+        emailPrefix.toLowerCase().includes(term);
       const roleMatch =
         selectedRoles.length === 0 || selectedRoles.includes(u.role ?? "user");
       return searchMatch && roleMatch;
