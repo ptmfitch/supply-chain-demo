@@ -1,6 +1,6 @@
 /**
  * Product Review Filters
- * Search and filter controls for product reviews list
+ * Search and filter controls for product reviews list (SCD-21 CSV/Excel export)
  */
 
 "use client";
@@ -14,11 +14,24 @@ import { IoClose } from "react-icons/io5";
 import { FilterDropdown } from "@/components/ui/filter-dropdown";
 import { ReviewStatusDropDown } from "@/components/product-reviews/ReviewStatusFilter";
 import { Star } from "lucide-react";
-import { DismissibleFilterChips } from "@/components/shared";
+import { DismissibleFilterChips, ExportMenuButton } from "@/components/shared";
 import type { FilterChipGroup } from "@/components/shared";
 import { PaginationType } from "@/components/shared/PaginationSelector";
 import { ReviewStatusBadge } from "@/lib/ui/semantic-badges";
 import { FILTER_CHIP_COLLAPSED_CLASS } from "@/lib/ui/filter-chip-styles";
+import { useToast } from "@/hooks/use-toast";
+import {
+  exportToCSV,
+  exportToExcel,
+  filterProductReviews,
+  mapProductReviewsToExportRows,
+  PRODUCT_REVIEW_EXPORT_COLUMNS,
+  PRODUCT_REVIEW_EXPORT_EXCEL_COLUMNS,
+  PRODUCT_REVIEW_EXPORT_FILE_STEM,
+  PRODUCT_REVIEW_EXPORT_SHEET,
+} from "@/lib/export";
+import { logger } from "@/lib/logger";
+import type { ProductReview } from "@/types";
 
 const RATING_OPTIONS = [
   { id: "1", name: "1 star" },
@@ -36,6 +49,7 @@ interface ProductReviewFiltersProps {
   selectedRatings: string[];
   setSelectedRatings: React.Dispatch<React.SetStateAction<string[]>>;
   setPagination?: React.Dispatch<React.SetStateAction<PaginationType>>;
+  allReviews: ProductReview[];
 }
 
 export default function ProductReviewFilters({
@@ -46,9 +60,89 @@ export default function ProductReviewFilters({
   selectedRatings,
   setSelectedRatings,
   setPagination,
+  allReviews,
 }: ProductReviewFiltersProps) {
+  const { toast } = useToast();
+
   const ratingTriggerClass =
     "h-10 rounded-[28px] border border-amber-400/30 dark:border-amber-400/30 bg-amber-100 dark:bg-amber-950/45 text-gray-700 dark:text-white shadow-sm backdrop-blur-md transition duration-200 hover:border-amber-300/40 hover:bg-amber-200 dark:hover:bg-amber-900/50 dark:hover:border-amber-300/40 hover:bg-amber-200 dark:hover:bg-amber-900/50";
+
+  const filteredReviews = useMemo(
+    () =>
+      filterProductReviews(allReviews, {
+        searchTerm,
+        selectedStatuses,
+        selectedRatings,
+      }),
+    [allReviews, searchTerm, selectedStatuses, selectedRatings],
+  );
+
+  const handleExportToCSV = useCallback(() => {
+    try {
+      if (filteredReviews.length === 0) {
+        toast({
+          title: "No Data to Export",
+          description:
+            "There are no product reviews to export with the current filters.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      exportToCSV(
+        mapProductReviewsToExportRows(filteredReviews),
+        PRODUCT_REVIEW_EXPORT_COLUMNS,
+        PRODUCT_REVIEW_EXPORT_FILE_STEM,
+      );
+
+      toast({
+        title: "CSV Export Successful!",
+        description: `${filteredReviews.length} product reviews exported to CSV file.`,
+      });
+    } catch (error) {
+      logger.warn("Product review CSV export failed:", error);
+      toast({
+        title: "Export Failed",
+        description:
+          "Failed to export product reviews to CSV. Please try again.",
+        variant: "destructive",
+      });
+    }
+  }, [filteredReviews, toast]);
+
+  const handleExportToExcel = useCallback(async () => {
+    try {
+      if (filteredReviews.length === 0) {
+        toast({
+          title: "No Data to Export",
+          description:
+            "There are no product reviews to export with the current filters.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      await exportToExcel({
+        sheetName: PRODUCT_REVIEW_EXPORT_SHEET,
+        fileName: PRODUCT_REVIEW_EXPORT_FILE_STEM,
+        columns: PRODUCT_REVIEW_EXPORT_EXCEL_COLUMNS,
+        data: mapProductReviewsToExportRows(filteredReviews),
+      });
+
+      toast({
+        title: "Excel Export Successful!",
+        description: `${filteredReviews.length} product reviews exported to Excel file.`,
+      });
+    } catch (error) {
+      logger.warn("Product review Excel export failed:", error);
+      toast({
+        title: "Export Failed",
+        description:
+          "Failed to export product reviews to Excel. Please try again.",
+        variant: "destructive",
+      });
+    }
+  }, [filteredReviews, toast]);
 
   const handleResetFilters = useCallback(() => {
     setSelectedStatuses([]);
@@ -121,6 +215,15 @@ export default function ProductReviewFilters({
             label="Rating"
             icon={Star}
             triggerClassName={ratingTriggerClass}
+          />
+        </div>
+        <div className="flex-shrink-0 flex items-center gap-2">
+          <ExportMenuButton
+            label="Export Reviews"
+            accent="violet"
+            disabled={filteredReviews.length === 0}
+            onExportCsv={handleExportToCSV}
+            onExportExcel={handleExportToExcel}
           />
         </div>
       </div>

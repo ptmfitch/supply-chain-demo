@@ -165,6 +165,7 @@ export default function ProductReviewList({
             selectedRatings={selectedRatings}
             setSelectedRatings={setSelectedRatings}
             setPagination={setPagination}
+            allReviews={allReviews}
           />
         </div>
         {isMounted && (

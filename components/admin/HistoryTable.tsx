@@ -31,6 +31,7 @@ import { useClampPaginationIndex } from "@/hooks/use-clamp-pagination-index";
 import { Button } from "@/components/ui/button";
 import { GrFormPrevious, GrFormNext } from "react-icons/gr";
 import { BiFirstPage, BiLastPage } from "react-icons/bi";
+import { filterImportHistory } from "@/lib/export";
 import type { ImportHistoryForPage } from "@/types";
 
 interface HistoryTableProps {
@@ -58,21 +59,15 @@ export const HistoryTable = React.memo(function HistoryTable({
 }: HistoryTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
 
-  const filteredData = useMemo(() => {
-    return data.filter((record) => {
-      const searchMatch =
-        !searchTerm ||
-        record.fileName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        record.importType.toLowerCase().includes(searchTerm.toLowerCase());
-      const importTypeMatch =
-        selectedImportTypes.length === 0 ||
-        selectedImportTypes.includes(record.importType);
-      const statusMatch =
-        selectedStatuses.length === 0 ||
-        selectedStatuses.includes(record.status);
-      return searchMatch && importTypeMatch && statusMatch;
-    });
-  }, [data, searchTerm, selectedImportTypes, selectedStatuses]);
+  const filteredData = useMemo(
+    () =>
+      filterImportHistory(data, {
+        searchTerm,
+        selectedImportTypes,
+        selectedStatuses,
+      }),
+    [data, searchTerm, selectedImportTypes, selectedStatuses],
+  );
 
   useClampPaginationIndex(filteredData.length, pagination, setPagination);
 

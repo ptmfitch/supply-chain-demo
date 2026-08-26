@@ -186,6 +186,7 @@ export default function SupportTicketList({
             viewFilter={viewFilter}
             onViewFilterChange={setViewFilter}
             setPagination={setPagination}
+            allTickets={allTickets}
           />
         </div>
         {isMounted && (

@@ -31,6 +31,7 @@ import { useClampPaginationIndex } from "@/hooks/use-clamp-pagination-index";
 import { Button } from "@/components/ui/button";
 import { GrFormPrevious, GrFormNext } from "react-icons/gr";
 import { BiFirstPage, BiLastPage } from "react-icons/bi";
+import { filterProductReviews } from "@/lib/export";
 import type { ProductReview } from "@/types";
 
 interface ProductReviewTableProps {
@@ -58,21 +59,15 @@ export const ProductReviewTable = React.memo(function ProductReviewTable({
 }: ProductReviewTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
 
-  const filteredData = useMemo(() => {
-    return data.filter((r) => {
-      const searchMatch =
-        !searchTerm ||
-        r.productName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        r.comment.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (r.productSku ?? "").toLowerCase().includes(searchTerm.toLowerCase());
-      const statusMatch =
-        selectedStatuses.length === 0 || selectedStatuses.includes(r.status);
-      const ratingMatch =
-        selectedRatings.length === 0 ||
-        selectedRatings.includes(String(r.rating));
-      return searchMatch && statusMatch && ratingMatch;
-    });
-  }, [data, searchTerm, selectedStatuses, selectedRatings]);
+  const filteredData = useMemo(
+    () =>
+      filterProductReviews(data, {
+        searchTerm,
+        selectedStatuses,
+        selectedRatings,
+      }),
+    [data, searchTerm, selectedStatuses, selectedRatings],
+  );
 
   useClampPaginationIndex(filteredData.length, pagination, setPagination);
 

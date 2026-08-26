@@ -70,6 +70,7 @@ export default function HistoryList({
             selectedStatuses={selectedStatuses}
             setSelectedStatuses={setSelectedStatuses}
             setPagination={setPagination}
+            allRecords={allRecords}
           />
         </div>
       </div>

@@ -179,6 +179,7 @@ export default function SupportTicketsPageContent({
                 setSelectedStatuses={setSelectedStatuses}
                 selectedPriorities={selectedPriorities}
                 setSelectedPriorities={setSelectedPriorities}
+                allTickets={list}
               />
             </div>
           </div>

@@ -31,6 +31,7 @@ import { useClampPaginationIndex } from "@/hooks/use-clamp-pagination-index";
 import { Button } from "@/components/ui/button";
 import { GrFormPrevious, GrFormNext } from "react-icons/gr";
 import { BiFirstPage, BiLastPage } from "react-icons/bi";
+import { filterSupportTickets } from "@/lib/export";
 import type { SupportTicket } from "@/types";
 
 interface SupportTicketTableProps {
@@ -58,20 +59,15 @@ export const SupportTicketTable = React.memo(function SupportTicketTable({
 }: SupportTicketTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
 
-  const filteredData = useMemo(() => {
-    return data.filter((t) => {
-      const searchMatch =
-        !searchTerm ||
-        t.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        t.description.toLowerCase().includes(searchTerm.toLowerCase());
-      const statusMatch =
-        selectedStatuses.length === 0 || selectedStatuses.includes(t.status);
-      const priorityMatch =
-        selectedPriorities.length === 0 ||
-        selectedPriorities.includes(t.priority);
-      return searchMatch && statusMatch && priorityMatch;
-    });
-  }, [data, searchTerm, selectedStatuses, selectedPriorities]);
+  const filteredData = useMemo(
+    () =>
+      filterSupportTickets(data, {
+        searchTerm,
+        selectedStatuses,
+        selectedPriorities,
+      }),
+    [data, searchTerm, selectedStatuses, selectedPriorities],
+  );
 
   useClampPaginationIndex(filteredData.length, pagination, setPagination);
 

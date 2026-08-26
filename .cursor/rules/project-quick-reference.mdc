@@ -81,6 +81,19 @@ After TS/JS edits, the hook injects context (and one `stop` follow-up) if the hu
 
 **Invalidation unchanged** — preference is client-only.
 
+## Admin list CSV export (REQ-0231 / SCD-21)
+
+| Piece | Location |
+|-------|----------|
+| Helpers | `lib/export/admin-list-export.ts` — filter predicates + CSV/Excel row mapping (`formatStableDate` on date columns) |
+| Tickets | `SupportTicketFilters` + `SupportTicketTable` share `filterSupportTickets`; Export menu `accent="violet"` |
+| Reviews | `ProductReviewFilters` + `ProductReviewTable` share `filterProductReviews` |
+| History | `HistoryFilters` + `HistoryTable` share `filterImportHistory`; `HistoryList` only passes `allRecords` |
+| Stems | `stockly-support-tickets` / `stockly-product-reviews` / `stockly-import-history` |
+| Tests | `lib/export/admin-list-export.test.ts` |
+
+**UI-only** — currently filtered rows, not the raw dataset. No new cache domains; `invalidateAfter*` untouched. Users list = SCD-9; activity log = SCD-10.
+
 ## Supplier catalog detail (REQ-0029)
 
 | Piece | Location |

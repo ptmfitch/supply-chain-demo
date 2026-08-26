@@ -1,6 +1,6 @@
 /**
  * History (Import History) Filters
- * Search and filter controls for import history list
+ * Search and filter controls for import history list (SCD-21 CSV/Excel export)
  */
 
 "use client";
@@ -13,10 +13,23 @@ import { Search } from "lucide-react";
 import { IoClose } from "react-icons/io5";
 import { ImportTypeDropDown } from "./ImportTypeFilter";
 import { ImportStatusDropDown } from "./ImportStatusFilter";
-import { DismissibleFilterChips } from "@/components/shared";
+import { DismissibleFilterChips, ExportMenuButton } from "@/components/shared";
 import type { FilterChipGroup } from "@/components/shared";
 import { PaginationType } from "@/components/shared/PaginationSelector";
 import { ImportStatusBadge, ImportTypeBadge } from "@/lib/ui/semantic-badges";
+import { useToast } from "@/hooks/use-toast";
+import {
+  exportToCSV,
+  exportToExcel,
+  filterImportHistory,
+  IMPORT_HISTORY_EXPORT_COLUMNS,
+  IMPORT_HISTORY_EXPORT_EXCEL_COLUMNS,
+  IMPORT_HISTORY_EXPORT_FILE_STEM,
+  IMPORT_HISTORY_EXPORT_SHEET,
+  mapImportHistoryToExportRows,
+} from "@/lib/export";
+import { logger } from "@/lib/logger";
+import type { ImportHistoryForPage } from "@/types";
 
 interface HistoryFiltersProps {
   searchTerm: string;
@@ -26,6 +39,7 @@ interface HistoryFiltersProps {
   selectedStatuses: string[];
   setSelectedStatuses: React.Dispatch<React.SetStateAction<string[]>>;
   setPagination?: React.Dispatch<React.SetStateAction<PaginationType>>;
+  allRecords: ImportHistoryForPage[];
 }
 
 export default function HistoryFilters({
@@ -36,7 +50,87 @@ export default function HistoryFilters({
   selectedStatuses,
   setSelectedStatuses,
   setPagination,
+  allRecords,
 }: HistoryFiltersProps) {
+  const { toast } = useToast();
+
+  const filteredRecords = useMemo(
+    () =>
+      filterImportHistory(allRecords, {
+        searchTerm,
+        selectedImportTypes,
+        selectedStatuses,
+      }),
+    [allRecords, searchTerm, selectedImportTypes, selectedStatuses],
+  );
+
+  const handleExportToCSV = useCallback(() => {
+    try {
+      if (filteredRecords.length === 0) {
+        toast({
+          title: "No Data to Export",
+          description:
+            "There is no import history to export with the current filters.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      exportToCSV(
+        mapImportHistoryToExportRows(filteredRecords),
+        IMPORT_HISTORY_EXPORT_COLUMNS,
+        IMPORT_HISTORY_EXPORT_FILE_STEM,
+      );
+
+      toast({
+        title: "CSV Export Successful!",
+        description: `${filteredRecords.length} import history rows exported to CSV file.`,
+      });
+    } catch (error) {
+      logger.warn("Import history CSV export failed:", error);
+      toast({
+        title: "Export Failed",
+        description:
+          "Failed to export import history to CSV. Please try again.",
+        variant: "destructive",
+      });
+    }
+  }, [filteredRecords, toast]);
+
+  const handleExportToExcel = useCallback(async () => {
+    try {
+      if (filteredRecords.length === 0) {
+        toast({
+          title: "No Data to Export",
+          description:
+            "There is no import history to export with the current filters.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      await exportToExcel({
+        sheetName: IMPORT_HISTORY_EXPORT_SHEET,
+        fileName: IMPORT_HISTORY_EXPORT_FILE_STEM,
+        columns: IMPORT_HISTORY_EXPORT_EXCEL_COLUMNS,
+        data: mapImportHistoryToExportRows(filteredRecords),
+      });
+
+      toast({
+        title: "Excel Export Successful!",
+        description: `${filteredRecords.length} import history rows exported to Excel file.`,
+      });
+    } catch (error) {
+      logger.warn("Import history Excel export failed:", error);
+      toast({
+        title: "Export Failed",
+        description:
+          "Failed to export import history to Excel. Please try again.",
+        variant: "destructive",
+      });
+    }
+  }, [filteredRecords, toast]);
+
   const handleResetFilters = useCallback(() => {
     setSelectedImportTypes([]);
     setSelectedStatuses([]);
@@ -99,6 +193,15 @@ export default function HistoryFilters({
           <ImportStatusDropDown
             selectedStatuses={selectedStatuses}
             setSelectedStatuses={setSelectedStatuses}
+          />
+        </div>
+        <div className="flex-shrink-0 flex items-center gap-2">
+          <ExportMenuButton
+            label="Export History"
+            accent="violet"
+            disabled={filteredRecords.length === 0}
+            onExportCsv={handleExportToCSV}
+            onExportExcel={handleExportToExcel}
           />
         </div>
       </div>
