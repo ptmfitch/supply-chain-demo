@@ -49,7 +49,7 @@ export function TableEmptyState({
   );
 
   const actionButton =
-    "href" in action ? (
+    action.href !== undefined ? (
       <Button asChild variant="ghost" className={actionClassName}>
         <Link href={action.href}>{action.label}</Link>
       </Button>
