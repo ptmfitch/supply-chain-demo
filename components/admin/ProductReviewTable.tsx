@@ -67,12 +67,13 @@ export const ProductReviewTable = React.memo(function ProductReviewTable({
   const [sorting, setSorting] = useState<SortingState>([]);
 
   const filteredData = useMemo(() => {
+    const term = searchTerm.trim().toLowerCase();
     return data.filter((r) => {
       const searchMatch =
-        !searchTerm ||
-        r.productName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        r.comment.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (r.productSku ?? "").toLowerCase().includes(searchTerm.toLowerCase());
+        !term ||
+        r.productName.toLowerCase().includes(term) ||
+        r.comment.toLowerCase().includes(term) ||
+        (r.productSku ?? "").toLowerCase().includes(term);
       const statusMatch =
         selectedStatuses.length === 0 || selectedStatuses.includes(r.status);
       const ratingMatch =
