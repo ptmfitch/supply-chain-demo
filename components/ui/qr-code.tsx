@@ -4,6 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { logger } from "@/lib/logger";
+import {
+  GLASS_ACTION_BUTTON,
+  GLASS_BUTTON_ICON_HOVER,
+  GLASS_BUTTON_SHELL_RESET,
+} from "@/lib/ui/glass-button-styles";
+import { TYPO_CARD_TITLE } from "@/lib/ui/typography-scale";
 import { Download, QrCode } from "lucide-react";
 import { SafeImage } from "@/components/ui/safe-image";
 import QRCode from "qrcode";
@@ -106,12 +112,13 @@ export function QRCodeComponent({
     "p-4",
     className,
   );
+  const titleRowClassName = cn("flex items-center gap-2", TYPO_CARD_TITLE);
 
   // Don't render QR code until mounted to prevent hydration mismatch
   if (!isMounted) {
     return (
       <div className={cardClassName}>
-        <div className=" flex items-center gap-2 text-white">
+        <div className={titleRowClassName}>
           <QrCode className="h-4 w-4" />
           <span className="text-sm font-medium">{title}</span>
         </div>
@@ -125,7 +132,7 @@ export function QRCodeComponent({
 
   return (
     <div className={cardClassName}>
-      <div className=" flex items-center gap-2 text-white">
+      <div className={titleRowClassName}>
         <QrCode className="h-4 w-4" />
         <span className="text-sm font-medium">{title}</span>
       </div>
@@ -146,10 +153,15 @@ export function QRCodeComponent({
         )}
         {showDownload && qrCodeUrl && (
           <Button
-            variant="outline"
+            variant="ghost"
             size="sm"
             onClick={handleDownload}
-            className="flex items-center gap-2 border-white/30 bg-white/20 dark:bg-white/10 hover:bg-white/30 dark:hover:bg-white/20 text-white"
+            className={cn(
+              GLASS_BUTTON_ICON_HOVER,
+              GLASS_BUTTON_SHELL_RESET,
+              "flex items-center gap-2",
+              GLASS_ACTION_BUTTON.sky,
+            )}
           >
             <Download className="h-4 w-4" />
             Download

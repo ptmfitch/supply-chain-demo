@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { QRCodeComponent } from "@/components/ui/qr-code";
 import { cn } from "@/lib/utils";
+import { TYPO_SUBTITLE } from "@/lib/ui/typography-scale";
 import { QrCode } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -94,11 +95,11 @@ export function QRCodeHover({
           onOpenAutoFocus={(e) => e.preventDefault()}
         >
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-[22px] text-white">
+            <DialogTitle className="flex items-center gap-2 text-[22px]">
               <QrCode className="h-5 w-5" />
               {title}
             </DialogTitle>
-            <DialogDescription className="text-white/80">
+            <DialogDescription className={TYPO_SUBTITLE}>
               Scan this QR code to view product details
             </DialogDescription>
           </DialogHeader>
