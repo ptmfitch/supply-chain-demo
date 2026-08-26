@@ -32,12 +32,29 @@ describe("resolveInvoiceSecondaryEvent", () => {
   });
 
   it("falls back to due date for sent", () => {
+    // Future-relative so the test never rots as the real clock passes a fixed fixture date
+    const futureDue = new Date(
+      Date.now() + 30 * 24 * 60 * 60 * 1000,
+    ).toISOString();
     expect(
       resolveInvoiceSecondaryEvent({
         status: "sent",
         sentAt: "2026-07-15T00:00:00.000Z",
-        dueDate: "2026-08-14T00:00:00.000Z",
+        dueDate: futureDue,
       }),
-    ).toMatchObject({ kind: "due", date: "2026-08-14T00:00:00.000Z" });
+    ).toMatchObject({ kind: "due", date: futureDue });
+  });
+
+  it("marks a past due date as overdue for sent", () => {
+    const pastDue = new Date(
+      Date.now() - 30 * 24 * 60 * 60 * 1000,
+    ).toISOString();
+    expect(
+      resolveInvoiceSecondaryEvent({
+        status: "sent",
+        sentAt: "2026-07-15T00:00:00.000Z",
+        dueDate: pastDue,
+      }),
+    ).toMatchObject({ kind: "overdue", date: pastDue });
   });
 });

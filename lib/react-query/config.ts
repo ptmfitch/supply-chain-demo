@@ -226,12 +226,16 @@ export const queryKeys = {
   clientPortal: {
     all: ["clientPortal"] as const,
     overview: () => [...queryKeys.clientPortal.all, "overview"] as const,
+    // SCD-15 — directory rows; under clientPortal.all so existing invalidation clears it
+    directory: () => [...queryKeys.clientPortal.all, "directory"] as const,
   },
 
   // Admin Supplier Portal queries
   supplierPortal: {
     all: ["supplierPortal"] as const,
     overview: () => [...queryKeys.supplierPortal.all, "overview"] as const,
+    // SCD-15 — directory rows; under supplierPortal.all so existing invalidation clears it
+    directory: () => [...queryKeys.supplierPortal.all, "directory"] as const,
   },
 
   // Stock Allocation queries

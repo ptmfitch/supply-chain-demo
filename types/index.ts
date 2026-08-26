@@ -135,6 +135,12 @@ export type {
   DashboardSelfOthersBreakdown,
 } from "./dashboard";
 
+// Admin portal directory types (SCD-15)
+export type {
+  ClientDirectoryRow,
+  SupplierDirectoryRow,
+} from "./portal-directory";
+
 // Stock Allocation types
 export type {
   StockTransferStatus,

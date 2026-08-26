@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import type { ColumnDef } from "@tanstack/react-table";
 import { InvoiceStatusBadge } from "@/lib/ui/semantic-badges";
 import {
   CARD_LIST_DIVIDE_CLASS,
@@ -20,6 +21,8 @@ import {
   SectionCardHeader,
   AvatarInlineLink,
   ClientCompactDateTime,
+  ClientDate,
+  PersonNameEmailCell,
   RecentOrderStatusColumn,
 } from "@/components/shared";
 import { DETAIL_PAGE_HEADER_SPACING_CLASS } from "@/lib/ui/shell-layout-styles";
@@ -29,12 +32,17 @@ import {
   GLASS_BUTTON_ICON_HOVER,
   GLASS_BUTTON_SHELL_RESET,
 } from "@/lib/ui/glass-button-styles";
-import { useClientPortal } from "@/hooks/queries";
+import { useClientPortal, useClientPortalDirectory } from "@/hooks/queries";
 import {
   isDataSlotUnsettled,
   queryKeys,
   useSyncSsrQueryData,
 } from "@/lib/react-query";
+import {
+  AdminPortalDirectory,
+  DirectorySortableHeader,
+} from "@/components/admin/AdminPortalDirectory";
+import { formatStableCurrency, formatStableDate } from "@/lib/format";
 import {
   Users,
   ShoppingCart,
@@ -46,74 +54,140 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ProductThumb } from "@/components/products/ProductOptionRow";
-import type { ClientPortalClient, ClientPortalStats } from "@/types";
-import {
-  AdminEmbedDataTable,
-  type AdminEmbedColumn,
-} from "@/components/admin/AdminEmbedDataTable";
+import type { ClientDirectoryRow, ClientPortalStats } from "@/types";
 
 export type AdminClientPortalContentProps = {
   initialStats?: ClientPortalStats | null;
+  /** SCD-15 — SSR-prefetched directory rows */
+  initialDirectory?: ClientDirectoryRow[] | null;
 };
 
 export default function AdminClientPortalContent({
   initialStats,
+  initialDirectory,
 }: AdminClientPortalContentProps = {}) {
   const portalQuery = useClientPortal(initialStats ?? undefined);
   const stats = portalQuery.data ?? initialStats ?? null;
   const dataLoading = isDataSlotUnsettled(portalQuery, initialStats);
 
+  const directoryQuery = useClientPortalDirectory(
+    initialDirectory ?? undefined,
+  );
+  const directoryRows =
+    directoryQuery.data ?? initialDirectory ?? ([] as ClientDirectoryRow[]);
+  const directoryLoading = isDataSlotUnsettled(
+    directoryQuery,
+    initialDirectory,
+  );
+
   useSyncSsrQueryData(
     queryKeys.clientPortal.overview(),
     initialStats ?? undefined,
   );
+  useSyncSsrQueryData(
+    queryKeys.clientPortal.directory(),
+    initialDirectory ?? undefined,
+  );
 
-  const clientColumns = useMemo<AdminEmbedColumn<ClientPortalClient>[]>(
+  // SCD-15 — full directory columns (sortable numerics, semantic dates)
+  const directoryColumns = useMemo<ColumnDef<ClientDirectoryRow>[]>(
     () => [
       {
-        id: "name",
-        header: "Name",
-        render: (c) => (
-          <AvatarInlineLink
-            label={c.name}
-            seed={c.id}
-            image={c.image}
-            href={`/admin/user-management/${c.id}`}
-            size={28}
-            linkClassName="text-sm font-normal"
+        accessorKey: "name",
+        header: ({ column }) => (
+          <DirectorySortableHeader column={column} label="Client" />
+        ),
+        cell: ({ row }) => (
+          <PersonNameEmailCell
+            seed={row.original.userId}
+            name={row.original.name}
+            email={row.original.email}
+            image={row.original.image}
+            href={`/admin/user-management/${row.original.userId}`}
           />
         ),
       },
       {
-        id: "email",
-        header: "Email",
-        headerClassName: "hidden sm:table-cell",
-        cellClassName:
-          "hidden sm:table-cell text-gray-600 dark:text-gray-300 truncate max-w-[160px]",
-        render: (c) => c.email,
+        accessorKey: "joinedAt",
+        header: ({ column }) => (
+          <DirectorySortableHeader column={column} label="Joined" />
+        ),
+        cell: ({ getValue }) => (
+          <ClientDate date={getValue<string>()} semantic="created" />
+        ),
       },
       {
-        id: "orders",
-        header: "Orders",
-        headerClassName: "text-right",
-        cellClassName: "text-right text-gray-700 dark:text-white",
-        render: (c) => c.orderCount,
+        accessorKey: "orderCount",
+        header: ({ column }) => (
+          <DirectorySortableHeader column={column} label="Orders" align="right" />
+        ),
+        cell: ({ getValue }) => (
+          <span className="block text-right text-gray-700 dark:text-white">
+            {getValue<number>()}
+          </span>
+        ),
       },
       {
-        id: "invoices",
-        header: "Invoices",
-        headerClassName: "text-right",
-        cellClassName: "text-right text-gray-700 dark:text-white",
-        render: (c) => c.invoiceCount,
+        accessorKey: "invoiceCount",
+        header: ({ column }) => (
+          <DirectorySortableHeader
+            column={column}
+            label="Invoices"
+            align="right"
+          />
+        ),
+        cell: ({ getValue }) => (
+          <span className="block text-right text-gray-700 dark:text-white">
+            {getValue<number>()}
+          </span>
+        ),
       },
       {
-        id: "spent",
-        header: "Total Spent",
-        headerClassName: "text-right",
-        cellClassName: "text-right text-gray-700 dark:text-white",
-        render: (c) => `$${c.totalSpent.toLocaleString()}`,
+        accessorKey: "totalRevenue",
+        header: ({ column }) => (
+          <DirectorySortableHeader
+            column={column}
+            label="Revenue"
+            align="right"
+          />
+        ),
+        cell: ({ getValue }) => (
+          <span className="block text-right text-gray-700 dark:text-white">
+            {formatStableCurrency(getValue<number>())}
+          </span>
+        ),
+      },
+      {
+        accessorKey: "lastActivityAt",
+        header: ({ column }) => (
+          <DirectorySortableHeader column={column} label="Last Activity" />
+        ),
+        cell: ({ getValue }) => {
+          const value = getValue<string | null>();
+          return value ? (
+            <ClientDate date={value} semantic="updated" />
+          ) : (
+            <span className="text-muted-foreground">—</span>
+          );
+        },
       },
     ],
+    [],
+  );
+
+  const buildDirectoryExportRows = useCallback(
+    (rows: ClientDirectoryRow[]) =>
+      rows.map((c) => ({
+        Name: c.name,
+        Email: c.email,
+        Joined: c.joinedAt ? formatStableDate(c.joinedAt) : "-",
+        Orders: c.orderCount,
+        Invoices: c.invoiceCount,
+        "Revenue (excl. cancelled)": c.totalRevenue,
+        "Last Activity": c.lastActivityAt
+          ? formatStableDate(c.lastActivityAt)
+          : "-",
+      })),
     [],
   );
 
@@ -460,24 +534,22 @@ export default function AdminClientPortalContent({
           </GlassCard>
         </div>
 
-        {/* Clients list */}
-        <GlassCard padding="body" variant="violet">
-          <SectionCardHeader
-            title="Clients"
-            description='Users with role "client" and their activity summary'
-            icon={Users}
-            tone="violet"
-            className="mb-4"
-          />
-          <AdminEmbedDataTable
-            columns={clientColumns}
-            data={stats?.clients ?? []}
-            loading={dataLoading}
-            emptyMessage='No client users yet. Assign "client" role to users from User Management.'
-            emptyIcon={Users}
-            getRowKey={(c) => c.id}
-          />
-          {stats && (stats.clients?.length ?? 0) > 0 && (
+        {/* Client Directory — SCD-15 search/filter/sort/export */}
+        <AdminPortalDirectory
+          title="Client Directory"
+          description='Users with role "client" — orders, invoices, revenue, and last activity'
+          icon={Users}
+          tone="violet"
+          rows={directoryRows}
+          loading={directoryLoading}
+          columns={directoryColumns}
+          getRowKey={(c) => c.userId}
+          searchPlaceholder="Search by name or email..."
+          emptyMessage='No matching clients. Assign "client" role to users from User Management.'
+          exportLabel="Export Clients"
+          exportFileStem="client_directory"
+          buildExportRows={buildDirectoryExportRows}
+          footer={
             <Button
               variant="ghost"
               size="sm"
@@ -494,8 +566,8 @@ export default function AdminClientPortalContent({
                 Manage Users
               </Link>
             </Button>
-          )}
-        </GlassCard>
+          }
+        />
       </div>
     </PageContentWrapper>
   );

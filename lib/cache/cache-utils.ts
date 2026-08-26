@@ -397,6 +397,8 @@ export const cacheKeys = {
   clientPortal: {
     /** REQ-0224 — v5: recentOrders product/supplier densify parity */
     overview: "clientPortal:overview:v5",
+    /** SCD-15 — client directory rows; cleared by clientPortal:* pattern */
+    directory: "clientPortal:directory:v1",
     pattern: "clientPortal:*",
   },
 
@@ -406,6 +408,8 @@ export const cacheKeys = {
   supplierPortal: {
     // REQ-0224 — v5: recentOrders product/supplier densify parity
     overview: (userId: string) => `supplierPortal:overview:v5:${userId}`,
+    /** SCD-15 — supplier directory rows; cleared by supplierPortal:* pattern */
+    directory: (userId: string) => `supplierPortal:directory:v1:${userId}`,
     pattern: "supplierPortal:*",
   },
 
