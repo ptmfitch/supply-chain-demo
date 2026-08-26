@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import Navbar from "@/components/layouts/Navbar";
 import { PageContentWrapper, PageSectionHeader } from "@/components/shared";
 import { PaginationType } from "@/components/shared/PaginationSelector";
@@ -64,6 +64,14 @@ export default function SupportTicketsPageContent({
   });
   const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
   const [selectedPriorities, setSelectedPriorities] = useState<string[]>([]);
+  const [createOpen, setCreateOpen] = useState(false);
+
+  const resetFilters = useCallback(() => {
+    setSearchTerm("");
+    setSelectedStatuses([]);
+    setSelectedPriorities([]);
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+  }, []);
 
   const columns = useMemo(
     () =>
@@ -94,6 +102,8 @@ export default function SupportTicketsPageContent({
               <SupportTicketDialog
                 productOwners={productOwners}
                 variant="sky"
+                open={createOpen}
+                onOpenChange={setCreateOpen}
                 trigger={
                   <Button
                     className={cn(
@@ -179,6 +189,7 @@ export default function SupportTicketsPageContent({
                 setSelectedStatuses={setSelectedStatuses}
                 selectedPriorities={selectedPriorities}
                 setSelectedPriorities={setSelectedPriorities}
+                onResetFilters={resetFilters}
               />
             </div>
           </div>
@@ -192,6 +203,13 @@ export default function SupportTicketsPageContent({
             setPagination={setPagination}
             selectedStatuses={selectedStatuses}
             selectedPriorities={selectedPriorities}
+            filtersActive={
+              searchTerm.trim().length > 0 ||
+              selectedStatuses.length > 0 ||
+              selectedPriorities.length > 0
+            }
+            onResetFilters={resetFilters}
+            onCreate={() => setCreateOpen(true)}
           />
         </div>
       </PageContentWrapper>
