@@ -1,5 +1,6 @@
 /**
  * Admin sidebar counts — client orders, client invoices, support tickets, product reviews.
+ * SCD-22 — ticket/review fields are actionable counts from GET /api/admin/counts.
  */
 
 import { useQuery } from "@tanstack/react-query";

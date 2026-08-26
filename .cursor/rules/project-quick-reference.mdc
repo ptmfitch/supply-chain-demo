@@ -81,6 +81,17 @@ After TS/JS edits, the hook injects context (and one `stop` follow-up) if the hu
 
 **Invalidation unchanged** — preference is client-only.
 
+## Admin sidebar actionable badges (REQ-0232 / SCD-22)
+
+| Piece | Location |
+|-------|----------|
+| Helpers | `lib/server/admin-count-badges.ts` — `ACTIONABLE_TICKET_STATUSES` (`open` \| `in_progress`), `ACTIONABLE_REVIEW_STATUS` (`pending`), Prisma `where` builders, hide-at-zero + aria-label |
+| Counts | `lib/server/admin-counts.ts` `getAdminCounts` — tickets: assigned + actionable status; reviews: owned products + pending. Same `AdminCounts` fields |
+| UI | `AdminSidebar` — hide Support Tickets / Product Reviews pills when count is 0; muted pill unchanged; aria-label describes actionable items |
+| Tests | `lib/server/admin-count-badges.test.ts` |
+
+**Invalidation unchanged** — same `GET /api/admin/counts` / `queryKeys.admin.counts()`. List KPI cards stay totals + breakdowns.
+
 ## Supplier catalog detail (REQ-0029)
 
 | Piece | Location |

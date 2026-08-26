@@ -31,9 +31,13 @@ import {
   type AdminNavItemConfig,
 } from "@/lib/navigation/admin-nav-config";
 import { adminSidebarLinkClass } from "@/lib/navigation/nav-link-styles";
+import {
+  adminCountBadgeAriaLabel,
+  shouldShowAdminCountBadge,
+} from "@/lib/server/admin-count-badges";
 import type { AdminCounts } from "@/types";
 
-/** Icon map for admin sidebar items (REQ-0094 — hrefs live in admin-nav-config). */
+/** SCD-22 — Support Tickets / Product Reviews badges are actionable; hidden at 0. Icon map (REQ-0094 — hrefs live in admin-nav-config). */
 const ADMIN_NAV_ICONS: Record<string, LucideIcon> = {
   "/admin/dashboard-overall-insights": LayoutDashboard,
   "/admin/orders": ShoppingCart,
@@ -72,7 +76,9 @@ export default function AdminSidebar({
     items.map((item) => {
       const Icon = ADMIN_NAV_ICONS[item.href] ?? Package;
       const count = getCount(item.countKey);
-      const showBadge = item.countKey != null;
+      const showBadge =
+        item.countKey != null &&
+        (countsLoading || shouldShowAdminCountBadge(item.countKey, count));
       return (
         <Link
           key={item.href}
@@ -84,7 +90,7 @@ export default function AdminSidebar({
           })}
           title={collapsed ? item.label : undefined}
         >
-          <Icon className="h-4 w-4 flex-shrink-0" />
+          <Icon className="h-4 w-4 flex-shrink-0" aria-hidden={true} />
           {!collapsed && (
             <span className="min-w-0 flex-1 truncate">{item.label}</span>
           )}
@@ -94,13 +100,11 @@ export default function AdminSidebar({
                 "flex-shrink-0 rounded-full px-1 py-0.5 text-xs font-medium min-w-[1.25rem] text-center",
                 "bg-muted text-muted-foreground",
               )}
-              aria-label={
-                countsLoading
-                  ? "Loading count"
-                  : count !== undefined
-                    ? `${count} items`
-                    : undefined
-              }
+              aria-label={adminCountBadgeAriaLabel(
+                item.countKey,
+                count,
+                countsLoading,
+              )}
             >
               {countsLoading ? (
                 <DataSlotPulse variant="badge" className="mx-auto" />

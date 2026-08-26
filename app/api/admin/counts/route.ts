@@ -1,6 +1,7 @@
 /**
  * GET /api/admin/counts — lightweight counts for admin sidebar badges.
  * Returns { clientOrders, clientInvoices, supportTickets, productReviews }.
+ * SCD-22 — supportTickets / productReviews are actionable counts, not totals.
  */
 
 import { NextRequest, NextResponse } from "next/server";

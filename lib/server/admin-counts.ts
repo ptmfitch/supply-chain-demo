@@ -1,17 +1,24 @@
 /**
  * Server-side admin counts for sidebar badges.
  * Used by GET /api/admin/counts. Only import from server code.
+ * SCD-22 — supportTickets / productReviews are actionable (not totals).
  */
 
 import { prisma } from "@/prisma/client";
 import { mergeProductListWhere } from "@/lib/products/product-query";
+import {
+  actionableAssignedTicketWhere,
+  actionableOwnedReviewWhere,
+} from "@/lib/server/admin-count-badges";
 import { getSuppliersForAdminIncludingDemo } from "@/prisma/supplier";
 import type { AdminCounts } from "@/types";
 
 /**
  * Get counts for admin sidebar: orders, invoices, support tickets, product reviews,
  * products, warehouses, suppliers, clients, users.
- * Client orders/invoices and product reviews: scoped to product owner (userId).
+ * Client orders/invoices: scoped to product owner (userId).
+ * Support tickets (SCD-22): assigned to userId and status open | in_progress.
+ * Product reviews (SCD-22): pending, on products owned by userId.
  * Products, warehouses: scoped to this admin (userId).
  * Suppliers: own + Demo Supplier (same as Supplier Portal and GET /api/suppliers).
  * Clients: users with role client. Users: all users (user management).
@@ -20,7 +27,9 @@ export async function getAdminCounts(userId: string): Promise<AdminCounts> {
   const [clientOrderIds, supportTicketsCount, productIdsOwned, productsCount, warehousesCount, suppliersForAdmin, clientsCount, usersCount] =
     await Promise.all([
       getClientOrderIdsForProductOwner(userId),
-      prisma.supportTicket.count({ where: { assignedToId: userId } }),
+      prisma.supportTicket.count({
+        where: actionableAssignedTicketWhere(userId),
+      }),
       prisma.product.findMany({
         where: mergeProductListWhere({ userId }),
         select: { id: true },
@@ -37,7 +46,7 @@ export async function getAdminCounts(userId: string): Promise<AdminCounts> {
   const productReviewsCountForOwner =
     productIdsOwned.length > 0
       ? await prisma.productReview.count({
-          where: { productId: { in: productIdsOwned } },
+          where: actionableOwnedReviewWhere(productIdsOwned),
         })
       : 0;
 

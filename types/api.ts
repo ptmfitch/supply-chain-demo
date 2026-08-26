@@ -46,6 +46,8 @@ export interface ValidationErrorResponse extends ApiError {
 /**
  * Admin sidebar badge counts (Orders, Invoices, Support Tickets, Product Reviews,
  * Products, Warehouses, Supplier Portal, Client Portal, User Management).
+ * SCD-22 — `supportTickets` is assigned open|in_progress; `productReviews` is
+ * pending on owned products. Field names unchanged (same cache keys).
  */
 export interface AdminCounts {
   clientOrders: number;
