@@ -1,0 +1,35 @@
+---
+description: Design and accessibility philosophy for UI. Reuse token hubs; keyboard-visible focus; do not rely on colour alone.
+globs: **/*.{ts,tsx,css}
+alwaysApply: false
+---
+
+# Design and accessibility
+
+Apply when the change is user-visible UI (pages, dialogs, tables, charts, tokens). Skip API/Prisma-only edits.
+
+Read the cited file before inventing classes, copy, or new primitives.
+
+## Design
+
+- Prefer a reviewer-visible chart, table, or filter over new chrome. Match neighbors; do not invent a second visual system.
+- Typography: `lib/ui/typography-scale.ts` — `TYPO_*` tiers. No `text-xl` in UI. Stat numbers only on `TYPO_STAT_VALUE`.
+- Surfaces/CTAs: `lib/ui/glass-button-styles.ts`, `lib/ui/pastel-surface-styles.ts`, `lib/ui/glass-card.tsx`. Glass buttons use `GLASS_BUTTON_SHELL_RESET`; do not `bg-transparent` on primary fills.
+- Status is icon + label, not hue alone: `lib/ui/semantic-badges.tsx`. Dates: `lib/ui/semantic-date-styles.ts`.
+- Colour-blind is independent of light/dark: `lib/ui/colour-blind-mode.ts` (`html[data-colour-blind]`). Never a whole-app CSS filter (charts/photos distort).
+- Popovers/selects must stay readable in both themes: `lib/ui/popover-readability-styles.ts`. Empty pickers: `lib/ui/select-empty-copy.ts`.
+- Images: `components/ui/safe-image.tsx` (meaningful `alt`; decorative `alt=""`). Avatars: `components/ui/safe-avatar-image.tsx`.
+- Titles + count badges are siblings, never nest a `Badge` in `h3`/`p`: `lib/ui/section-title-row.tsx`.
+
+## Accessibility
+
+- Keyboard focus via box-shadow rings only — no `focus:border-2` (layout shift): `lib/ui/focus-ring-styles.ts`.
+- Icon-only controls need `aria-label` or `sr-only` text (example: `components/invoices/InvoiceActions.tsx`). Decorative Lucide icons: `aria-hidden`.
+- Dense column headers: `components/shared/HelpTooltip.tsx` beside the label, not a title-only hover.
+- Copy must work without colour (status words, empty states, error text next to the field). Prefer existing `logger.warn` for client validation, not a colour-only fail state.
+
+## Do not
+
+- New design tokens, Grafana, or a parallel badge/button system.
+- Rely on red/green alone for stock, order, or invoice status.
+- Customer names in UI copy (stem **supply-chain-demo** only).
