@@ -81,6 +81,17 @@ After TS/JS edits, the hook injects context (and one `stop` follow-up) if the hu
 
 **Invalidation unchanged** — preference is client-only.
 
+## Admin table empty states (REQ-0231 / SCD-20)
+
+| Piece | Location |
+|-------|----------|
+| Shared chrome | `components/shared/TableEmptyState.tsx` — icon, guidance, primary/outline action |
+| Admin lists | User Management, Support Tickets, Product Reviews, Import History |
+| Empty action | Create dialog for users/tickets/reviews; `/products` import entry for history |
+| Filtered action | “No matches” resets search, chips, ticket view, and pagination |
+
+**Invalidation unchanged** — client-only list filtering and dialog/navigation actions.
+
 ## Supplier catalog detail (REQ-0029)
 
 | Piece | Location |
