@@ -63,6 +63,16 @@ describe("admin-count-badges (SCD-22)", () => {
     expect(shouldShowAdminCountBadge(undefined, 4)).toBe(false);
   });
 
+  it("does not flash a ticket/review pulse when a known zero is refreshing", () => {
+    expect(shouldShowAdminCountBadge("supportTickets", 0, true)).toBe(false);
+    expect(shouldShowAdminCountBadge("productReviews", 0, true)).toBe(false);
+    expect(
+      shouldShowAdminCountBadge("supportTickets", undefined, true),
+    ).toBe(true);
+    expect(shouldShowAdminCountBadge("supportTickets", 3, true)).toBe(true);
+    expect(shouldShowAdminCountBadge("products", 0, true)).toBe(true);
+  });
+
   it("keeps empty pills at zero for other sidebar count keys", () => {
     expect(shouldShowAdminCountBadge("products", 0)).toBe(true);
     expect(shouldShowAdminCountBadge("users", 0)).toBe(true);

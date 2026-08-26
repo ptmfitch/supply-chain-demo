@@ -76,9 +76,11 @@ export default function AdminSidebar({
     items.map((item) => {
       const Icon = ADMIN_NAV_ICONS[item.href] ?? Package;
       const count = getCount(item.countKey);
-      const showBadge =
-        item.countKey != null &&
-        (countsLoading || shouldShowAdminCountBadge(item.countKey, count));
+      const showBadge = shouldShowAdminCountBadge(
+        item.countKey,
+        count,
+        countsLoading,
+      );
       return (
         <Link
           key={item.href}

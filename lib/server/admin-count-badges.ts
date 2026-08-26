@@ -73,15 +73,18 @@ export function isActionableAdminBadgeCount(count: number): boolean {
 }
 
 /**
- * Tickets/reviews hide at 0 (actionable empty). Other keys keep the empty pill.
+ * Tickets/reviews hide at 0 (actionable empty), including stale refetch pulses.
+ * Other keys keep the empty pill. Cold load (unknown count) still shows a pulse.
  */
 export function shouldShowAdminCountBadge(
   countKey: keyof AdminCounts | undefined,
   count: number | undefined,
+  countsLoading = false,
 ): boolean {
   if (!countKey) return false;
   if (ACTIONABLE_ADMIN_BADGE_KEYS.has(countKey)) {
-    return isActionableAdminBadgeCount(count ?? 0);
+    if (isActionableAdminBadgeCount(count ?? 0)) return true;
+    return countsLoading && count === undefined;
   }
   return true;
 }
