@@ -23,6 +23,14 @@ npm run test:invalidate  # invalidation audit spec only (~205 checks)
 npm start            # production server
 ```
 
+## Cursor hooks
+
+| Event | Script |
+|----|-----|
+| `afterFileEdit` + `stop` | `.cursor/hooks/ensure-logging.cjs` |
+
+After TS/JS edits, the hook injects context (and one `stop` follow-up) if the hunk introduced `console.*`, a silent `catch`, or `logger.error` on Zod/`onInvalid` paths. Use `{ logger }` from `@/lib/logger`: `error` for unexpected 5xx (pass the Error as the second arg), `warn` for 4xx/validation. Skips tests, `scripts/`, and `lib/logger.ts`.
+
 ## Required env (see `lib/env.ts`)
 
 `DATABASE_URL`, `JWT_SECRET`, `NEXT_PUBLIC_API_URL`
