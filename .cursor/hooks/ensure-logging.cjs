@@ -78,6 +78,90 @@ function stripComments(src) {
     .replace(/(^|[^:])\/\/.*$/gm, "$1");
 }
 
+function skipStringLiteral(text, start) {
+  const quote = text[start];
+  if (quote !== '"' && quote !== "'" && quote !== "`") {
+    return start;
+  }
+  let i = start + 1;
+  while (i < text.length) {
+    if (text[i] === "\\") {
+      i += 2;
+      continue;
+    }
+    if (text[i] === quote) {
+      return i;
+    }
+    i += 1;
+  }
+  return text.length - 1;
+}
+
+/** Inclusive `{` … matching `}`; skips quotes so nested `}` is not a closer. */
+function extractBalancedBlock(text, openBraceIndex) {
+  if (text[openBraceIndex] !== "{") {
+    return "";
+  }
+  let depth = 0;
+  for (let i = openBraceIndex; i < text.length; i += 1) {
+    const ch = text[i];
+    if (ch === '"' || ch === "'" || ch === "`") {
+      i = skipStringLiteral(text, i);
+      continue;
+    }
+    if (ch === "{") {
+      depth += 1;
+    } else if (ch === "}") {
+      depth -= 1;
+      if (depth === 0) {
+        return text.slice(openBraceIndex, i + 1);
+      }
+    }
+  }
+  return text.slice(openBraceIndex);
+}
+
+function hasLoggerErrorOnValidationPath(text) {
+  if (!VALIDATION_HINT_RE.test(text) || !LOGGER_ERROR_RE.test(text)) {
+    return false;
+  }
+
+  const onInvalidRe = /\bonInvalid\b/g;
+  let match;
+  while ((match = onInvalidRe.exec(text)) !== null) {
+    const afterStart = match.index + match[0].length;
+    const after = text.slice(afterStart, afterStart + 200);
+    if (/=>\s*logger\.error\s*\(/.test(after)) {
+      return true;
+    }
+    const braceOffset = after.indexOf("{");
+    if (braceOffset !== -1 && braceOffset < 80) {
+      const body = extractBalancedBlock(text, afterStart + braceOffset);
+      if (LOGGER_ERROR_RE.test(body)) {
+        return true;
+      }
+    }
+  }
+
+  const safeParseRe = /\bsafeParse\b/g;
+  while ((match = safeParseRe.exec(text)) !== null) {
+    const region = text.slice(match.index, match.index + 500);
+    const ifMatch = /if\s*\(\s*![\w$.]+\.success\s*\)\s*\{/.exec(region);
+    if (!ifMatch) {
+      continue;
+    }
+    const braceIndex = match.index + ifMatch.index + ifMatch[0].length - 1;
+    const body = extractBalancedBlock(text, braceIndex);
+    if (LOGGER_ERROR_RE.test(body)) {
+      return true;
+    }
+  }
+
+  return /\blogger\.error\s*\(\s*[`'"][^`'"]*\b(?:Invalid \w+ data|invalid(?:ate)?\s+\w+\s+data)\b/i.test(
+    text,
+  );
+}
+
 function findingsPath(workspaceRoot, conversationId) {
   const key = crypto
     .createHash("sha256")
@@ -129,7 +213,7 @@ function analyzeText(filePath, source) {
     );
   }
 
-  if (VALIDATION_HINT_RE.test(text) && LOGGER_ERROR_RE.test(text)) {
+  if (hasLoggerErrorOnValidationPath(text)) {
     findings.push(
       "Validation / Zod `safeParse` / RHF `onInvalid` must use `logger.warn`, not `logger.error` (error routes to Sentry).",
     );
@@ -139,9 +223,8 @@ function analyzeText(filePath, source) {
     CATCH_RE.lastIndex = 0;
     let match;
     while ((match = CATCH_RE.exec(text)) !== null) {
-      const window = text.slice(match.index, match.index + 500);
-      const close = window.indexOf("}");
-      const body = close === -1 ? window : window.slice(0, close + 1);
+      const openBrace = match.index + match[0].length - 1;
+      const body = extractBalancedBlock(text, openBrace);
       if (LOGGING_CALL_RE.test(body) || RETHROW_RE.test(body)) {
         continue;
       }
@@ -361,6 +444,82 @@ if (process.argv.includes("--self-test")) {
     },
   ]);
   assert(newConsole.length === 1, "flag newly introduced console");
+
+  const warnPlusCatchError = analyzeText(
+    "app/api/categories/route.ts",
+    [
+      "export async function POST(request) {",
+      "  try {",
+      "    const parsed = createCategoryBodySchema.safeParse(body);",
+      "    if (!parsed.success) {",
+      '      logger.warn("Invalid category data", { issues: parsed.error.issues });',
+      "      return NextResponse.json({ error: \"Invalid\" }, { status: 400 });",
+      "    }",
+      "  } catch (error) {",
+      '    logger.error("Error creating category:", error);',
+      "    return NextResponse.json({ error: \"Failed\" }, { status: 500 });",
+      "  }",
+      "}",
+      "",
+    ].join("\n"),
+  );
+  assert(warnPlusCatchError.length === 0, "safeParse warn + catch error is fine");
+
+  const onInvalidError = analyzeText(
+    "components/products/ProductFormDialog.tsx",
+    'onInvalid={(errors) => {\n  logger.error("Invalid product data", errors);\n}}\n',
+  );
+  assert(onInvalidError.some((f) => f.includes("logger.warn")), "flag logger.error on onInvalid");
+
+  const nestedCatchObject = analyzeText(
+    "app/api/orders/route.ts",
+    [
+      "try {",
+      "  await createOrder();",
+      "} catch (error) {",
+      "  const details = { id: orderId, reason: \"failed\" };",
+      '  logger.error("Error creating order:", error);',
+      "  return NextResponse.json({ error: \"Failed\" }, { status: 500 });",
+      "}",
+      "",
+    ].join("\n"),
+  );
+  assert(nestedCatchObject.length === 0, "catch with nested braces before logger is fine");
+
+  const nestedCatchIf = analyzeText(
+    "app/api/orders/route.ts",
+    [
+      "try {",
+      "  await createOrder();",
+      "} catch (error) {",
+      "  if (isExpectedClientError(error)) {",
+      '    logger.warn("Expected order error", error);',
+      "    return NextResponse.json({ error: \"Invalid\" }, { status: 400 });",
+      "  }",
+      '  logger.error("Error creating order:", error);',
+      "  return NextResponse.json({ error: \"Failed\" }, { status: 500 });",
+      "}",
+      "",
+    ].join("\n"),
+  );
+  assert(nestedCatchIf.length === 0, "catch with inner if before logger is fine");
+
+  const silentNestedCatch = analyzeText(
+    "app/api/orders/route.ts",
+    [
+      "try {",
+      "  await createOrder();",
+      "} catch (error) {",
+      "  const details = { id: orderId, reason: \"failed\" };",
+      "  return NextResponse.json({ error: \"Failed\" }, { status: 500 });",
+      "}",
+      "",
+    ].join("\n"),
+  );
+  assert(
+    silentNestedCatch.some((f) => f.includes("Catch block")),
+    "flag silent catch even with nested braces",
+  );
 
   assert(shouldSkipFile("README.md"), "skip non-ts");
 
