@@ -81,6 +81,16 @@ After TS/JS edits, the hook injects context (and one `stop` follow-up) if the hu
 
 **Invalidation unchanged** — preference is client-only.
 
+## Import History KPIs (REQ-0233 / SCD-23)
+
+| Piece | Location |
+|-------|----------|
+| Helper | `lib/history/import-history-kpis.ts` — `summarizeImportHistoryKpis` (`records.length` + Σ `successRows` / `failedRows`) |
+| UI | `HistoryList` — 3 `StatisticsCard`s above `HistoryFilters` (Upload / CheckCircle2 / AlertCircle) |
+| Tests | `lib/history/import-history-kpis.test.ts` |
+
+**No new API/cache/invalidation** — sums existing `ImportHistoryForPage` list/SSR payload. Do not add CSV export (SCD-21). KPI strip stays above the filters block so SCD-21 filter-prop changes can merge.
+
 ## Supplier catalog detail (REQ-0029)
 
 | Piece | Location |
