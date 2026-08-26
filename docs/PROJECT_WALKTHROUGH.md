@@ -1,6 +1,6 @@
 # PROJECT_WALKTHROUGH.md
 
-Agent-oriented map of **stock-inventory** (Stockly). Last updated: 2026-07-31 (REQ-0224 densify parity).
+Agent-oriented map of **stock-inventory** (Stockly). Last updated: 2026-08-26 (REQ-0231 sticky admin table headers).
 
 ## 1. What this app is
 
@@ -170,6 +170,7 @@ Prevents `NotFoundError: removeChild` when App Router navigates between pages wh
 | Admin dashboard hydration (REQ-0019) | `formatStableCurrency` + `formatStableCompactDateTime` (UTC) in `AdminAnalyticsContent`; `LLM_INSIGHTS_MAX_TOKENS=512` in forecasting route; cache key `forecasting:summary:v2` |
 | Locale-aware admin (REQ-0020) | `lib/format/client-locale.ts` + `ClientFormatDisplay.tsx`; browser local TZ/currency after mount on admin dashboard + my-activity |
 | Shell-first nav (REQ-0021) | `DataSlotPulse` + `isDataSlotLoading` / `isDataSlotUnsettled`; `page.tsx` Suspense shell + streamed SSR; hooks `initialData`; tables keep headers, body pulses; REQ-0122+ patch-then-invalidate |
+| Sticky admin list headers (REQ-0231 / SCD-24) | `Table stickyHeader` + `TABLE_STICKY_HEADER_WRAP_CLASS`; users/tickets/reviews/history; CSS-only |
 | Supplier catalog detail (REQ-0029) | `lib/server/catalog-entity-access.ts`; supplier read-only `/categories/[id]` + `/suppliers/[id]` via product links; scoped Redis `detail(id, supplier:{entityId})`; `disableCrud` on detail pages |
 | Auth login/register (REQ-0030–0033) | `components/auth/*` — `AuthPageShell`, flat left list, `AuthFormCard` glass, `LoginRoleSelect`; copy in `auth-panel-copy.ts`; `.auth-page-root` document scroll; no TanStack changes |
 | Scroll-lock no shift (REQ-0216) | `globals.css` — auth-only html gutter + unlayered `html body[data-scroll-locked]` pad cancel (beats RemoveScroll); CSS-only |

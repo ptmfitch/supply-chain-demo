@@ -73,6 +73,17 @@ npm start            # production server
 
 **Invalidation unchanged** — preference is client-only.
 
+## Sticky admin table headers (REQ-0231 / SCD-24)
+
+| Piece | Location |
+|-------|----------|
+| Token | `lib/ui/table-sticky-styles.ts` — `TABLE_STICKY_HEADER_WRAP_CLASS` |
+| Wrapper | `components/ui/table.tsx` — opt-in `stickyHeader` (default still overflow-x only, REQ-0172) |
+| Wired | `UserManagementTable`, `SupportTicketTable`, `ProductReviewTable`, `HistoryTable` |
+| Tests | `lib/ui/table-sticky-styles.test.ts` |
+
+**Invalidation unchanged** — CSS/UI only. Catalog tables can pass `stickyHeader` later.
+
 ## Supplier catalog detail (REQ-0029)
 
 | Piece | Location |

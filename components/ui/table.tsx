@@ -1,20 +1,31 @@
 import * as React from "react";
 
+import { TABLE_STICKY_HEADER_WRAP_CLASS } from "@/lib/ui/table-sticky-styles";
 import { cn } from "@/lib/utils";
 
-/** Wrapper scrolls X only — `overflow-auto` nested a Y bar beside `#main-content` (REQ-0172). */
-const Table = React.forwardRef<
-  HTMLTableElement,
-  React.HTMLAttributes<HTMLTableElement>
->(({ className, ...props }, ref) => (
-  <div className="relative w-full overflow-x-auto">
-    <table
-      ref={ref}
-      className={cn("w-full caption-bottom text-xs", className)}
-      {...props}
-    />
-  </div>
-));
+export type TableProps = React.HTMLAttributes<HTMLTableElement> & {
+  /** Pin `<th>` inside this wrapper's Y scroll (REQ-0231 / SCD-24). Off by default (REQ-0172). */
+  stickyHeader?: boolean;
+};
+
+/** Wrapper scrolls X only unless `stickyHeader` — nested Y beside `#main-content` (REQ-0172). */
+const Table = React.forwardRef<HTMLTableElement, TableProps>(
+  ({ className, stickyHeader = false, ...props }, ref) => (
+    <div
+      className={cn(
+        "relative w-full",
+        stickyHeader ? TABLE_STICKY_HEADER_WRAP_CLASS : "overflow-x-auto",
+      )}
+      data-sticky-header={stickyHeader ? "true" : undefined}
+    >
+      <table
+        ref={ref}
+        className={cn("w-full caption-bottom text-xs", className)}
+        {...props}
+      />
+    </div>
+  ),
+);
 Table.displayName = "Table";
 
 const TableHeader = React.forwardRef<

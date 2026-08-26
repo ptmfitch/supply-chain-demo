@@ -89,7 +89,7 @@ export const SupportTicketTable = React.memo(function SupportTicketTable({
   return (
     <div className="poppins mt-0">
       <div className="rounded-[28px] border border-violet-400/20 dark:border-white/10 shadow-sm bg-white/90 dark:bg-stone-900/80 backdrop-blur-md overflow-hidden">
-        <Table>
+        <Table stickyHeader>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow
