@@ -5,7 +5,13 @@
 
 "use client";
 
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   useSupportTickets,
   useDashboard,
@@ -96,6 +102,15 @@ export default function SupportTicketList({
   });
   const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
   const [selectedPriorities, setSelectedPriorities] = useState<string[]>([]);
+  const [createOpen, setCreateOpen] = useState(false);
+
+  const resetFilters = useCallback(() => {
+    setSearchTerm("");
+    setSelectedStatuses([]);
+    setSelectedPriorities([]);
+    setViewFilter("all");
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+  }, []);
 
   const columns = useMemo(
     () =>
@@ -185,7 +200,7 @@ export default function SupportTicketList({
             setSelectedPriorities={setSelectedPriorities}
             viewFilter={viewFilter}
             onViewFilterChange={setViewFilter}
-            setPagination={setPagination}
+            onResetFilters={resetFilters}
           />
         </div>
         {isMounted && (
@@ -193,6 +208,8 @@ export default function SupportTicketList({
             <SupportTicketDialog
               productOwners={productOwners}
               variant="violet"
+              open={createOpen}
+              onOpenChange={setCreateOpen}
               trigger={
                 <Button className="h-10 rounded-[28px] border border-violet-400/30 dark:border-violet-400/30 bg-violet-100 dark:bg-violet-950/45 text-white shadow-sm flex items-center gap-2">
                   <MessageSquare className="h-4 w-4" />
@@ -213,6 +230,14 @@ export default function SupportTicketList({
         setPagination={setPagination}
         selectedStatuses={selectedStatuses}
         selectedPriorities={selectedPriorities}
+        filtersActive={
+          searchTerm.trim().length > 0 ||
+          selectedStatuses.length > 0 ||
+          selectedPriorities.length > 0 ||
+          viewFilter !== "all"
+        }
+        onResetFilters={resetFilters}
+        onCreate={() => setCreateOpen(true)}
       />
     </div>
   );

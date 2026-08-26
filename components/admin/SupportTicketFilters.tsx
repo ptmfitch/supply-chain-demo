@@ -6,7 +6,7 @@
 "use client";
 
 import { FILTER_SEARCH_INPUT_SKY_CLASS } from "@/lib/ui/filter-toolbar-styles";
-import React, { useCallback, useMemo } from "react";
+import React, { useMemo } from "react";
 import {
   DeferredSelectGate,
   DismissibleFilterChips,
@@ -27,7 +27,6 @@ import {
 } from "@/components/ui/select";
 import { ChevronDown } from "lucide-react";
 import type { SupportTicketViewFilter } from "@/hooks/queries/use-support-tickets";
-import { PaginationType } from "@/components/shared/PaginationSelector";
 import {
   TicketPriorityBadge,
   TicketStatusBadge,
@@ -49,7 +48,7 @@ interface SupportTicketFiltersProps {
   setSelectedPriorities: React.Dispatch<React.SetStateAction<string[]>>;
   viewFilter?: SupportTicketViewFilter;
   onViewFilterChange?: (view: SupportTicketViewFilter) => void;
-  setPagination?: React.Dispatch<React.SetStateAction<PaginationType>>;
+  onResetFilters: () => void;
 }
 
 export default function SupportTicketFilters({
@@ -61,20 +60,8 @@ export default function SupportTicketFilters({
   setSelectedPriorities,
   viewFilter = "all",
   onViewFilterChange,
-  setPagination,
+  onResetFilters,
 }: SupportTicketFiltersProps) {
-  const handleResetFilters = useCallback(() => {
-    setSelectedStatuses([]);
-    setSelectedPriorities([]);
-    onViewFilterChange?.("all");
-    setPagination?.((prev) => ({ ...prev, pageIndex: 0 }));
-  }, [
-    setSelectedStatuses,
-    setSelectedPriorities,
-    onViewFilterChange,
-    setPagination,
-  ]);
-
   const filterChipGroups = useMemo((): FilterChipGroup[] => {
     const groups: FilterChipGroup[] = [];
 
@@ -197,7 +184,7 @@ export default function SupportTicketFilters({
 
       <DismissibleFilterChips
         groups={filterChipGroups}
-        onReset={handleResetFilters}
+        onReset={onResetFilters}
       />
     </div>
   );

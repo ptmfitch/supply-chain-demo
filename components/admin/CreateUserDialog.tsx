@@ -67,8 +67,27 @@ const ROLE_OPTIONS = [
   },
 ];
 
-export default function CreateUserDialog() {
-  const [open, setOpen] = useState(false);
+export type CreateUserDialogProps = {
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  trigger?: React.ReactNode;
+};
+
+export default function CreateUserDialog({
+  open: controlledOpen,
+  onOpenChange,
+  trigger,
+}: CreateUserDialogProps = {}) {
+  const [internalOpen, setInternalOpen] = useState(false);
+  const isControlled = controlledOpen !== undefined;
+  const open = isControlled ? controlledOpen : internalOpen;
+  const setOpen = (value: boolean) => {
+    if (isControlled) {
+      onOpenChange?.(value);
+      return;
+    }
+    setInternalOpen(value);
+  };
   const [showPassword, setShowPassword] = useState(false);
   const createUserMutation = useCreateUser();
 
@@ -114,18 +133,20 @@ export default function CreateUserDialog() {
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button
-          variant="ghost"
-          className={cn(
-            GLASS_BUTTON_ICON_HOVER,
-            GLASS_BUTTON_SHELL_RESET,
-            "gap-2 h-10 font-medium",
-            GLASS_ACTION_BUTTON.blue,
-          )}
-        >
-          <Plus className="h-4 w-4" />
-          Create User
-        </Button>
+        {trigger ?? (
+          <Button
+            variant="ghost"
+            className={cn(
+              GLASS_BUTTON_ICON_HOVER,
+              GLASS_BUTTON_SHELL_RESET,
+              "gap-2 h-10 font-medium",
+              GLASS_ACTION_BUTTON.blue,
+            )}
+          >
+            <Plus className="h-4 w-4" />
+            Create User
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent className="p-2 sm:p-4 sm:px-8 poppins max-h-[90vh] overflow-y-auto border-blue-400/30 dark:border-blue-400/30 shadow-sm">
         <DialogHeader>

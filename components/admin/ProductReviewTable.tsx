@@ -27,8 +27,10 @@ import { TableBodyPulseRows } from "@/components/ui/table-data-skeleton";
 import PaginationSelector, {
   type PaginationType,
 } from "@/components/shared/PaginationSelector";
+import { TableEmptyState } from "@/components/shared";
 import { useClampPaginationIndex } from "@/hooks/use-clamp-pagination-index";
 import { Button } from "@/components/ui/button";
+import { Plus, X } from "lucide-react";
 import { GrFormPrevious, GrFormNext } from "react-icons/gr";
 import { BiFirstPage, BiLastPage } from "react-icons/bi";
 import type { ProductReview } from "@/types";
@@ -44,6 +46,9 @@ interface ProductReviewTableProps {
   ) => void;
   selectedStatuses: string[];
   selectedRatings: string[];
+  filtersActive: boolean;
+  onResetFilters: () => void;
+  onCreate: () => void;
 }
 
 export const ProductReviewTable = React.memo(function ProductReviewTable({
@@ -55,6 +60,9 @@ export const ProductReviewTable = React.memo(function ProductReviewTable({
   setPagination,
   selectedStatuses,
   selectedRatings,
+  filtersActive,
+  onResetFilters,
+  onCreate,
 }: ProductReviewTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
 
@@ -142,9 +150,23 @@ export const ProductReviewTable = React.memo(function ProductReviewTable({
                 <TableRow>
                   <TableCell
                     colSpan={columns.length}
-                    className="text-center text-gray-700 dark:text-white"
+                    className="p-0"
                   >
-                    No product reviews found.
+                    <TableEmptyState
+                      icon={filtersActive ? X : Plus}
+                      title={filtersActive ? "No matches" : "No reviews yet"}
+                      description={
+                        filtersActive
+                          ? "Adjust or reset the active filters."
+                          : "Add the first review to get started."
+                      }
+                      action={
+                        filtersActive
+                          ? { label: "Reset filters", onClick: onResetFilters }
+                          : { label: "Add Review", onClick: onCreate }
+                      }
+                      actionVariant={filtersActive ? "outline" : "primary"}
+                    />
                   </TableCell>
                 </TableRow>
               )}

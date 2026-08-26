@@ -21,6 +21,8 @@ export type {
   DeferredSelectGateRenderProps,
 } from "./DeferredSelectGate";
 export { SelectEmptyContent } from "./SelectEmptyContent";
+export { TableEmptyState } from "./TableEmptyState";
+export type { TableEmptyStateProps } from "./TableEmptyState";
 export {
   selectEmptyMessage,
   selectEmptyPlaceholder,

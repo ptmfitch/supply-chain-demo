@@ -6,7 +6,7 @@
 "use client";
 
 import { FILTER_SEARCH_INPUT_SKY_CLASS } from "@/lib/ui/filter-toolbar-styles";
-import React, { useCallback, useMemo } from "react";
+import React, { useMemo } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
@@ -15,7 +15,6 @@ import { ImportTypeDropDown } from "./ImportTypeFilter";
 import { ImportStatusDropDown } from "./ImportStatusFilter";
 import { DismissibleFilterChips } from "@/components/shared";
 import type { FilterChipGroup } from "@/components/shared";
-import { PaginationType } from "@/components/shared/PaginationSelector";
 import { ImportStatusBadge, ImportTypeBadge } from "@/lib/ui/semantic-badges";
 
 interface HistoryFiltersProps {
@@ -25,7 +24,7 @@ interface HistoryFiltersProps {
   setSelectedImportTypes: React.Dispatch<React.SetStateAction<string[]>>;
   selectedStatuses: string[];
   setSelectedStatuses: React.Dispatch<React.SetStateAction<string[]>>;
-  setPagination?: React.Dispatch<React.SetStateAction<PaginationType>>;
+  onResetFilters: () => void;
 }
 
 export default function HistoryFilters({
@@ -35,14 +34,8 @@ export default function HistoryFilters({
   setSelectedImportTypes,
   selectedStatuses,
   setSelectedStatuses,
-  setPagination,
+  onResetFilters,
 }: HistoryFiltersProps) {
-  const handleResetFilters = useCallback(() => {
-    setSelectedImportTypes([]);
-    setSelectedStatuses([]);
-    setPagination?.((prev) => ({ ...prev, pageIndex: 0 }));
-  }, [setSelectedImportTypes, setSelectedStatuses, setPagination]);
-
   const filterChipGroups = useMemo((): FilterChipGroup[] => {
     return [
       {
@@ -105,7 +98,7 @@ export default function HistoryFilters({
 
       <DismissibleFilterChips
         groups={filterChipGroups}
-        onReset={handleResetFilters}
+        onReset={onResetFilters}
       />
     </div>
   );

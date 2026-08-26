@@ -27,8 +27,10 @@ import { TableBodyPulseRows } from "@/components/ui/table-data-skeleton";
 import PaginationSelector, {
   type PaginationType,
 } from "@/components/shared/PaginationSelector";
+import { TableEmptyState } from "@/components/shared";
 import { useClampPaginationIndex } from "@/hooks/use-clamp-pagination-index";
 import { Button } from "@/components/ui/button";
+import { Plus, X } from "lucide-react";
 import { GrFormPrevious, GrFormNext } from "react-icons/gr";
 import { BiFirstPage, BiLastPage } from "react-icons/bi";
 import type { SupportTicket } from "@/types";
@@ -44,6 +46,9 @@ interface SupportTicketTableProps {
   ) => void;
   selectedStatuses: string[];
   selectedPriorities: string[];
+  filtersActive: boolean;
+  onResetFilters: () => void;
+  onCreate: () => void;
 }
 
 export const SupportTicketTable = React.memo(function SupportTicketTable({
@@ -55,6 +60,9 @@ export const SupportTicketTable = React.memo(function SupportTicketTable({
   setPagination,
   selectedStatuses,
   selectedPriorities,
+  filtersActive,
+  onResetFilters,
+  onCreate,
 }: SupportTicketTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
 
@@ -141,9 +149,23 @@ export const SupportTicketTable = React.memo(function SupportTicketTable({
                 <TableRow>
                   <TableCell
                     colSpan={columns.length}
-                    className="text-center text-gray-700 dark:text-white"
+                    className="p-0"
                   >
-                    No support tickets found.
+                    <TableEmptyState
+                      icon={filtersActive ? X : Plus}
+                      title={filtersActive ? "No matches" : "No tickets yet"}
+                      description={
+                        filtersActive
+                          ? "Adjust or reset the active filters."
+                          : "Create the first ticket to get started."
+                      }
+                      action={
+                        filtersActive
+                          ? { label: "Reset filters", onClick: onResetFilters }
+                          : { label: "Create Ticket", onClick: onCreate }
+                      }
+                      actionVariant={filtersActive ? "outline" : "primary"}
+                    />
                   </TableCell>
                 </TableRow>
               )}

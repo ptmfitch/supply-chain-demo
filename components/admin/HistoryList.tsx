@@ -5,7 +5,7 @@
 
 "use client";
 
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { useHistory } from "@/hooks/queries";
 import { isDataSlotLoading, queryKeys, useSyncSsrQueryData } from "@/lib/react-query";
 import { APP_SHELL_WIDTH_CLASS } from "@/lib/ui/shell-layout-styles";
@@ -42,6 +42,13 @@ export default function HistoryList({
   const [selectedImportTypes, setSelectedImportTypes] = useState<string[]>([]);
   const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
 
+  const resetFilters = useCallback(() => {
+    setSearchTerm("");
+    setSelectedImportTypes([]);
+    setSelectedStatuses([]);
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+  }, []);
+
   const columns = useMemo(
     () => createHistoryColumns(detailHrefBase ?? "/admin/activity-history"),
     [detailHrefBase],
@@ -69,7 +76,7 @@ export default function HistoryList({
             setSelectedImportTypes={setSelectedImportTypes}
             selectedStatuses={selectedStatuses}
             setSelectedStatuses={setSelectedStatuses}
-            setPagination={setPagination}
+            onResetFilters={resetFilters}
           />
         </div>
       </div>
@@ -83,6 +90,12 @@ export default function HistoryList({
         setPagination={setPagination}
         selectedImportTypes={selectedImportTypes}
         selectedStatuses={selectedStatuses}
+        filtersActive={
+          searchTerm.trim().length > 0 ||
+          selectedImportTypes.length > 0 ||
+          selectedStatuses.length > 0
+        }
+        onResetFilters={resetFilters}
       />
     </div>
   );

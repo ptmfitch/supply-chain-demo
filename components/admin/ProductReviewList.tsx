@@ -5,7 +5,13 @@
 
 "use client";
 
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useProductReviews, useDashboard } from "@/hooks/queries";
 import { isDataSlotLoading, isDataSlotUnsettled, queryKeys, useSyncSsrQueryData } from "@/lib/react-query";
 import { useAuth } from "@/contexts";
@@ -91,6 +97,14 @@ export default function ProductReviewList({
   });
   const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
   const [selectedRatings, setSelectedRatings] = useState<string[]>([]);
+  const [createOpen, setCreateOpen] = useState(false);
+
+  const resetFilters = useCallback(() => {
+    setSearchTerm("");
+    setSelectedStatuses([]);
+    setSelectedRatings([]);
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+  }, []);
 
   const columns = useMemo(
     () =>
@@ -164,12 +178,14 @@ export default function ProductReviewList({
             setSelectedStatuses={setSelectedStatuses}
             selectedRatings={selectedRatings}
             setSelectedRatings={setSelectedRatings}
-            setPagination={setPagination}
+            onResetFilters={resetFilters}
           />
         </div>
         {isMounted && (
           <div className="flex-shrink-0">
             <ProductReviewDialog
+              open={createOpen}
+              onOpenChange={setCreateOpen}
               trigger={
                 <Button className="h-10 rounded-[28px] border border-violet-400/30 dark:border-violet-400/30 bg-violet-100 dark:bg-violet-950/45 text-white shadow-sm flex items-center gap-2">
                   <Star className="h-4 w-4" />
@@ -190,6 +206,13 @@ export default function ProductReviewList({
         setPagination={setPagination}
         selectedStatuses={selectedStatuses}
         selectedRatings={selectedRatings}
+        filtersActive={
+          searchTerm.trim().length > 0 ||
+          selectedStatuses.length > 0 ||
+          selectedRatings.length > 0
+        }
+        onResetFilters={resetFilters}
+        onCreate={() => setCreateOpen(true)}
       />
     </div>
   );

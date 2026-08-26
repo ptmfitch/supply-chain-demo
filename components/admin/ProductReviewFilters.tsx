@@ -6,7 +6,7 @@
 "use client";
 
 import { FILTER_SEARCH_INPUT_SKY_CLASS } from "@/lib/ui/filter-toolbar-styles";
-import React, { useCallback, useMemo } from "react";
+import React, { useMemo } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
@@ -16,7 +16,6 @@ import { ReviewStatusDropDown } from "@/components/product-reviews/ReviewStatusF
 import { Star } from "lucide-react";
 import { DismissibleFilterChips } from "@/components/shared";
 import type { FilterChipGroup } from "@/components/shared";
-import { PaginationType } from "@/components/shared/PaginationSelector";
 import { ReviewStatusBadge } from "@/lib/ui/semantic-badges";
 import { FILTER_CHIP_COLLAPSED_CLASS } from "@/lib/ui/filter-chip-styles";
 
@@ -35,7 +34,7 @@ interface ProductReviewFiltersProps {
   setSelectedStatuses: React.Dispatch<React.SetStateAction<string[]>>;
   selectedRatings: string[];
   setSelectedRatings: React.Dispatch<React.SetStateAction<string[]>>;
-  setPagination?: React.Dispatch<React.SetStateAction<PaginationType>>;
+  onResetFilters: () => void;
 }
 
 export default function ProductReviewFilters({
@@ -45,16 +44,10 @@ export default function ProductReviewFilters({
   setSelectedStatuses,
   selectedRatings,
   setSelectedRatings,
-  setPagination,
+  onResetFilters,
 }: ProductReviewFiltersProps) {
   const ratingTriggerClass =
     "h-10 rounded-[28px] border border-amber-400/30 dark:border-amber-400/30 bg-amber-100 dark:bg-amber-950/45 text-gray-700 dark:text-white shadow-sm backdrop-blur-md transition duration-200 hover:border-amber-300/40 hover:bg-amber-200 dark:hover:bg-amber-900/50 dark:hover:border-amber-300/40 hover:bg-amber-200 dark:hover:bg-amber-900/50";
-
-  const handleResetFilters = useCallback(() => {
-    setSelectedStatuses([]);
-    setSelectedRatings([]);
-    setPagination?.((prev) => ({ ...prev, pageIndex: 0 }));
-  }, [setSelectedStatuses, setSelectedRatings, setPagination]);
 
   const filterChipGroups = useMemo((): FilterChipGroup[] => {
     const ratingLabelById = new Map(RATING_OPTIONS.map((o) => [o.id, o.name]));
@@ -127,7 +120,7 @@ export default function ProductReviewFilters({
 
       <DismissibleFilterChips
         groups={filterChipGroups}
-        onReset={handleResetFilters}
+        onReset={onResetFilters}
       />
     </div>
   );

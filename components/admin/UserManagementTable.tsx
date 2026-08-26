@@ -26,8 +26,10 @@ import { TableBodyPulseRows } from "@/components/ui/table-data-skeleton";
 import PaginationSelector, {
   type PaginationType,
 } from "@/components/shared/PaginationSelector";
+import { TableEmptyState } from "@/components/shared";
 import { useClampPaginationIndex } from "@/hooks/use-clamp-pagination-index";
 import { Button } from "@/components/ui/button";
+import { Plus, X } from "lucide-react";
 import { GrFormPrevious, GrFormNext } from "react-icons/gr";
 import { BiFirstPage, BiLastPage } from "react-icons/bi";
 import type { UserForAdmin } from "@/types";
@@ -42,6 +44,9 @@ interface UserManagementTableProps {
     updater: PaginationType | ((old: PaginationType) => PaginationType),
   ) => void;
   selectedRoles: string[];
+  filtersActive: boolean;
+  onResetFilters: () => void;
+  onCreate: () => void;
 }
 
 export const UserManagementTable = React.memo(function UserManagementTable({
@@ -52,6 +57,9 @@ export const UserManagementTable = React.memo(function UserManagementTable({
   pagination,
   setPagination,
   selectedRoles,
+  filtersActive,
+  onResetFilters,
+  onCreate,
 }: UserManagementTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
 
@@ -138,9 +146,23 @@ export const UserManagementTable = React.memo(function UserManagementTable({
                 <TableRow>
                   <TableCell
                     colSpan={columns.length}
-                    className="text-center text-gray-700 dark:text-white"
+                    className="p-0"
                   >
-                    No users found.
+                    <TableEmptyState
+                      icon={filtersActive ? X : Plus}
+                      title={filtersActive ? "No matches" : "No users yet"}
+                      description={
+                        filtersActive
+                          ? "Adjust or reset the active filters."
+                          : "Create the first account to get started."
+                      }
+                      action={
+                        filtersActive
+                          ? { label: "Reset filters", onClick: onResetFilters }
+                          : { label: "Create User", onClick: onCreate }
+                      }
+                      actionVariant={filtersActive ? "outline" : "primary"}
+                    />
                   </TableCell>
                 </TableRow>
               )}

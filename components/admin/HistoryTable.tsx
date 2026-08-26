@@ -27,8 +27,10 @@ import { TableBodyPulseRows } from "@/components/ui/table-data-skeleton";
 import PaginationSelector, {
   type PaginationType,
 } from "@/components/shared/PaginationSelector";
+import { TableEmptyState } from "@/components/shared";
 import { useClampPaginationIndex } from "@/hooks/use-clamp-pagination-index";
 import { Button } from "@/components/ui/button";
+import { Plus, X } from "lucide-react";
 import { GrFormPrevious, GrFormNext } from "react-icons/gr";
 import { BiFirstPage, BiLastPage } from "react-icons/bi";
 import type { ImportHistoryForPage } from "@/types";
@@ -44,6 +46,8 @@ interface HistoryTableProps {
   ) => void;
   selectedImportTypes: string[];
   selectedStatuses: string[];
+  filtersActive: boolean;
+  onResetFilters: () => void;
 }
 
 export const HistoryTable = React.memo(function HistoryTable({
@@ -55,6 +59,8 @@ export const HistoryTable = React.memo(function HistoryTable({
   setPagination,
   selectedImportTypes,
   selectedStatuses,
+  filtersActive,
+  onResetFilters,
 }: HistoryTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
 
@@ -145,9 +151,25 @@ export const HistoryTable = React.memo(function HistoryTable({
                 <TableRow>
                   <TableCell
                     colSpan={columns.length}
-                    className="text-center text-gray-700 dark:text-white"
+                    className="p-0"
                   >
-                    No import history found.
+                    <TableEmptyState
+                      icon={filtersActive ? X : Plus}
+                      title={
+                        filtersActive ? "No matches" : "No import history yet"
+                      }
+                      description={
+                        filtersActive
+                          ? "Adjust or reset the active filters."
+                          : "Import products to create the first run."
+                      }
+                      action={
+                        filtersActive
+                          ? { label: "Reset filters", onClick: onResetFilters }
+                          : { label: "Import products", href: "/products" }
+                      }
+                      actionVariant={filtersActive ? "outline" : "primary"}
+                    />
                   </TableCell>
                 </TableRow>
               )}

@@ -5,7 +5,7 @@
 "use client";
 
 import { FILTER_SEARCH_INPUT_SKY_CLASS } from "@/lib/ui/filter-toolbar-styles";
-import React, { useCallback, useMemo } from "react";
+import React, { useMemo } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
@@ -13,7 +13,6 @@ import { IoClose } from "react-icons/io5";
 import { UserRoleDropDown } from "./UserRoleFilter";
 import { DismissibleFilterChips } from "@/components/shared";
 import type { FilterChipGroup } from "@/components/shared";
-import { PaginationType } from "@/components/shared/PaginationSelector";
 import { UserRoleBadge } from "@/lib/ui/semantic-badges";
 
 interface UserManagementFiltersProps {
@@ -21,7 +20,7 @@ interface UserManagementFiltersProps {
   setSearchTerm: (term: string) => void;
   selectedRoles: string[];
   setSelectedRoles: React.Dispatch<React.SetStateAction<string[]>>;
-  setPagination?: React.Dispatch<React.SetStateAction<PaginationType>>;
+  onResetFilters: () => void;
 }
 
 export default function UserManagementFilters({
@@ -29,13 +28,8 @@ export default function UserManagementFilters({
   setSearchTerm,
   selectedRoles,
   setSelectedRoles,
-  setPagination,
+  onResetFilters,
 }: UserManagementFiltersProps) {
-  const handleResetFilters = useCallback(() => {
-    setSelectedRoles([]);
-    setPagination?.((prev) => ({ ...prev, pageIndex: 0 }));
-  }, [setSelectedRoles, setPagination]);
-
   const filterChipGroups = useMemo((): FilterChipGroup[] => {
     return [
       {
@@ -79,7 +73,7 @@ export default function UserManagementFilters({
 
       <DismissibleFilterChips
         groups={filterChipGroups}
-        onReset={handleResetFilters}
+        onReset={onResetFilters}
       />
     </div>
   );

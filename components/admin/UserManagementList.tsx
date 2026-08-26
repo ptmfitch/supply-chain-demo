@@ -4,7 +4,13 @@
 
 "use client";
 
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useUsers, useDashboard } from "@/hooks/queries";
 import {
   isDataSlotLoading,
@@ -65,6 +71,13 @@ export default function UserManagementList({
     pageSize: 8,
   });
   const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
+  const [createOpen, setCreateOpen] = useState(false);
+
+  const resetFilters = useCallback(() => {
+    setSearchTerm("");
+    setSelectedRoles([]);
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+  }, []);
 
   const columns = useMemo(
     () =>
@@ -149,12 +162,15 @@ export default function UserManagementList({
             setSearchTerm={setSearchTerm}
             selectedRoles={selectedRoles}
             setSelectedRoles={setSelectedRoles}
-            setPagination={setPagination}
+            onResetFilters={resetFilters}
           />
         </div>
         {isMounted && (
           <div className="shrink-0">
-            <CreateUserDialog />
+            <CreateUserDialog
+              open={createOpen}
+              onOpenChange={setCreateOpen}
+            />
           </div>
         )}
       </div>
@@ -167,6 +183,9 @@ export default function UserManagementList({
         pagination={pagination}
         setPagination={setPagination}
         selectedRoles={selectedRoles}
+        filtersActive={searchTerm.trim().length > 0 || selectedRoles.length > 0}
+        onResetFilters={resetFilters}
+        onCreate={() => setCreateOpen(true)}
       />
     </div>
   );
