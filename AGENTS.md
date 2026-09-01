@@ -66,4 +66,5 @@ When a ticket exists in Jira project `supply-chain-demo`, mention it in the PR b
 |------|------|
 | `.cursor/rules/demo-naming.mdc` | Always — stem only, no customer names |
 | `.cursor/rules/demo-heavy.mdc` | Always — visible UI/charts; no Grafana |
+| `.cursor/skills/run-dev/SKILL.md` | Start/stop local stack (Colima, Mongo `rs0`, Next.js). Model-invoked on “start the app”. |
 | `.cursor/skills/add-dashboard-pivot/SKILL.md` | Adding a denser pivot-style stock/order grid with filters |
