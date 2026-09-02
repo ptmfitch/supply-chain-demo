@@ -494,6 +494,19 @@ All user-facing POST/PUT JSON bodies use `safeParse` + `logger.warn` on fail. Ne
 
 **Rule:** Shell (titles, headers, filters, sidebar) always visible; only data values pulse. No `loading.tsx`.
 
+## Usage metrics — admin nav clicks (separate DB)
+
+| Piece | Location |
+|----|----|
+| Skill (read first) | `.cursor/skills/usage-metrics/SKILL.md` |
+| DB name | `stockly_usage` — app DB + `_usage`; `USAGE_DB_NAME` overrides (`lib/usage-metrics/usage-db-name.ts`) |
+| Nav dimension | `lib/usage-metrics/nav-item-catalog.ts` — built from `role-nav-config` + `admin-nav-config`; 9 top bar / 13 sidebar / 4 profile, 4 `duplicateOf` |
+| Collections | `nav_click_events` (time series `ts`/`meta`), `nav_click_daily` (unique `day,source,itemKey`), `nav_session_daily` (unique `day`), `nav_items` |
+| Scripts | `npm run script:seed-usage-metrics` · `npm run script:usage-metrics-report [-- --json]` |
+| Pipelines | `scripts/lib/usage-metrics-queries.ts` — reuse, don't rewrite |
+
+**Read the rollups, not the events.** No Prisma model, no TanStack key, no Redis, no invalidation — the app never touches this DB; seeding only reads `stockly.User`. Seeded demo data, not real telemetry.
+
 ## Docs
 
 - Full walkthrough: `docs/PROJECT_WALKTHROUGH.md`
