@@ -20,7 +20,7 @@ describe("role-nav-config (REQ-0094)", () => {
       "/orders",
       "/invoices",
     ]);
-    expect(getNavPathsForRole("admin")).toHaveLength(9);
+    expect(getNavPathsForRole("admin")).toHaveLength(8);
   });
 
   it("includes profile menu paths for all roles", () => {
@@ -39,9 +39,7 @@ describe("role-nav-config (REQ-0094)", () => {
     expect(adminWarm).not.toContain("/admin");
     expect(adminWarm.length).toBe(
       new Set([
-        ...getNavPathsForRole("admin").map((p) =>
-          p === "/admin" ? "/admin/dashboard-overall-insights" : p,
-        ),
+        ...getNavPathsForRole("admin"),
         ...getProfileMenuPaths(),
         ...getAdminSidebarWarmPaths(),
       ]).size,

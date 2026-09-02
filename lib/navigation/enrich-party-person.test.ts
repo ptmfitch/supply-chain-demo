@@ -16,12 +16,12 @@ describe("enrichPartyPerson", () => {
     expect(enriched?.linkClassName).toBeUndefined();
   });
 
-  it("uses admin products path for admin viewers", () => {
+  it("uses store products path for admin viewers", () => {
     const enriched = enrichPartyPerson(
       { userId: "u2", name: "Other", email: "o@test.com" },
       { isAdminRole: true, viewerUserId: "u1" },
     );
-    expect(enriched?.href).toBe("/admin/products?ownerId=u2");
+    expect(enriched?.href).toBe("/products?ownerId=u2");
     expect(enriched?.linkClassName).toBeUndefined();
   });
 });

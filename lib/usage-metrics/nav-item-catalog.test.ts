@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
   buildNavItemCatalog,
-  buildNavItemKey,
   getDuplicateNavItems,
   getSidebarOnlyNavItems,
   slugifyNavLabel,
@@ -34,8 +33,8 @@ describe("buildNavItemCatalog", () => {
     const bySource = (source: string) =>
       catalog.filter((item) => item.source === source);
 
-    expect(bySource("top_bar")).toHaveLength(9);
-    expect(bySource("sidebar")).toHaveLength(13);
+    expect(bySource("top_bar")).toHaveLength(8);
+    expect(bySource("sidebar")).toHaveLength(9);
     expect(bySource("profile_menu")).toHaveLength(4);
     expect(new Set(catalog.map((item) => item._id)).size).toBe(catalog.length);
   });
@@ -56,15 +55,8 @@ describe("buildNavItemCatalog", () => {
     expect(hrefsFor("profile_menu")).toEqual([...PROFILE_MENU_PATHS]);
   });
 
-  it("marks the four store/admin duplicate destinations", () => {
-    expect(
-      getDuplicateNavItems(catalog).map((item) => [item._id, item.duplicateOf]),
-    ).toEqual([
-      ["sidebar:orders", "top_bar:orders"],
-      ["sidebar:invoices", "top_bar:invoices"],
-      ["sidebar:products", "top_bar:products"],
-      ["sidebar:warehouses", "top_bar:warehouses"],
-    ]);
+  it("has no sidebar duplicates of top bar destinations", () => {
+    expect(getDuplicateNavItems(catalog)).toEqual([]);
   });
 
   it("leaves sidebar-only destinations unmarked", () => {
@@ -75,18 +67,12 @@ describe("buildNavItemCatalog", () => {
     expect(sidebarOnly).toContain("User Management");
     expect(sidebarOnly).toContain("Client Portal");
     expect(sidebarOnly).not.toContain("Orders");
+    expect(sidebarOnly).not.toContain("Products");
     expect(sidebarOnly).toHaveLength(9);
   });
 
-  it("records that Admin Panel only redirects", () => {
-    const adminPanel = catalog.find(
-      (item) => item._id === buildNavItemKey("top_bar", "Admin Panel"),
-    );
-    expect(adminPanel?.href).toBe("/admin");
-    expect(adminPanel?.redirectsTo).toBe("/admin/dashboard-overall-insights");
-    expect(
-      catalog.filter((item) => item.redirectsTo !== null),
-    ).toHaveLength(1);
+  it("does not mark any nav item as redirect-only", () => {
+    expect(catalog.filter((item) => item.redirectsTo !== null)).toHaveLength(0);
   });
 
   it("shares an entity across surfaces without labelling profile items duplicates", () => {

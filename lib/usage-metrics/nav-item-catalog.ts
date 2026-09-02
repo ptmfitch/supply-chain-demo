@@ -6,8 +6,7 @@
  * inside client components (profile menu, sidebar group headings) are mirrored
  * here and pinned by nav-item-catalog.test.ts.
  *
- * `duplicateOf` covers the four entities reachable at both a store route and an
- * admin route. Support Tickets and Email Preferences also appear twice
+ * `duplicateOf` is null for all sidebar items after the one-system nav change.
  * (profile menu vs sidebar) but at different paths, so they share an `entity`
  * without being marked duplicates — group by `entity` to find those.
  */
@@ -66,10 +65,6 @@ const PROFILE_MENU_LABELS: Record<string, string> = {
 
 const EMAIL_PREFERENCES_LABEL = "Email Preferences";
 
-/** `/admin` is redirect-only (app/admin/page.tsx). */
-const ADMIN_PANEL_HREF = "/admin";
-const ADMIN_PANEL_REDIRECT_TARGET = "/admin/dashboard-overall-insights";
-
 export function slugifyNavLabel(label: string): string {
   return label
     .toLowerCase()
@@ -116,14 +111,7 @@ function sidebarDrafts(
  */
 export function buildNavItemCatalog(): NavItemDoc[] {
   const topBar = getNavItemsForRole("admin").map((item) =>
-    draft(
-      "top_bar",
-      item.label,
-      item.path,
-      null,
-      item.label,
-      item.path === ADMIN_PANEL_HREF ? ADMIN_PANEL_REDIRECT_TARGET : null,
-    ),
+    draft("top_bar", item.label, item.path, null, item.label),
   );
 
   const sidebar = [
