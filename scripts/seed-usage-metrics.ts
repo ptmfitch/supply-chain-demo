@@ -71,6 +71,8 @@ async function resolveAdminUserIds(
     .db(appDbName)
     .collection("User")
     .find({ role: { $in: ["admin", "user"] } }, { projection: { _id: 1 } })
+    .sort({ _id: 1 })
+    .limit(ADMIN_POOL_SIZE)
     .toArray();
 
   const ids = rows.map((row) => String(row._id));
