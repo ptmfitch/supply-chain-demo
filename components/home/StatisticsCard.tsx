@@ -138,7 +138,7 @@ export function StatisticsCard({
           </p>
           <div
             className={cn(
-              "flex shrink-0 items-center justify-center rounded-xl border border-gray-300/30 bg-gray-100/50 shadow-inner shadow-primary/30 backdrop-blur dark:border-white/15 dark:bg-white/10",
+              "flex shrink-0 items-center justify-center rounded-xl border border-gray-300/30 bg-gray-100/50 backdrop-blur dark:border-white/15 dark:bg-white/10",
               compact ? "h-8 w-8" : "h-10 w-10",
             )}
           >
