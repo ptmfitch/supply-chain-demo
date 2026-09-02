@@ -192,7 +192,7 @@ const OrderList = React.memo(
       dataSource === "clientOrders"
         ? "/admin/client-orders"
         : dataSource === "adminCombined"
-          ? "/admin/orders"
+          ? (detailHrefBase ?? "/admin/orders")
           : detailHrefBase;
 
     const [orderSourceFilter, setOrderSourceFilter] =
