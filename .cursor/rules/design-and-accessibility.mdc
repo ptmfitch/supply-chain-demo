@@ -33,3 +33,4 @@ Read the cited file before inventing classes, copy, or new primitives.
 - New design tokens, Grafana, or a parallel badge/button system.
 - Rely on red/green alone for stock, order, or invoice status.
 - Customer names in UI copy (stem **supply-chain-demo** only).
+- Playwright (or a second browser) to re-check Design Mode tweaks — see `ui-verification.mdc`.

@@ -1,0 +1,22 @@
+---
+description: Skip Playwright in Design Mode. Use Playwright only for cloud or async agents.
+alwaysApply: true
+---
+
+# UI verification
+
+No repo skill requires Playwright for local UI tweaks.
+
+## Design Mode (in-IDE preview)
+
+Signals: `browser_element` selection, a Design Mode / browser-preview screenshot, or the user already has the app open in the Cursor preview.
+
+- Edit the code and stop. The preview is the verification surface.
+- Do not open Playwright MCP, a second browser, or sign in again to re-check.
+- Do not screenshot or `browser_evaluate` the live preview unless the user asks.
+
+## Playwright is for
+
+- Cloud agents
+- Async / unattended runs
+- An explicit request to use Playwright or a smoke spec
