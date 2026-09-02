@@ -109,9 +109,30 @@ async function collectReport(db: Db) {
         .aggregate<{ firstDay: string; lastDay: string; uniqueUsers: number }>([
           {
             $group: {
+              _id: "$day",
+              userSets: { $push: "$userIds" },
+            },
+          },
+          {
+            $project: {
+              uniqueUsers: {
+                $size: {
+                  $reduce: {
+                    input: "$userSets",
+                    initialValue: [],
+                    in: {
+                      $setUnion: ["$$value", { $ifNull: ["$$this", []] }],
+                    },
+                  },
+                },
+              },
+            },
+          },
+          {
+            $group: {
               _id: null,
-              firstDay: { $min: "$day" },
-              lastDay: { $max: "$day" },
+              firstDay: { $min: "$_id" },
+              lastDay: { $max: "$_id" },
               uniqueUsers: { $max: "$uniqueUsers" },
             },
           },

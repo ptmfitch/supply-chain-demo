@@ -253,6 +253,7 @@ export function buildNavClickDailyPipeline(): Document[] {
         source: "$_id.source",
         itemKey: "$_id.itemKey",
         clicks: 1,
+        userIds: 1,
         uniqueUsers: { $size: "$userIds" },
         sessions: { $size: "$sessionIds" },
         entity: 1,
