@@ -456,6 +456,17 @@ All user-facing POST/PUT JSON bodies use `safeParse` + `logger.warn` on fail. Ne
 
 **C2 backlog (REQ-0027):** done — shallow `?ownerId=` + deferred admin client-list warm.
 
+## Admin navigation — one system
+
+| Piece | Location |
+|-------|----------|
+| Top bar | `role-nav-config.ts` — 8 items (no Admin Panel); store paths for orders/invoices/products/warehouses |
+| Sidebar | `admin-nav-config.ts` — 9 admin-only items; rendered via `Navbar` for admin/user on all routes |
+| Combined lists | `/orders` + `/invoices` — `adminCombined` dataSource for admin/user (Self + Client badges) |
+| Redirects | `lib/navigation/redirect-with-search.ts` — `/admin/{orders,invoices,products,warehouses}` → store URL |
+
+**Invalidation unchanged** — nav/routing only.
+
 ## Role-scoped warm prefetch (REQ-0093)
 
 | Piece | Location |

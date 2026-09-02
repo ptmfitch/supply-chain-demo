@@ -1,8 +1,12 @@
-import { redirect } from "next/navigation";
+import { redirectWithSearch } from "@/lib/navigation/redirect-with-search";
 
-/**
- * Legacy Personal Invoices — redirect to combined Invoices page.
- */
-export default function AdminPersonalInvoicesPage() {
-  redirect("/admin/invoices");
+type Props = {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+};
+
+/** Legacy Personal Invoices — redirect to combined store list. */
+export default async function AdminPersonalInvoicesPage({
+  searchParams,
+}: Props) {
+  redirectWithSearch("/invoices", await searchParams);
 }

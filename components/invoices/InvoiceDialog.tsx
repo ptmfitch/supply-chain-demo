@@ -153,10 +153,11 @@ export default function InvoiceDialog({
       : setInternalEditingInvoice;
 
   const pathname = usePathname();
-  const isAdminInvoicesPage = pathname?.startsWith("/admin/invoices");
+  const isAdminInvoicesPage =
+    pathname === "/invoices" || pathname?.startsWith("/admin/invoices");
   const isAdmin = user?.role === "admin";
   // Client-orders leg also loads when pre-selecting an order (REQ-0061 —
-  // "Create Invoice" from a client order row on /admin/orders)
+  // "Create Invoice" from a client order row on /orders)
   const needsClientOrdersLeg =
     isAdmin && (isAdminInvoicesPage || Boolean(initialOrderId));
 
@@ -166,8 +167,7 @@ export default function InvoiceDialog({
     enabled: open && needsClientOrdersLeg,
   });
 
-  // /admin/invoices: show self + client orders with placer name
-  // /invoices: show only self orders (product owner's own)
+  // Combined invoices (/invoices or /admin/invoices): self + client with placer name
   const orders = React.useMemo(() => {
     if (!needsClientOrdersLeg) return selfOrders;
     const byId = new Map<string, Order & { _source?: string }>();

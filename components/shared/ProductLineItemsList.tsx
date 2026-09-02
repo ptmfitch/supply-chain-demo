@@ -124,20 +124,16 @@ export function ProductLineItemsList({
   const invoice = order?.invoiceForOrder;
   const invoiceHref =
     invoice != null
-      ? linkMode === "admin"
-        ? `/admin/invoices/${invoice.id}`
-        : linkMode !== "none"
-          ? `/invoices/${invoice.id}`
-          : null
+      ? linkMode === "none"
+        ? null
+        : `/invoices/${invoice.id}`
       : null;
 
   const relatedOrderHref =
     relatedOrder != null
-      ? linkMode === "admin"
-        ? `/admin/orders/${relatedOrder.id}`
-        : linkMode !== "none"
-          ? `/orders/${relatedOrder.id}`
-          : null
+      ? linkMode === "none"
+        ? null
+        : `/orders/${relatedOrder.id}`
       : null;
 
   return (
@@ -153,14 +149,14 @@ export function ProductLineItemsList({
             : `/suppliers/${item.supplierId}`;
         const productHref =
           linkMode === "admin" && item.productId
-            ? `/admin/products/${item.productId}`
+            ? `/products/${item.productId}`
             : linkMode === "portal" && item.productId
               ? `/products/${item.productId}`
               : null;
 
         const warehouseHref =
           item.warehouseId && warehouseLinkMode === "admin"
-            ? `/admin/warehouses/${item.warehouseId}`
+            ? `/warehouses/${item.warehouseId}`
             : item.warehouseId && warehouseLinkMode === "owner"
               ? `/warehouses/${item.warehouseId}`
               : null;

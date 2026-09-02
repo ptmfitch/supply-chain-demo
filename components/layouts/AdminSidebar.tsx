@@ -6,8 +6,6 @@ import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
   Package,
-  Warehouse,
-  ShoppingCart,
   History,
   MessageSquare,
   Star,
@@ -15,7 +13,6 @@ import {
   Truck,
   Users,
   Mail,
-  FileText,
   UserCircle,
   type LucideIcon,
 } from "lucide-react";
@@ -36,12 +33,8 @@ import type { AdminCounts } from "@/types";
 /** Icon map for admin sidebar items (REQ-0094 — hrefs live in admin-nav-config). */
 const ADMIN_NAV_ICONS: Record<string, LucideIcon> = {
   "/admin/dashboard-overall-insights": LayoutDashboard,
-  "/admin/orders": ShoppingCart,
-  "/admin/invoices": FileText,
   "/admin/support-tickets": MessageSquare,
   "/admin/product-reviews": Star,
-  "/admin/products": Package,
-  "/admin/warehouses": Warehouse,
   "/admin/supplier-portal": Truck,
   "/admin/client-portal": Store,
   "/admin/user-management": Users,

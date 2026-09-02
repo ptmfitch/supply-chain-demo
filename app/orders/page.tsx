@@ -5,6 +5,7 @@ import {
   getOrdersForUser,
   getOrdersForClientId,
   getOrdersForSupplierId,
+  getClientOrdersForProductOwner,
 } from "@/lib/server/orders-data";
 import { prefetchListPageStats } from "@/lib/server/list-page-stats";
 import { getSupplierByUserId } from "@/prisma/supplier";
@@ -48,16 +49,20 @@ export default async function OrdersRoute() {
     );
   }
 
-  const [initialOrdersResult, listStats] = await Promise.all([
-    getOrdersForUser(user.id),
-    listStatsPromise,
-  ]);
+  const [initialOrdersResult, initialClientOrders, listStats] =
+    await Promise.all([
+      getOrdersForUser(user.id),
+      getClientOrdersForProductOwner(user.id),
+      listStatsPromise,
+    ]);
 
   return (
     <OrdersPage
       initialOrders={initialOrdersResult}
+      initialClientOrders={initialClientOrders}
       userRole={userRole}
       initialStats={listStats.initialStats}
+      adminCombined
     />
   );
 }

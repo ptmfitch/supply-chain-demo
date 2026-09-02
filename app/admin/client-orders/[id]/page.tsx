@@ -1,13 +1,15 @@
-import { redirect } from "next/navigation";
+import { redirectWithSearch } from "@/lib/navigation/redirect-with-search";
 
-/**
- * Legacy Client Order detail — redirect to combined order detail.
- */
+type Props = {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+};
+
+/** Legacy Client Order detail — redirect to store order detail. */
 export default async function AdminClientOrderDetailPage({
   params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+  searchParams,
+}: Props) {
   const { id } = await params;
-  redirect(`/admin/orders/${id}`);
+  redirectWithSearch(`/orders/${id}`, await searchParams);
 }

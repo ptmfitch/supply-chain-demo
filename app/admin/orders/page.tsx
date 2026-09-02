@@ -1,30 +1,12 @@
-import { redirect } from "next/navigation";
-import { getSession } from "@/lib/auth-server";
-import {
-  getOrdersForUser,
-  getClientOrdersForProductOwner,
-} from "@/lib/server/orders-data";
-import { getDashboardForAdmin } from "@/lib/server/dashboard-data";
-import AdminCombinedOrdersContent from "@/components/admin/AdminCombinedOrdersContent";
+import { redirectWithSearch } from "@/lib/navigation/redirect-with-search";
 
-/** REQ-0025 — blocking SSR prefetch (no Suspense shell flash, no double client fetch). */
-export const dynamic = "force-dynamic";
+type Props = {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+};
 
-export default async function AdminOrdersPage() {
-  const user = await getSession();
-  if (!user) redirect("/login");
-
-  const [initialOrders, initialClientOrders, initialStats] = await Promise.all([
-    getOrdersForUser(user.id),
-    getClientOrdersForProductOwner(user.id),
-    getDashboardForAdmin(user.id),
-  ]);
-
-  return (
-    <AdminCombinedOrdersContent
-      initialOrders={initialOrders}
-      initialClientOrders={initialClientOrders}
-      initialStats={initialStats}
-    />
-  );
+/** Admin orders twin — redirect to the single store list. */
+export default async function AdminOrdersPage({
+  searchParams,
+}: Props) {
+  redirectWithSearch("/orders", await searchParams);
 }
