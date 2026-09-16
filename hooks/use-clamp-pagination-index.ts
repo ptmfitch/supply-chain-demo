@@ -7,6 +7,7 @@
 
 import { useEffect, type Dispatch, type SetStateAction } from "react";
 import type { PaginationType } from "@/components/shared/PaginationSelector";
+import { tablePageCountFromRows } from "@/lib/ui/table-page-count";
 
 export function useClampPaginationIndex(
   filteredCount: number,
@@ -14,7 +15,10 @@ export function useClampPaginationIndex(
   setPagination: Dispatch<SetStateAction<PaginationType>>,
 ): void {
   useEffect(() => {
-    const pageCount = Math.max(1, Math.ceil(filteredCount / pagination.pageSize));
+    const pageCount = tablePageCountFromRows(
+      filteredCount,
+      pagination.pageSize,
+    );
     const maxIndex = pageCount - 1;
     setPagination((prev) =>
       prev.pageIndex <= maxIndex ? prev : { ...prev, pageIndex: maxIndex },
