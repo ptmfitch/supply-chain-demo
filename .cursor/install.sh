@@ -16,8 +16,26 @@ need_docker_packages() {
   ! command -v dockerd >/dev/null 2>&1 || ! command -v fuse-overlayfs >/dev/null 2>&1
 }
 
+# Snapshot rebuilds already have node_modules; a fresh git checkout often leaves
+# gitignored dirs in place. Skip npm ci when the lockfile install is present so
+# a draft builder that still cannot reach registry.npmjs.org can succeed.
+need_npm_ci() {
+  ! [ -d node_modules/@prisma/client ] || ! [ -f node_modules/.package-lock.json ]
+}
+
+prefer_https_ubuntu_apt() {
+  local sources="/etc/apt/sources.list.d/ubuntu.sources"
+  if [ -f "$sources" ]; then
+    sudo sed -i \
+      -e 's|http://archive.ubuntu.com|https://archive.ubuntu.com|g' \
+      -e 's|http://security.ubuntu.com|https://security.ubuntu.com|g' \
+      "$sources"
+  fi
+}
+
 echo "==> [install] System packages: Docker + fuse-overlayfs (rootless-capable storage driver)"
 if need_docker_packages; then
+  prefer_https_ubuntu_apt
   # --force-confold keeps the existing /etc/fuse.conf so the fuse3 postinst does
   # not block on an interactive conffile prompt in a non-tty build.
   if ! sudo apt-get update -o Acquire::Retries=3; then
@@ -37,11 +55,15 @@ command -v dockerd >/dev/null || { echo "dockerd missing after install"; exit 1;
 command -v fuse-overlayfs >/dev/null || { echo "fuse-overlayfs missing after install"; exit 1; }
 
 echo "==> [install] npm ci (postinstall runs prisma generate)"
-if ! npm ci; then
-  echo "ERROR: npm ci failed. Cloud Agent egress must allow:" >&2
-  echo "  - registry.npmjs.org" >&2
-  echo "  - binaries.prisma.sh  (prisma generate engines)" >&2
-  exit 1
+if need_npm_ci; then
+  if ! npm ci; then
+    echo "ERROR: npm ci failed. Cloud Agent egress must allow:" >&2
+    echo "  - registry.npmjs.org" >&2
+    echo "  - binaries.prisma.sh  (prisma generate engines)" >&2
+    exit 1
+  fi
+else
+  echo "   node_modules already present; skipping npm ci"
 fi
 
 echo "==> [install] Pre-pull mongo:7 so boots are fast and do not require the registry"
@@ -55,7 +77,11 @@ pull_mongo_image() {
     for _ in $(seq 1 30); do sudo docker info >/dev/null 2>&1 && break; sleep 1; done
   fi
   if sudo docker info >/dev/null 2>&1; then
-    sudo docker pull mongo:7
+    if sudo docker image inspect mongo:7 >/dev/null 2>&1; then
+      echo "   mongo:7 already present; skipping pull"
+    else
+      sudo docker pull mongo:7
+    fi
   else
     echo "   WARN: dockerd unavailable during install; start.sh will pull mongo:7 on first boot"
   fi
