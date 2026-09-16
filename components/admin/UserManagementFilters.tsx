@@ -11,12 +11,21 @@ import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 import { IoClose } from "react-icons/io5";
 import { UserRoleDropDown } from "./UserRoleFilter";
-import { DismissibleFilterChips } from "@/components/shared";
+import { DismissibleFilterChips, ExportMenuButton } from "@/components/shared";
 import type { FilterChipGroup } from "@/components/shared";
 import { PaginationType } from "@/components/shared/PaginationSelector";
 import { UserRoleBadge } from "@/lib/ui/semantic-badges";
+import { useToast } from "@/hooks/use-toast";
+import { exportToCSV, exportToExcel } from "@/lib/export";
+import {
+  USER_MANAGEMENT_EXPORT_COLUMNS,
+  buildUserManagementExportRows,
+  filterUserManagementList,
+} from "@/lib/admin/user-management-list";
+import type { UserForAdmin } from "@/types";
 
 interface UserManagementFiltersProps {
+  allUsers: UserForAdmin[];
   searchTerm: string;
   setSearchTerm: (term: string) => void;
   selectedRoles: string[];
@@ -25,12 +34,83 @@ interface UserManagementFiltersProps {
 }
 
 export default function UserManagementFilters({
+  allUsers,
   searchTerm,
   setSearchTerm,
   selectedRoles,
   setSelectedRoles,
   setPagination,
 }: UserManagementFiltersProps) {
+  const { toast } = useToast();
+
+  const filteredUsers = useMemo(
+    () => filterUserManagementList(allUsers, searchTerm, selectedRoles),
+    [allUsers, searchTerm, selectedRoles],
+  );
+
+  const handleExportToCSV = useCallback(() => {
+    try {
+      if (filteredUsers.length === 0) {
+        toast({
+          title: "No Data to Export",
+          description: "There are no users to export with the current filters.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const csvData = buildUserManagementExportRows(filteredUsers);
+      const columns = USER_MANAGEMENT_EXPORT_COLUMNS.map(({ header, key }) => ({
+        header,
+        key,
+      }));
+
+      exportToCSV(csvData, columns, "stockly-users");
+
+      toast({
+        title: "CSV Export Successful!",
+        description: `${filteredUsers.length} users exported to CSV file.`,
+      });
+    } catch {
+      toast({
+        title: "Export Failed",
+        description: "Failed to export users to CSV. Please try again.",
+        variant: "destructive",
+      });
+    }
+  }, [filteredUsers, toast]);
+
+  const handleExportToExcel = useCallback(async () => {
+    try {
+      if (filteredUsers.length === 0) {
+        toast({
+          title: "No Data to Export",
+          description: "There are no users to export with the current filters.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      await exportToExcel({
+        sheetName: "Users",
+        fileName: "stockly-users",
+        columns: [...USER_MANAGEMENT_EXPORT_COLUMNS],
+        data: buildUserManagementExportRows(filteredUsers),
+      });
+
+      toast({
+        title: "Excel Export Successful!",
+        description: `${filteredUsers.length} users exported to Excel file.`,
+      });
+    } catch {
+      toast({
+        title: "Export Failed",
+        description: "Failed to export users to Excel. Please try again.",
+        variant: "destructive",
+      });
+    }
+  }, [filteredUsers, toast]);
+
   const handleResetFilters = useCallback(() => {
     setSelectedRoles([]);
     setPagination?.((prev) => ({ ...prev, pageIndex: 0 }));
@@ -73,6 +153,15 @@ export default function UserManagementFilters({
           <UserRoleDropDown
             selectedRoles={selectedRoles}
             setSelectedRoles={setSelectedRoles}
+          />
+        </div>
+        <div className="flex-shrink-0 flex items-center gap-2">
+          <ExportMenuButton
+            label="Export Users"
+            accent="violet"
+            disabled={filteredUsers.length === 0}
+            onExportCsv={handleExportToCSV}
+            onExportExcel={handleExportToExcel}
           />
         </div>
       </div>
