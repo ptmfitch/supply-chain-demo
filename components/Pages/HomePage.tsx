@@ -125,8 +125,9 @@ export default function HomePage({
           title="Store Overview"
           description={
             <>
-              Store-wide metrics for you, clients, and others. Personal
-              activity only:{" "}
+              Store-wide metrics for you, clients, and others.
+              <br />
+              Personal activity only:{" "}
               <Link
                 href="/admin/my-activity"
                 className="font-medium text-sky-600 hover:text-sky-800 dark:text-sky-400 dark:hover:text-sky-300"
