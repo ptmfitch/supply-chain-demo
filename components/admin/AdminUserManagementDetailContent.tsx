@@ -74,19 +74,13 @@ import {
   getUserOverviewDescription,
   shouldShowMyActivityTip,
 } from "@/lib/ui/user-overview-copy";
+import { getDisplayUsername } from "@/lib/admin/user-management-list";
 
 const PROTECTED_EMAILS = [
   "test@admin.com",
   "test@supplier.com",
   "test@client.com",
 ];
-
-function getDisplayUsername(u: UserForAdmin): string {
-  if (u.username?.trim()) return u.username.trim();
-  const email = u.email ?? "";
-  const at = email.indexOf("@");
-  return at > 0 ? email.slice(0, at) : "—";
-}
 
 const ROLE_OPTIONS: { value: UserRole; label: string }[] = [
   { value: "user", label: "User" },
