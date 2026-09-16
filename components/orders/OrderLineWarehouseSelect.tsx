@@ -140,7 +140,7 @@ export function OrderLineWarehouseSelect({
         <div
           className={cn(
             DIALOG_FORM_FIELD_VIOLET,
-            "h-11 rounded-md flex items-center px-3 text-sm text-gray-400 dark:text-gray-700 dark:text-white/50",
+            "h-11 rounded-md flex items-center px-3 text-sm text-gray-400 dark:text-white/50",
           )}
         >
           Select product first
@@ -173,7 +173,7 @@ export function OrderLineWarehouseSelect({
         <div
           className={cn(
             DIALOG_FORM_FIELD_VIOLET,
-            "h-11 rounded-md flex items-center px-3 text-sm text-gray-400 dark:text-gray-700 dark:text-white/50",
+            "h-11 rounded-md flex items-center px-3 text-sm text-gray-400 dark:text-white/50",
           )}
         >
           Not warehouse-tracked
@@ -192,7 +192,7 @@ export function OrderLineWarehouseSelect({
       className="flex-1"
     />
   ) : (
-    <span className="text-sm text-gray-600 dark:text-gray-700 dark:text-white/80">Auto-assign warehouses</span>
+    <span className="text-sm text-gray-600 dark:text-white/80">Auto-assign warehouses</span>
   );
 
   return (

@@ -440,7 +440,7 @@ export default function AddProductDialog({
                   placeholder={
                     <div
                       className={cn(
-                        "flex h-11 w-full items-center rounded-md px-2 text-sm text-gray-500 dark:text-gray-700 dark:text-white/60",
+                        "flex h-11 w-full items-center rounded-md px-2 text-sm text-gray-500 dark:text-white/60",
                         DIALOG_FORM_FIELD_ROSE,
                       )}
                       aria-hidden
@@ -498,7 +498,7 @@ export default function AddProductDialog({
                   placeholder={
                     <div
                       className={cn(
-                        "flex h-11 w-full items-center rounded-md px-2 text-sm text-gray-500 dark:text-gray-700 dark:text-white/60",
+                        "flex h-11 w-full items-center rounded-md px-2 text-sm text-gray-500 dark:text-white/60",
                         DIALOG_FORM_FIELD_ROSE,
                       )}
                       aria-hidden
@@ -516,7 +516,7 @@ export default function AddProductDialog({
                             )?.userId ?? selectedSupplier
                           }
                           size={22}
-                          linkClassName="text-sm font-normal text-gray-700 dark:text-gray-700 dark:text-white/90"
+                          linkClassName="text-sm font-normal text-gray-700 dark:text-white/90"
                         />
                       ) : (
                         supplierInvite
@@ -553,7 +553,7 @@ export default function AddProductDialog({
                                 )?.userId ?? selectedSupplier
                               }
                               size={22}
-                              linkClassName="text-sm font-normal text-gray-700 dark:text-gray-700 dark:text-white/90"
+                              linkClassName="text-sm font-normal text-gray-700 dark:text-white/90"
                             />
                           ) : (
                             supplierInvite

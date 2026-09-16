@@ -241,7 +241,7 @@ export function OrderDialogCreateLineItem({
                       className="flex-1"
                     />
                   ) : (
-                    <span className="text-gray-500 dark:text-gray-700 dark:text-white/60">
+                    <span className="text-gray-500 dark:text-white/60">
                       {productSelectPlaceholder}
                     </span>
                   )}
@@ -316,11 +316,11 @@ export function OrderDialogCreateLineItem({
             )}
             {/* REQ-0187 gap — Subtotal under Product column */}
             {selectedProduct ? (
-              <div className="text-sm text-gray-500 dark:text-gray-700 dark:text-white/70 min-w-0 inline-flex flex-wrap items-center gap-x-2 gap-y-1">
+              <div className="text-sm text-gray-500 dark:text-white/70 min-w-0 inline-flex flex-wrap items-center gap-x-2 gap-y-1">
                 <span>Subtotal:</span>
                 <ProportionalPriceDisplay
                   listAmount={itemSubtotal}
-                  className="text-gray-700 dark:text-gray-700 dark:text-white/90"
+                  className="text-gray-700 dark:text-white/90"
                 />
                 <span>
                   ({selectedProduct.name} × {quantity || 0})

@@ -763,7 +763,7 @@ export default function OrderDialog({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {/* Order Status */}
                 <div className="flex flex-col gap-2">
-                  <label className="text-sm font-medium text-gray-600 dark:text-gray-700 dark:text-white/80">
+                  <label className="text-sm font-medium text-gray-600 dark:text-white/80">
                     Order Status
                   </label>
                   <DeferredSelectGate
@@ -771,7 +771,7 @@ export default function OrderDialog({
                     placeholder={
                       <div
                         className={cn(
-                          "flex h-11 w-full items-center rounded-md px-2 text-sm text-gray-500 dark:text-gray-700 dark:text-white/60",
+                          "flex h-11 w-full items-center rounded-md px-2 text-sm text-gray-500 dark:text-white/60",
                           DIALOG_FORM_FIELD_VIOLET,
                         )}
                         aria-hidden
@@ -824,7 +824,7 @@ export default function OrderDialog({
 
                 {/* Payment Status */}
                 <div className="flex flex-col gap-2">
-                  <label className="text-sm font-medium text-gray-600 dark:text-gray-700 dark:text-white/80">
+                  <label className="text-sm font-medium text-gray-600 dark:text-white/80">
                     Payment Status
                   </label>
                   <DeferredSelectGate
@@ -832,7 +832,7 @@ export default function OrderDialog({
                     placeholder={
                       <div
                         className={cn(
-                          "flex h-11 w-full items-center rounded-md px-2 text-sm text-gray-500 dark:text-gray-700 dark:text-white/60",
+                          "flex h-11 w-full items-center rounded-md px-2 text-sm text-gray-500 dark:text-white/60",
                           DIALOG_FORM_FIELD_VIOLET,
                         )}
                         aria-hidden
@@ -889,7 +889,7 @@ export default function OrderDialog({
                   name="trackingNumber"
                   label="Tracking Number"
                   placeholder="Enter tracking number"
-                  labelClassName="text-gray-600 dark:text-gray-700 dark:text-white/80"
+                  labelClassName="text-gray-600 dark:text-white/80"
                   inputClassName={DIALOG_FORM_FIELD_VIOLET}
                 />
 
@@ -899,7 +899,7 @@ export default function OrderDialog({
                   label="Tracking URL"
                   placeholder="https://tracking.example.com/..."
                   type="url"
-                  labelClassName="text-gray-600 dark:text-gray-700 dark:text-white/80"
+                  labelClassName="text-gray-600 dark:text-white/80"
                   inputClassName={DIALOG_FORM_FIELD_VIOLET}
                 />
 
@@ -1145,7 +1145,7 @@ export default function OrderDialog({
                     />
                     <Label
                       htmlFor="useSameAddress"
-                      className="text-gray-600 dark:text-gray-700 dark:text-white/80 text-sm cursor-pointer"
+                      className="text-gray-600 dark:text-white/80 text-sm cursor-pointer"
                     >
                       Use same address for billing
                     </Label>
@@ -1165,28 +1165,28 @@ export default function OrderDialog({
                   <DialogFormLabel icon={DollarSign}>Order Totals</DialogFormLabel>
                   {showOrderTotals ? (
                     <div className="p-4 border border-violet-400/20 rounded-lg bg-white/5 space-y-2">
-                      <div className="flex justify-between text-sm text-gray-500 dark:text-gray-700 dark:text-white/70">
+                      <div className="flex justify-between text-sm text-gray-500 dark:text-white/70">
                         <span className="inline-flex items-center gap-1.5">
                           <Receipt className="h-3.5 w-3.5 shrink-0" />
                           Subtotal:
                         </span>
                         <span>${subtotal.toFixed(2)}</span>
                       </div>
-                      <div className="flex justify-between text-sm text-gray-500 dark:text-gray-700 dark:text-white/70">
+                      <div className="flex justify-between text-sm text-gray-500 dark:text-white/70">
                         <span className="inline-flex items-center gap-1.5">
                           <Percent className="h-3.5 w-3.5 shrink-0" />
                           Tax (7%):
                         </span>
                         <span>${orderFees.taxAmount.toFixed(2)}</span>
                       </div>
-                      <div className="flex justify-between text-sm text-gray-500 dark:text-gray-700 dark:text-white/70">
+                      <div className="flex justify-between text-sm text-gray-500 dark:text-white/70">
                         <span className="inline-flex items-center gap-1.5">
                           <Truck className="h-3.5 w-3.5 shrink-0" />
                           Shipping:
                         </span>
                         <span>${orderFees.shippingAmount.toFixed(2)}</span>
                       </div>
-                      <div className="flex justify-between text-sm text-gray-500 dark:text-gray-700 dark:text-white/70">
+                      <div className="flex justify-between text-sm text-gray-500 dark:text-white/70">
                         <span className="inline-flex items-center gap-1.5">
                           <Tag className="h-3.5 w-3.5 shrink-0" />
                           Discount ({orderFees.discountPercent}%):
@@ -1204,7 +1204,7 @@ export default function OrderDialog({
                       </div>
                     </div>
                   ) : (
-                    <div className="flex flex-col items-center justify-center gap-2 rounded-lg border border-violet-400/20 bg-white/5 p-6 text-center text-gray-500 dark:text-gray-700 dark:text-white/60">
+                    <div className="flex flex-col items-center justify-center gap-2 rounded-lg border border-violet-400/20 bg-white/5 p-6 text-center text-gray-500 dark:text-white/60">
                       <Package className="h-8 w-8 shrink-0 opacity-70" aria-hidden />
                       <p className="text-sm">Add products to see totals</p>
                     </div>
