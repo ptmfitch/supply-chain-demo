@@ -36,6 +36,7 @@ import PaginationSelector, {
   type PaginationType,
 } from "@/components/shared/PaginationSelector";
 import { useClampPaginationIndex } from "@/hooks/use-clamp-pagination-index";
+import { formatTablePageLabel } from "@/lib/ui/table-page-count";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { GrFormPrevious, GrFormNext } from "react-icons/gr";
@@ -393,7 +394,7 @@ export function AdminPortalDirectory<T extends DirectoryRowBase>({
             <GrFormPrevious />
           </Button>
           <span className="text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">
-            Page {pagination.pageIndex + 1} of {Math.max(1, table.getPageCount())}
+            {formatTablePageLabel(pagination.pageIndex, table.getPageCount())}
           </span>
           <Button
             variant="outline"

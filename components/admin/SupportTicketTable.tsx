@@ -28,6 +28,7 @@ import PaginationSelector, {
   type PaginationType,
 } from "@/components/shared/PaginationSelector";
 import { useClampPaginationIndex } from "@/hooks/use-clamp-pagination-index";
+import { formatTablePageLabel } from "@/lib/ui/table-page-count";
 import { Button } from "@/components/ui/button";
 import { GrFormPrevious, GrFormNext } from "react-icons/gr";
 import { BiFirstPage, BiLastPage } from "react-icons/bi";
@@ -180,7 +181,7 @@ export const SupportTicketTable = React.memo(function SupportTicketTable({
             <GrFormPrevious />
           </Button>
           <span className="text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">
-            Page {pagination.pageIndex + 1} of {table.getPageCount()}
+            {formatTablePageLabel(pagination.pageIndex, table.getPageCount())}
           </span>
           <Button
             variant="outline"
