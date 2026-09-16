@@ -203,7 +203,7 @@ export default function EmailPreferencesPage({
                 return (
                   <div
                     key={item.key}
-                    className="flex items-center justify-between gap-2 p-3 rounded-xl border border-gray-300/20 dark:border-white/10 bg-white/30 dark:bg-white/5 hover:bg-white/50 dark:hover:bg-white/10 transition-colors"
+                    className="flex items-center justify-between gap-2 p-3 rounded-xl border border-gray-300/40 dark:border-white/20 bg-white/80 dark:bg-white/10 hover:bg-white dark:hover:bg-white/20 transition-colors"
                   >
                     <div className="flex items-start gap-2 flex-1 min-w-0">
                       <div className="mt-0.5 shrink-0">
