@@ -2,25 +2,47 @@
 # Cloud Agent install phase — durable, source-derived setup captured in the
 # environment snapshot. Runs after checkout. Must be idempotent and terminate.
 #
-# MongoDB is provided via Docker because the official MongoDB apt/download hosts
-# are outside the Cloud Agent egress allowlist, whereas the Ubuntu archive
-# (docker.io package) and docker.io registry (mongo image) are reachable.
+# MongoDB is provided via Docker because official MongoDB apt/download hosts
+# are outside the Cloud Agent egress allowlist. docker.io comes from Ubuntu
+# apt (archive.ubuntu.com / security.ubuntu.com); the mongo image comes from
+# docker.io (registry-1.docker.io). Both Ubuntu apt hosts must be allowlisted
+# on this Ubuntu Noble image — Debian apt hosts in the default policy are not
+# enough.
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
+need_docker_packages() {
+  ! command -v dockerd >/dev/null 2>&1 || ! command -v fuse-overlayfs >/dev/null 2>&1
+}
+
 echo "==> [install] System packages: Docker + fuse-overlayfs (rootless-capable storage driver)"
-sudo apt-get update -o Acquire::Retries=3
-# --force-confold keeps the existing /etc/fuse.conf so the fuse3 postinst does
-# not block on an interactive conffile prompt in a non-tty build.
-sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
-  -o Dpkg::Options::=--force-confold \
-  docker.io containerd fuse-overlayfs
+if need_docker_packages; then
+  # --force-confold keeps the existing /etc/fuse.conf so the fuse3 postinst does
+  # not block on an interactive conffile prompt in a non-tty build.
+  if ! sudo apt-get update -o Acquire::Retries=3; then
+    echo "ERROR: apt-get update failed. Cloud Agent egress must allow:" >&2
+    echo "  - archive.ubuntu.com" >&2
+    echo "  - security.ubuntu.com" >&2
+    echo "Current policy allows Debian apt hosts (deb.debian.org) which this Ubuntu image does not use." >&2
+    exit 1
+  fi
+  sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    -o Dpkg::Options::=--force-confold \
+    docker.io containerd fuse-overlayfs
+else
+  echo "   Docker + fuse-overlayfs already present; skipping apt"
+fi
 command -v dockerd >/dev/null || { echo "dockerd missing after install"; exit 1; }
 command -v fuse-overlayfs >/dev/null || { echo "fuse-overlayfs missing after install"; exit 1; }
 
 echo "==> [install] npm ci (postinstall runs prisma generate)"
-npm ci
+if ! npm ci; then
+  echo "ERROR: npm ci failed. Cloud Agent egress must allow:" >&2
+  echo "  - registry.npmjs.org" >&2
+  echo "  - binaries.prisma.sh  (prisma generate engines)" >&2
+  exit 1
+fi
 
 echo "==> [install] Pre-pull mongo:7 so boots are fast and do not require the registry"
 # Best-effort: dockerd is not running during the build, so start it briefly to

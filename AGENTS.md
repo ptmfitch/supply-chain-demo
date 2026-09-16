@@ -69,3 +69,16 @@ When a ticket exists in Jira project `supply-chain-demo`, mention it in the PR b
 | `.cursor/skills/run-dev/SKILL.md` | Start/stop local stack (Colima, Mongo `rs0`, Next.js). Model-invoked on “start the app”. |
 | `.cursor/skills/add-dashboard-pivot/SKILL.md` | Adding a denser pivot-style stock/order grid with filters |
 | `.cursor/skills/usage-metrics/SKILL.md` | Charting or seeding admin navigation usage (`stockly_usage` database, top bar vs sidebar clicks) |
+
+## Cursor Cloud specific instructions
+
+Cloud Agent `install` (`bash .cursor/install.sh`) needs Ubuntu apt and npm, not the Debian apt hosts on the default allowlist.
+
+Allowlist these domains on the environment, or `apt-get update` / `npm ci` fail with 403 / ECONNRESET:
+
+- `archive.ubuntu.com` and `security.ubuntu.com` — `docker.io`, `containerd`, `fuse-overlayfs`
+- `registry.npmjs.org` — `npm ci`
+- `binaries.prisma.sh` — `prisma generate` (npm postinstall)
+- `registry-1.docker.io` — `mongo:7` image (usually already allowed)
+
+`start.sh` still runs MongoDB in Docker (`stockly-mongo`, replica set `rs0`) and seeds when `User` is empty.
