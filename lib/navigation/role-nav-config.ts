@@ -26,7 +26,6 @@ const ADMIN_NAV_ITEMS: RoleNavItem[] = [
     path: "/business-insights",
     hasDropdown: false,
   },
-  { label: "Admin Panel", path: "/admin", hasDropdown: false },
 ];
 
 const CLIENT_NAV_ITEMS: RoleNavItem[] = [
@@ -70,19 +69,13 @@ export function getProfileMenuPaths(): string[] {
   return [...PROFILE_MENU_PATHS];
 }
 
-/** Map navbar paths to RSC warm targets (skip redirect-only routes like /admin). */
-function resolveWarmNavPath(path: string): string {
-  if (path === "/admin") return "/admin/dashboard-overall-insights";
-  return path;
-}
-
 /**
  * Deduped RSC warm paths: navbar + profile + admin sidebar (admin/user only).
  * Complements Link viewport prefetch — Next dedupes duplicate RSC fetches.
  */
 export function getWarmPathsForRole(role: string | null | undefined): string[] {
   const paths = [
-    ...getNavPathsForRole(role).map(resolveWarmNavPath),
+    ...getNavPathsForRole(role),
     ...getProfileMenuPaths(),
   ];
   if (role !== "client" && role !== "supplier") {

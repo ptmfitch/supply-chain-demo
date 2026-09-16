@@ -19,6 +19,8 @@ import type {
 
 export type OrdersPageProps = {
   initialOrders?: OrderForPage[];
+  /** Client-buyer orders for admin combined list */
+  initialClientOrders?: OrderForPage[];
   userRole?: string;
   /** SSR dashboard stats for admin/user /orders cards (REQ-0025) */
   initialStats?: DashboardStats;
@@ -26,6 +28,8 @@ export type OrdersPageProps = {
   initialClientPortal?: ClientPortalDashboard;
   /** SSR supplier portal for supplier /orders cards */
   initialSupplierPortal?: SupplierPortalDashboard | null;
+  /** Admin/user store route — Self + Client badges on one list */
+  adminCombined?: boolean;
 };
 
 /**
@@ -34,16 +38,21 @@ export type OrdersPageProps = {
  */
 export default function OrdersPage({
   initialOrders,
+  initialClientOrders,
   userRole,
   initialStats,
   initialClientPortal,
   initialSupplierPortal,
+  adminCombined = false,
 }: OrdersPageProps = {}) {
   return (
     <Navbar>
       <PageContentWrapper>
         <OrderList
+          dataSource={adminCombined ? "adminCombined" : "orders"}
+          detailHrefBase={adminCombined ? "/orders" : undefined}
           initialOrders={initialOrders}
+          initialClientOrders={initialClientOrders}
           initialStats={initialStats}
           initialClientPortal={initialClientPortal}
           initialSupplierPortal={initialSupplierPortal}

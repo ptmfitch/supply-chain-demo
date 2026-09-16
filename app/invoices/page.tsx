@@ -5,6 +5,7 @@ import {
   getInvoicesForClientId,
   getInvoicesForSupplierId,
   getInvoicesForUser,
+  getClientInvoicesForProductOwner,
 } from "@/lib/server/invoices-data";
 import { prefetchListPageStats } from "@/lib/server/list-page-stats";
 import { getSupplierByUserId } from "@/prisma/supplier";
@@ -47,17 +48,20 @@ export default async function InvoicesRoute() {
     );
   }
 
-  // REQ-0159 — Self-only table (parity with /orders); store KPIs via dashboard
-  const [initialInvoices, listStats] = await Promise.all([
-    getInvoicesForUser(user.id),
-    prefetchListPageStats(user),
-  ]);
+  const [initialInvoices, initialClientInvoices, listStats] =
+    await Promise.all([
+      getInvoicesForUser(user.id),
+      getClientInvoicesForProductOwner(user.id),
+      prefetchListPageStats(user),
+    ]);
 
   return (
     <InvoicesPage
       userRole={userRole}
       initialInvoices={initialInvoices}
+      initialClientInvoices={initialClientInvoices}
       initialStats={listStats.initialStats}
+      adminCombined
     />
   );
 }

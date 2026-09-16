@@ -29,16 +29,6 @@ export const ADMIN_MY_STORE_ITEMS: AdminNavItemConfig[] = [
     label: "Store Overview",
   },
   {
-    href: "/admin/orders",
-    label: "Orders",
-    countKey: "clientOrders",
-  },
-  {
-    href: "/admin/invoices",
-    label: "Invoices",
-    countKey: "clientInvoices",
-  },
-  {
     href: "/admin/support-tickets",
     label: "Support Tickets",
     countKey: "supportTickets",
@@ -51,16 +41,6 @@ export const ADMIN_MY_STORE_ITEMS: AdminNavItemConfig[] = [
 ];
 
 export const ADMIN_MANAGEMENT_ITEMS: AdminNavItemConfig[] = [
-  {
-    href: "/admin/products",
-    label: "Products",
-    countKey: "products",
-  },
-  {
-    href: "/admin/warehouses",
-    label: "Warehouses",
-    countKey: "warehouses",
-  },
   {
     href: "/admin/supplier-portal",
     label: "Supplier Portal",

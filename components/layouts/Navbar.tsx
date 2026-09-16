@@ -44,6 +44,8 @@ import { resolveUserAvatarSources } from "@/lib/ui/user-avatar-sources";
 import { useTheme } from "next-themes";
 import ScrollControl from "../shared/ScrollControl";
 import Footer from "./Footer";
+import PageWithSidebar from "./PageWithSidebar";
+import AdminSidebar from "./AdminSidebar";
 import { NotificationBell } from "../shared";
 
 import {
@@ -60,6 +62,7 @@ import {
   type RoleNavItem,
 } from "@/lib/navigation/role-nav-config";
 import { navbarNavLinkClass } from "@/lib/navigation/nav-link-styles";
+import type { AdminCounts } from "@/types";
 
 /** Profile menu entries — paths shared with RouteWarmPrefetch (REQ-0094). */
 const PROFILE_MENU_LINKS = [
@@ -166,6 +169,8 @@ function ModeToggle() {
 
 interface NavbarProps {
   children?: ReactNode;
+  /** SSR sidebar badge counts for /admin/* routes (REQ-0025). */
+  adminSidebarInitialCounts?: AdminCounts;
 }
 
 /**
@@ -173,7 +178,10 @@ interface NavbarProps {
  * Handles navigation, user menu, theme toggle, mobile responsive menu
  * Also provides the layout structure with background and scrolling
  */
-export default function Navbar({ children }: NavbarProps) {
+export default function Navbar({
+  children,
+  adminSidebarInitialCounts,
+}: NavbarProps) {
   const { user, isCheckingAuth } = useAuth();
   const pathname = usePathname();
   const { toast } = useToast();
@@ -236,6 +244,9 @@ export default function Navbar({ children }: NavbarProps) {
         ? "supplier"
         : "user");
   const navItems = getNavItemsForRole(role);
+  const showAdminSidebar = role !== "client" && role !== "supplier";
+  const useAdminContentPadding =
+    showAdminSidebar || pathname?.startsWith("/business-insights");
 
   /** Home link for logo/brand: admin → /, client → /client, supplier → /supplier */
   const homePath = getHomePathForRole(role);
@@ -569,6 +580,24 @@ export default function Navbar({ children }: NavbarProps) {
 
   // If children provided, wrap with full layout structure
   if (children) {
+    const pageContent = showAdminSidebar ? (
+      <PageWithSidebar
+        sidebarContent={
+          <AdminSidebar initialCounts={adminSidebarInitialCounts} />
+        }
+        sidebarCollapsed={
+          <AdminSidebar
+            collapsed
+            initialCounts={adminSidebarInitialCounts}
+          />
+        }
+      >
+        <div className="min-w-0 flex-1 px-1 sm:px-0">{children}</div>
+      </PageWithSidebar>
+    ) : (
+      children
+    );
+
     return (
       <div className={PASTEL_PAGE_SHELL_LAYOUT}>
         <ScrollControl />
@@ -583,13 +612,12 @@ export default function Navbar({ children }: NavbarProps) {
             <div className="flex-1 flex flex-col">
               <div
                 className={
-                  pathname?.startsWith("/admin") ||
-                  pathname?.startsWith("/business-insights")
+                  useAdminContentPadding
                     ? `${APP_SHELL_WIDTH_CLASS} flex-1 sm:pr-4`
                     : `${APP_SHELL_WIDTH_CLASS} p-2 sm:px-4 sm:py-6 flex-1`
                 }
               >
-                {children}
+                {pageContent}
               </div>
             </div>
             {!pathname?.startsWith("/admin") && <Footer />}

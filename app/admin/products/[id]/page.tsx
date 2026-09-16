@@ -1,57 +1,15 @@
-import { notFound, redirect } from "next/navigation";
-import { getSession } from "@/lib/auth-server";
-import { getProductDetailForPage } from "@/lib/server/product-detail-data";
-import {
-  getReviewsForProductPage,
-  getReviewEligibilityForProduct,
-} from "@/lib/server/product-reviews-detail-data";
-import { getCachedForecastingSummary } from "@/lib/server/forecasting-data";
-import ProductDetailPage from "@/components/Pages/ProductDetailPage";
-import { enrichProductInsightsWithWarehouseStock } from "@/lib/insights/product-insights-enrich";
-import { getStockByProductForPage } from "@/lib/server/product-stock-data";
-import type { Product } from "@/types";
+import { redirectWithSearch } from "@/lib/navigation/redirect-with-search";
 
-type Props = { params: Promise<{ id: string }> };
+type Props = {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+};
 
-/** REQ-0025 — blocking SSR detail prefetch. REQ-0084 — admin cache-read forecast. */
-export const dynamic = "force-dynamic";
-
-export default async function AdminProductDetailPage({ params }: Props) {
-  const user = await getSession();
-  if (!user) redirect("/login");
+/** Admin product detail twin — redirect to store detail. */
+export default async function AdminProductDetailPage({
+  params,
+  searchParams,
+}: Props) {
   const { id } = await params;
-
-  const [initialProduct, initialReviews, initialEligibility, initialStockByProduct, initialForecasting] =
-    await Promise.all([
-      getProductDetailForPage({ id: user.id, role: user.role }, id),
-      getReviewsForProductPage(id, "all"),
-      getReviewEligibilityForProduct(user.id, id),
-      getStockByProductForPage({ id: user.id, role: user.role }, id),
-      user.role === "admin"
-        ? getCachedForecastingSummary(user.id)
-        : Promise.resolve(null),
-    ]);
-  if (!initialProduct) notFound();
-
-  const enrichedProduct = {
-    ...initialProduct,
-    productInsights: initialProduct.productInsights
-      ? enrichProductInsightsWithWarehouseStock(
-          initialProduct.productInsights,
-          initialStockByProduct ?? [],
-          Number(initialProduct.quantity),
-        )
-      : initialProduct.productInsights,
-  };
-
-  return (
-    <ProductDetailPage
-      embedInAdmin
-      initialProduct={enrichedProduct as unknown as Product}
-      initialReviews={initialReviews}
-      initialEligibility={initialEligibility}
-      initialStockByProduct={initialStockByProduct ?? undefined}
-      initialForecasting={initialForecasting}
-    />
-  );
+  redirectWithSearch(`/products/${id}`, await searchParams);
 }

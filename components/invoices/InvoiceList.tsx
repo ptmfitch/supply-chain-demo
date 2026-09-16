@@ -295,7 +295,7 @@ const InvoiceList = React.memo(
       dataSource === "clientInvoices"
         ? "/admin/client-invoices"
         : dataSource === "adminCombined"
-          ? "/admin/invoices"
+          ? (detailHrefBase ?? "/admin/invoices")
           : detailHrefBase;
 
     const allInvoicesRaw =

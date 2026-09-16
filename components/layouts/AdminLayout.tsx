@@ -2,14 +2,11 @@
 
 import React, { type ReactNode } from "react";
 import Navbar from "@/components/layouts/Navbar";
-import PageWithSidebar from "@/components/layouts/PageWithSidebar";
-import AdminSidebar from "@/components/layouts/AdminSidebar";
-import { PageContentWrapper } from "@/components/shared";
 
 import type { AdminCounts } from "@/types";
 
 /**
- * Admin layout: Navbar + left AdminSidebar + scrollable content.
+ * Admin layout: Navbar only — sidebar is rendered inside Navbar for admin/user.
  * initialCounts from app/admin/layout.tsx SSR (REQ-0025).
  */
 export default function AdminLayout({
@@ -20,13 +17,6 @@ export default function AdminLayout({
   initialCounts?: AdminCounts;
 }) {
   return (
-    <Navbar>
-      <PageWithSidebar
-        sidebarContent={<AdminSidebar initialCounts={initialCounts} />}
-        sidebarCollapsed={<AdminSidebar collapsed initialCounts={initialCounts} />}
-      >
-        <div className="min-w-0 flex-1 px-1 sm:px-0">{children}</div>
-      </PageWithSidebar>
-    </Navbar>
+    <Navbar adminSidebarInitialCounts={initialCounts}>{children}</Navbar>
   );
 }

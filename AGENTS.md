@@ -60,6 +60,12 @@ When a ticket exists in Jira project `supply-chain-demo`, mention it in the PR b
 - Recharts for dashboards (no Grafana)
 - After catalog / order / stock writes: existing `invalidateAfter*` helpers
 
+## Admin navigation (one system)
+
+- One store URL per catalog entity: `/orders`, `/invoices`, `/products`, `/warehouses`.
+- Admin-only destinations (Store Overview, portals, tickets, users, etc.) live in the left sidebar on admin/user pages.
+- Legacy `/admin/orders`, `/admin/invoices`, `/admin/products`, and `/admin/warehouses` routes redirect to the store paths (query string preserved).
+
 ## Skills and rules in this repo
 
 | Path | When |
