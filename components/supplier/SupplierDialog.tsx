@@ -386,7 +386,7 @@ export default function AddSupplierDialog({
                   />
                   <Label
                     htmlFor="edit-supplier-status"
-                    className="min-w-0 flex-1 text-sm font-medium leading-snug text-white/80 dark:text-white/80 cursor-pointer"
+                    className="min-w-0 flex-1 text-sm font-medium leading-snug text-gray-600 dark:text-white/80 cursor-pointer"
                   >
                     Active (Inactive suppliers will not appear while creating
                     products)
@@ -470,7 +470,7 @@ export default function AddSupplierDialog({
                   />
                   <Label
                     htmlFor="supplier-status"
-                    className="min-w-0 flex-1 text-sm font-medium leading-snug text-white/80 dark:text-white/80 cursor-pointer"
+                    className="min-w-0 flex-1 text-sm font-medium leading-snug text-gray-600 dark:text-white/80 cursor-pointer"
                   >
                     Active (Inactive suppliers will not appear while creating
                     products)

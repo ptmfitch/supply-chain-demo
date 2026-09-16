@@ -21,8 +21,8 @@ export const DIALOG_EDGE_SCROLL_INNER = "flex flex-col pr-4 sm:pr-8 pl-2 pb-4";
 /** Wrapper around dialog embedded list tables */
 export const DIALOG_TABLE_SECTION = "mt-6 min-w-0";
 
-/** Embedded table heading — dark glass dialogs always use white title (REQ-0117) */
-export const DIALOG_TABLE_SECTION_TITLE = "text-white/90";
+/** Embedded table heading — readable on light dialog shell (REQ-0231) */
+export const DIALOG_TABLE_SECTION_TITLE = "text-gray-700 dark:text-white/90";
 
 /** REQ-0117 — icon + label stay on one row; !important beats stray `block` on Label */
 export const DIALOG_FORM_LABEL_ROW =
@@ -75,8 +75,8 @@ export const DIALOG_TABLE_ACTION_ICON =
 export const DIALOG_FORM_FEEDBACK_ROW =
   "col-span-full mt-1 w-full space-y-1 sm:col-span-2";
 
-/** REQ-0109 — inline hint under dialog fields (dark glass dialogs) */
-export const DIALOG_FORM_HINT_TEXT = "text-xs text-white/60";
+/** REQ-0109 — inline hint under dialog fields */
+export const DIALOG_FORM_HINT_TEXT = "text-xs text-gray-500 dark:text-white/60";
 
 /** REQ-0109 — validation error copy */
 export const DIALOG_FORM_ERROR_TEXT =
@@ -90,10 +90,10 @@ export const DIALOG_FORM_SUCCESS_TEXT =
 export const DIALOG_FORM_WARN_TEXT = "text-xs text-amber-400/90";
 
 /** REQ-0114 — dialog field labels */
-export const DIALOG_FORM_LABEL = "text-sm font-medium text-white/80";
+export const DIALOG_FORM_LABEL = "text-sm font-medium text-gray-700 dark:text-white/80";
 
 /** REQ-0119 — compact grid field labels under a section DialogFormLabel */
-export const DIALOG_FORM_SUB_LABEL = "text-xs font-medium text-white/70";
+export const DIALOG_FORM_SUB_LABEL = "text-xs font-medium text-gray-600 dark:text-white/70";
 
 /** REQ-0114 — required field asterisk */
 export const DIALOG_FORM_REQUIRED_MARK = "text-red-400";

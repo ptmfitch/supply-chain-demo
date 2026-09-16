@@ -26,10 +26,10 @@ export function DialogWarehouseOptionRow({
   className,
 }: DialogWarehouseOptionRowProps) {
   const nameClass = metaOnDark
-    ? "text-sm font-normal text-white/90"
+    ? "text-sm font-normal text-gray-700 dark:text-white/90"
     : "text-sm font-normal text-gray-700 dark:text-gray-100";
   const availClass = metaOnDark
-    ? "text-xs text-white/70"
+    ? "text-xs text-gray-500 dark:text-white/70"
     : "text-xs text-gray-600 dark:text-gray-300";
 
   return (

@@ -69,6 +69,20 @@ After TS/JS edits, the hook injects context (and one `stop` follow-up) if the hu
 
 **Production:** Redeploy after env changes so `NEXT_PUBLIC_*` is baked into the client bundle.
 
+## Dialog light-mode contrast + pagination (REQ-0231)
+
+| Piece | Location |
+|-------|----------|
+| Form fields | `dialog-form-field.ts` — `DIALOG_FORM_FIELD_BASE` + date/combobox tokens; `text-gray-700 dark:text-white` |
+| Labels / hints | `dialog-edge-scroll.ts` — `DIALOG_FORM_LABEL`, `DIALOG_FORM_SUB_LABEL`, `DIALOG_FORM_HINT_TEXT`, `DIALOG_TABLE_SECTION_TITLE` |
+| Header brand | `DialogHeaderBrand.tsx` — title + description dual-theme |
+| Submit CTA | `DialogSubmitButton.tsx` — drop `!text-white`; rely on `GLASS_PRIMARY_BUTTON` / `PASTEL_PRIMARY` |
+| Picker densify | `ProductOptionRow.tsx` / `DialogWarehouseOptionRow.tsx` — `metaOnDark` light grays |
+| Tickets page | `SupportTicketsPageContent` Create button; `SupportTicketDialog` Send-to placeholders |
+| Pagination | 10 `*Table.tsx` — `Math.max(1, table.getPageCount())` (empty → Page 1 of 1) |
+
+**Invalidation unchanged** — CSS/class tokens only.
+
 ## Colour-blind mode (REQ-0230 / SCD-4)
 
 | Piece | Location |
@@ -1164,6 +1178,17 @@ Hub: `lib/ui/typography-scale.ts`. Hubs import tokens; ~45 inline files use equi
 **Invalidation unchanged** — review/product/dashboard CRUD already clears lists + portals.
 
 **Active wave:** **0224** densify parity done → **Gate 2** Sentry 24h (REQ-0009).
+
+## REQ-0231 dialog light-mode contrast + pagination (2026-09-16)
+
+| Piece | Location |
+|-------|----------|
+| Hub tokens | `dialog-form-field.ts`, `dialog-edge-scroll.ts`, `dialog-form-label.tsx`, `DialogHeaderBrand.tsx`, `DialogSubmitButton.tsx` |
+| Dialog sweep | 17 dialog files — `text-gray-* dark:text-white` on light `bg-slate-100` shells |
+| Tickets UI | `SupportTicketsPageContent`, `SupportTicketList`, `SupportTicketFilters`, `SupportTicketDialog`, `TicketReassignDialog` |
+| Pagination | 10 `*Table.tsx` — `Math.max(1, table.getPageCount())` |
+
+**Invalidation unchanged** — CSS/class tokens only.
 
 ## REQ-0227 personal ticket list scope (2026-08-01)
 

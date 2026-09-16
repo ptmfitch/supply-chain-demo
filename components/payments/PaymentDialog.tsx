@@ -178,11 +178,11 @@ export default function PaymentDialog({
           <div className="pr-4 sm:pr-8 flex flex-col gap-2 sm:gap-4">
             <div className="rounded-lg border border-sky-400/30 dark:border-white/20 bg-white/10 dark:bg-white/5 backdrop-blur-md p-4 space-y-2 flex-shrink-0 shadow-sm">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-white">
+                <span className="text-sm font-medium text-gray-700 dark:text-white">
                   {type === "order" ? "Order" : "Invoice"} Summary
                 </span>
                 {items?.length != null && (
-                  <span className="text-sm text-white">
+                  <span className="text-sm text-gray-700 dark:text-white">
                     Items ({items.length})
                   </span>
                 )}
@@ -203,26 +203,26 @@ export default function PaymentDialog({
                           className="border-sky-400/30"
                         />
                         {item.quantity != null && (
-                          <span className="px-1 py-0.5 rounded bg-primary/10 text-white text-xs font-medium shrink-0">
+                          <span className="px-1 py-0.5 rounded bg-primary/10 text-gray-700 dark:text-white text-xs font-medium shrink-0">
                             {item.quantity}
                           </span>
                         )}
-                        <span className="text-white truncate">{item.name}</span>
+                        <span className="text-gray-700 dark:text-white truncate">{item.name}</span>
                       </span>
-                      <span className="font-medium text-white shrink-0">
+                      <span className="font-medium text-gray-700 dark:text-white shrink-0">
                         ${item.price.toFixed(2)}
                       </span>
                     </div>
                   ))}
                   {items.length > 5 && (
-                    <p className="text-xs text-white/80 pt-1">
+                    <p className="text-xs text-gray-600 dark:text-white/80 pt-1">
                       + {items.length - 5} more items...
                     </p>
                   )}
                 </div>
               ) : (
                 <div className="text-sm">
-                  <CopyableText value={referenceNumber} className="text-white">
+                  <CopyableText value={referenceNumber} className="text-gray-700 dark:text-white">
                     {type === "order" ? "Order" : "Invoice"} #{referenceNumber}
                   </CopyableText>
                 </div>
@@ -276,14 +276,14 @@ export default function PaymentDialog({
               {hasFeeRows && <Separator className="my-2 bg-sky-400/20" />}
 
               <div className="flex items-center justify-between pt-1 text-sm sm:text-lg font-medium">
-                <span className="text-white inline-flex items-center gap-1.5">
+                <span className="text-gray-700 dark:text-white inline-flex items-center gap-1.5">
                   <CircleDollarSign className="h-4 w-4 shrink-0" />
                   {paidSoFar > 0 ? "Amount due" : "Total"}
                 </span>
-                <span className="text-white">
+                <span className="text-gray-700 dark:text-white">
                   ${remainingDue.toFixed(2)}
                   {paidSoFar > 0 && displayTotal > 0 ? (
-                    <span className="ml-1 text-xs font-normal text-white/70">
+                    <span className="ml-1 text-xs font-normal text-gray-500 dark:text-white/70">
                       / ${displayTotal.toFixed(2)}
                     </span>
                   ) : null}
@@ -297,11 +297,11 @@ export default function PaymentDialog({
                 <div className="min-w-0">
                   <Label
                     htmlFor="pay-partial-toggle"
-                    className="text-sm font-medium text-white"
+                    className="text-sm font-medium text-gray-700 dark:text-white"
                   >
                     Pay partially
                   </Label>
-                  <p className="text-xs text-white/70 mt-0.5">
+                  <p className="text-xs text-gray-500 dark:text-white/70 mt-0.5">
                     Off = pay full remaining (${remainingDue.toFixed(2)})
                   </p>
                 </div>
@@ -322,7 +322,7 @@ export default function PaymentDialog({
               <div className="space-y-1.5">
                 <Label
                   htmlFor="checkout-amount"
-                  className="text-xs text-white/80"
+                  className="text-xs text-gray-600 dark:text-white/80"
                 >
                   Amount to charge
                 </Label>
@@ -349,7 +349,7 @@ export default function PaymentDialog({
                     {amountError}
                   </p>
                 ) : (
-                  <p className="text-xs text-white/60">
+                  <p className="text-xs text-gray-500 dark:text-white/60">
                     {payPartial
                       ? `Enter any amount up to $${remainingDue.toFixed(2)}`
                       : "Full remaining balance will be charged"}
@@ -363,7 +363,7 @@ export default function PaymentDialog({
             </div>
 
             <div className="flex flex-col gap-2 flex-shrink-0">
-              <p className="text-xs text-center text-white/80">
+              <p className="text-xs text-center text-gray-600 dark:text-white/80">
                 No card entry here — you&apos;ll enter payment details on
                 Stripe&apos;s page after clicking below.
               </p>
@@ -399,7 +399,7 @@ export default function PaymentDialog({
                 />
               </DialogFooter>
 
-              <p className="text-xs text-center text-white">
+              <p className="text-xs text-center text-gray-700 dark:text-white">
                 You&apos;ll be redirected to Stripe&apos;s secure checkout page
               </p>
             </div>

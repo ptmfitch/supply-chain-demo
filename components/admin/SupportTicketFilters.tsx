@@ -136,7 +136,7 @@ export default function SupportTicketFilters({
               variant="ghost"
               size="sm"
               onClick={() => setSearchTerm("")}
-              className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 p-0 text-white/60 hover:text-white hover:bg-white/10 backdrop-blur-md"
+              className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 p-0 text-gray-500 hover:text-gray-700 dark:text-white/60 dark:hover:text-white hover:bg-gray-100/80 dark:hover:bg-white/10 backdrop-blur-md"
             >
               <IoClose className="h-4 w-4 text-gray-700 dark:text-white/80" />
             </Button>

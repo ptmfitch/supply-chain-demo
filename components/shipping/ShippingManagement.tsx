@@ -178,15 +178,15 @@ export default function ShippingManagement({
         )}
       >
         <DialogHeader className={DIALOG_EDGE_SCROLL_HEADER}>
-          <DialogTitle className="flex items-center gap-2 text-white">
+          <DialogTitle className="flex items-center gap-2 text-gray-700 dark:text-white">
             <Package className="h-5 w-5" />
             Shipping Management
           </DialogTitle>
-          <DialogDescription className="text-white/80">
+          <DialogDescription className="text-gray-600 dark:text-white/80">
             Generate a shipping label or add a tracking number for order{" "}
             <CopyableText
               value={order.orderNumber}
-              className="font-mono font-medium text-white inline"
+              className="font-mono font-medium text-gray-700 dark:text-white inline"
             >
               {order.orderNumber}
             </CopyableText>
@@ -197,7 +197,7 @@ export default function ShippingManagement({
           <div className={cn(DIALOG_EDGE_SCROLL_INNER, "gap-4")}>
             {/* Order context densify */}
             <div className="rounded-xl border border-white/15 bg-white/5 p-3 space-y-3">
-              <p className="text-xs font-medium text-white/80">Order items</p>
+              <p className="text-xs font-medium text-gray-600 dark:text-white/80">Order items</p>
               <ProductLineItemsList
                 items={order.items ?? []}
                 linkMode="none"
@@ -219,7 +219,7 @@ export default function ShippingManagement({
               onValueChange={(v) => setActiveTab(v as "auto" | "manual")}
               className="flex flex-col"
             >
-              <TabsList className="grid w-full grid-cols-2 h-11 p-1 rounded-lg bg-white/30 dark:bg-white/10 text-white shrink-0 border border-emerald-400/30 dark:border-white/20 shadow-sm">
+              <TabsList className="grid w-full grid-cols-2 h-11 p-1 rounded-lg bg-white/30 dark:bg-white/10 text-gray-700 dark:text-white shrink-0 border border-emerald-400/30 dark:border-white/20 shadow-sm">
                 <TabsTrigger
                   value="auto"
                   className="h-9 gap-2 rounded-md data-[state=active]:border data-[state=active]:border-emerald-400 data-[state=active]:ring-2 data-[state=active]:ring-emerald-500/50 data-[state=active]:bg-background data-[state=active]:text-slate-700 dark:data-[state=active]:text-white dark:data-[state=active]:bg-white/20"
@@ -263,7 +263,7 @@ export default function ShippingManagement({
                     placeholder={
                       <div
                         className={cn(
-                          "flex h-11 w-full items-center rounded-md px-2 text-sm text-white/60",
+                          "flex h-11 w-full items-center rounded-md px-2 text-sm text-gray-500 dark:text-white/60",
                           DIALOG_FORM_FIELD_EMERALD,
                         )}
                         aria-hidden
@@ -341,7 +341,7 @@ export default function ShippingManagement({
                 value="manual"
                 className="space-y-4 mt-4 data-[state=inactive]:hidden"
               >
-                <p className="text-sm text-white/70">
+                <p className="text-sm text-gray-500 dark:text-white/70">
                   Already have a tracking number from another source? Enter it
                   here to update the order.
                 </p>
@@ -355,7 +355,7 @@ export default function ShippingManagement({
                     placeholder={
                       <div
                         className={cn(
-                          "flex h-11 w-full items-center rounded-md px-2 text-sm text-white/60",
+                          "flex h-11 w-full items-center rounded-md px-2 text-sm text-gray-500 dark:text-white/60",
                           DIALOG_FORM_FIELD_EMERALD,
                         )}
                         aria-hidden

@@ -224,10 +224,10 @@ export default function AllocateStockDialog({
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className={ALLOCATE_DIALOG_CONTENT_CLASS}>
         <DialogHeader className={DIALOG_EDGE_SCROLL_HEADER}>
-          <DialogTitle className="text-[22px] text-white">
+          <DialogTitle className="text-[22px] text-gray-700 dark:text-white">
             {isEditMode ? "Update Allocation" : "Allocate Stock"}
           </DialogTitle>
-          <DialogDescription className="text-white/70">
+          <DialogDescription className="text-gray-500 dark:text-white/70">
             {isEditMode
               ? `Change allocated quantity in ${warehouseName ? `"${warehouseName}"` : "this warehouse"}.`
               : (

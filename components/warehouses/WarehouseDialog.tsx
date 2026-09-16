@@ -199,7 +199,7 @@ export default function WarehouseDialog({
                       contrast="solid"
                     />
                   ) : (
-                    <span className="text-white/60">Select type</span>
+                    <span className="text-gray-500 dark:text-white/60">Select type</span>
                   )}
                 </div>
               }
@@ -263,7 +263,7 @@ export default function WarehouseDialog({
               >
                 Active Status
               </DialogFormLabel>
-              <span className="text-xs text-white/50">
+              <span className="text-xs text-gray-400 dark:text-white/50">
                 {status
                   ? "Warehouse is currently active"
                   : "Warehouse is inactive"}

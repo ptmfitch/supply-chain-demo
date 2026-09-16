@@ -156,7 +156,7 @@ export default function TicketReassignDialog({
                 // REQ-0193 — match SelectTrigger h-auto min-h-11 (avoids bounce vs Edit dialog)
                 <div
                   className={cn(
-                    "flex h-auto min-h-11 w-full items-center rounded-xl px-2 py-1.5 text-sm text-white/60",
+                    "flex h-auto min-h-11 w-full items-center rounded-xl px-2 py-1.5 text-sm text-gray-500 dark:text-white/60",
                     "overflow-visible",
                     inputClass,
                   )}

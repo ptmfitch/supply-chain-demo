@@ -5,7 +5,7 @@
 import { glassFormFieldClasses } from "@/lib/ui/focus-ring-styles";
 
 const DIALOG_FORM_FIELD_BASE =
-  "bg-white/10 dark:bg-white/5 backdrop-blur-md text-white placeholder:text-white/40";
+  "bg-white/10 dark:bg-white/5 backdrop-blur-md text-gray-700 dark:text-white placeholder:text-gray-500 dark:placeholder:text-white/40";
 
 const roseShell = `${DIALOG_FORM_FIELD_BASE} border border-rose-400/30 dark:border-white/20 shadow-sm`;
 const skyShell = `${DIALOG_FORM_FIELD_BASE} border border-sky-400/30 dark:border-white/20 shadow-sm`;
@@ -47,7 +47,7 @@ export const DIALOG_FORM_FIELD_BLUE = glassFormFieldClasses("blue", blueShell);
 
 /** REQ-0126 — trailing calendar icon in dialog date fields (match Select chevron contrast). */
 export const DIALOG_DATE_CALENDAR_ICON_CLASS =
-  "text-white/80 hover:text-white transition-colors";
+  "text-gray-600 hover:text-gray-900 dark:text-white/80 dark:hover:text-white transition-colors";
 
 /**
  * REQ-0223 — fully hide native date indicator (opacity-0 still paints a 2nd icon on WebKit).
@@ -61,4 +61,4 @@ export const DIALOG_NATIVE_DATE_HIDE_INDICATOR =
  * Use with Button `variant="ghost"` + `DIALOG_FORM_FIELD_*` — kills outline→white hover.
  */
 export const DIALOG_COMBOBOX_TRIGGER_CLASS =
-  "font-normal text-white hover:bg-white/5 hover:text-white focus-visible:ring-0";
+  "font-normal text-gray-700 dark:text-white hover:bg-gray-100/80 dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-white focus-visible:ring-0";

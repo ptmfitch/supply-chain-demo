@@ -777,7 +777,7 @@ export default function WarehouseDetailPage({
                   label="Delete Warehouse"
                   icon={Trash2}
                   hue="rose"
-                  className="group w-full sm:w-auto gap-2 !text-white"
+                  className="group w-full sm:w-auto gap-2"
                 />
               </>
             ) : null}

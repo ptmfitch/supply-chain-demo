@@ -99,7 +99,7 @@ export default function SupportTicketsPageContent({
                     className={cn(
                       "h-10 rounded-[28px] border border-sky-400/30 dark:border-sky-400/30",
                       "bg-sky-100 dark:bg-sky-950/45",
-                      "text-white shadow-sm backdrop-blur-md",
+                      "text-gray-700 dark:text-white shadow-sm backdrop-blur-md",
                       "hover:border-sky-300/50 hover:bg-sky-200 dark:hover:bg-sky-900/50",
                       "gap-2",
                     )}

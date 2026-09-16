@@ -175,7 +175,7 @@ export const WarehouseTable = React.memo(function WarehouseTable({
             <GrFormPrevious />
           </Button>
           <span className="text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">
-            Page {pagination.pageIndex + 1} of {table.getPageCount()}
+            Page {pagination.pageIndex + 1} of {Math.max(1, table.getPageCount())}
           </span>
           <Button
             variant="outline"

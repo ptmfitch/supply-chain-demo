@@ -365,7 +365,7 @@ export default function AddProductDialog({
     <Dialog open={openProductDialog} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         {children || (
-          <Button className="h-10 font-medium inline-flex items-center justify-center rounded-xl border border-rose-400/30 dark:border-rose-400/30 bg-rose-100 dark:bg-rose-950/45 text-white shadow-sm backdrop-blur-md transition duration-200 hover:border-rose-300/50 hover:bg-rose-200 dark:hover:bg-rose-900/50 dark:hover:border-rose-300/50 hover:bg-rose-200 dark:hover:bg-rose-900/50">
+          <Button className="h-10 font-medium inline-flex items-center justify-center rounded-xl border border-rose-400/30 dark:border-rose-400/30 bg-rose-100 dark:bg-rose-950/45 text-gray-700 dark:text-white shadow-sm backdrop-blur-md transition duration-200 hover:border-rose-300/50 hover:bg-rose-200 dark:hover:bg-rose-900/50 dark:hover:border-rose-300/50 hover:bg-rose-200 dark:hover:bg-rose-900/50">
             +Add Product
           </Button>
         )}
@@ -440,7 +440,7 @@ export default function AddProductDialog({
                   placeholder={
                     <div
                       className={cn(
-                        "flex h-11 w-full items-center rounded-md px-2 text-sm text-white/60",
+                        "flex h-11 w-full items-center rounded-md px-2 text-sm text-gray-500 dark:text-white/60",
                         DIALOG_FORM_FIELD_ROSE,
                       )}
                       aria-hidden
@@ -498,7 +498,7 @@ export default function AddProductDialog({
                   placeholder={
                     <div
                       className={cn(
-                        "flex h-11 w-full items-center rounded-md px-2 text-sm text-white/60",
+                        "flex h-11 w-full items-center rounded-md px-2 text-sm text-gray-500 dark:text-white/60",
                         DIALOG_FORM_FIELD_ROSE,
                       )}
                       aria-hidden
@@ -516,7 +516,7 @@ export default function AddProductDialog({
                             )?.userId ?? selectedSupplier
                           }
                           size={22}
-                          linkClassName="text-sm font-normal text-white/90"
+                          linkClassName="text-sm font-normal text-gray-700 dark:text-white/90"
                         />
                       ) : (
                         supplierInvite
@@ -553,7 +553,7 @@ export default function AddProductDialog({
                                 )?.userId ?? selectedSupplier
                               }
                               size={22}
-                              linkClassName="text-sm font-normal text-white/90"
+                              linkClassName="text-sm font-normal text-gray-700 dark:text-white/90"
                             />
                           ) : (
                             supplierInvite
