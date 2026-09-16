@@ -187,10 +187,10 @@ export default function TransferStockDialog({
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className={TRANSFER_DIALOG_CONTENT_CLASS}>
         <DialogHeader className={DIALOG_EDGE_SCROLL_HEADER}>
-          <DialogTitle className="text-[22px] text-white">
+          <DialogTitle className="text-[22px] text-gray-700 dark:text-white">
             Transfer Stock
           </DialogTitle>
-          <DialogDescription className="text-white/70">
+          <DialogDescription className="text-gray-500 dark:text-gray-700 dark:text-white/70">
             Move units from{" "}
             {fromWarehouseName ? `"${fromWarehouseName}"` : "this warehouse"}{" "}
             to another location.
@@ -326,7 +326,7 @@ export default function TransferStockDialog({
                   </PopoverContent>
                 </Popover>
                 {allocatable.length === 0 && (
-                  <p className="mt-1 text-xs text-white/60">
+                  <p className="mt-1 text-xs text-gray-500 dark:text-gray-700 dark:text-white/60">
                     No available stock to transfer from this warehouse.
                   </p>
                 )}
@@ -371,7 +371,7 @@ export default function TransferStockDialog({
                                     contrast="solid"
                                   />
                                 ) : null}
-                                <span className="truncate text-sm text-white">
+                                <span className="truncate text-sm text-gray-700 dark:text-white">
                                   {w.name}
                                 </span>
                               </span>

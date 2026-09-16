@@ -97,7 +97,7 @@ export function OrderPickerCommand({
             <span className="flex min-w-0 flex-1 items-center gap-2 truncate text-left">
               <span className="truncate font-medium">
                 {selected.orderNumber}
-                <span className="font-normal text-white/70">
+                <span className="font-normal text-gray-500 dark:text-gray-700 dark:text-white/70">
                   {" "}
                   · {fmt(selected.total)}
                 </span>
@@ -116,7 +116,7 @@ export function OrderPickerCommand({
               />
             </span>
           ) : (
-            <span className="truncate text-white/60">Select an order...</span>
+            <span className="truncate text-gray-500 dark:text-gray-700 dark:text-white/60">Select an order...</span>
           )}
           <ChevronDown className="h-4 w-4 shrink-0 opacity-60" />
         </Button>

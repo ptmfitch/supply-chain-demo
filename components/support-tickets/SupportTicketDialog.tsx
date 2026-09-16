@@ -133,11 +133,11 @@ export function OwnerSelectRow({
   const count = owner.productCount;
   const nameClass =
     surface === "trigger"
-      ? "truncate text-sm text-white"
+      ? "truncate text-sm text-gray-700 dark:text-white"
       : "truncate text-sm text-gray-700 dark:text-white";
   const metaClass =
     surface === "trigger"
-      ? "truncate text-xs text-white/75"
+      ? "truncate text-xs text-gray-500 dark:text-white/75"
       : "truncate text-xs text-muted-foreground dark:text-white/70";
   return (
     <span className="flex min-w-0 flex-1 items-center gap-2 text-left">
@@ -442,7 +442,7 @@ export default function SupportTicketDialog({
                       surface="trigger"
                     />
                   ) : (
-                    <span className="text-sm text-white/75">
+                    <span className="text-sm text-gray-500 dark:text-white/75">
                       — No specific owner —
                     </span>
                   )}
@@ -454,7 +454,7 @@ export default function SupportTicketDialog({
                     // REQ-0198 — match SelectTrigger h-auto min-h-11 (Send-to densify)
                     <div
                       className={cn(
-                        "flex h-auto min-h-11 w-full items-center rounded-xl px-2 py-1.5 text-sm text-white/60",
+                        "flex h-auto min-h-11 w-full items-center rounded-xl px-2 py-1.5 text-sm text-gray-500 dark:text-white/60",
                         "overflow-visible",
                         inputClass,
                       )}
@@ -598,7 +598,7 @@ export default function SupportTicketDialog({
                         className="flex-1"
                       />
                     ) : (
-                      <span className="text-sm text-white/75">
+                      <span className="text-sm text-gray-500 dark:text-white/75">
                         {!assignedToId
                           ? "Select a product owner first"
                           : "— None —"}
@@ -749,7 +749,7 @@ export default function SupportTicketDialog({
                     className="flex-1"
                   />
                 ) : (
-                  <span className="text-sm text-white/90">
+                  <span className="text-sm text-gray-700 dark:text-white/90">
                     {existingTicket.relatedProductName?.trim() ||
                       existingTicket.relatedProductSku ||
                       existingTicket.productId.slice(-8)}

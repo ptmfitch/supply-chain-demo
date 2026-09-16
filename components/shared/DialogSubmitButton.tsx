@@ -48,7 +48,7 @@ export function DialogSubmitButton({
         GLASS_BUTTON_ICON_HOVER,
         GLASS_BUTTON_SHELL_RESET,
         GLASS_BUTTON_DISABLED,
-        "w-full sm:w-auto gap-2 px-8 !text-white",
+        "w-full sm:w-auto gap-2 px-8",
         GLASS_PRIMARY_BUTTON[hue],
         className,
       )}

@@ -667,31 +667,31 @@ export default function InvoiceDialog({
 
                 {/* Order Pricing Summary (read-only — values come from the order) */}
                 <div className="sm:col-span-2 p-4 border border-indigo-400/20 rounded-lg bg-white/5 space-y-2">
-                  <div className="flex justify-between text-sm text-white/70">
+                  <div className="flex justify-between text-sm text-gray-500 dark:text-gray-700 dark:text-white/70">
                     <span>Subtotal:</span>
                     <span>{fmt(editingInvoice.subtotal ?? 0)}</span>
                   </div>
                   {(editingInvoice.tax ?? 0) > 0 && (
-                    <div className="flex justify-between text-sm text-white/70">
+                    <div className="flex justify-between text-sm text-gray-500 dark:text-gray-700 dark:text-white/70">
                       <span>Tax:</span>
                       <span>{fmt(editingInvoice.tax ?? 0)}</span>
                     </div>
                   )}
                   {(editingInvoice.shipping ?? 0) > 0 && (
-                    <div className="flex justify-between text-sm text-white/70">
+                    <div className="flex justify-between text-sm text-gray-500 dark:text-gray-700 dark:text-white/70">
                       <span>Shipping:</span>
                       <span>{fmt(editingInvoice.shipping ?? 0)}</span>
                     </div>
                   )}
                   {(editingInvoice.discount ?? 0) > 0 && (
-                    <div className="flex justify-between text-sm text-white/70">
+                    <div className="flex justify-between text-sm text-gray-500 dark:text-gray-700 dark:text-white/70">
                       <span>Discount:</span>
                       <span className="text-red-400">
                         -{fmt(editingInvoice.discount ?? 0)}
                       </span>
                     </div>
                   )}
-                  <div className="flex justify-between text-base font-medium text-white pt-2 border-t border-indigo-400/20">
+                  <div className="flex justify-between text-base font-medium text-gray-700 dark:text-white pt-2 border-t border-indigo-400/20">
                     <span>Total:</span>
                     <span>{fmt(editingInvoice.total ?? 0)}</span>
                   </div>
@@ -782,7 +782,7 @@ export default function InvoiceDialog({
                   label="Payment Link"
                   placeholder="https://..."
                   type="url"
-                  labelClassName="text-white/80"
+                  labelClassName="text-gray-600 dark:text-gray-700 dark:text-white/80"
                   className="sm:col-span-2"
                   inputClassName={DIALOG_FORM_FIELD_INDIGO}
                 />
@@ -793,7 +793,7 @@ export default function InvoiceDialog({
                     name="notes"
                     label="Notes"
                     placeholder="Enter invoice notes..."
-                    labelClassName="text-white/80"
+                    labelClassName="text-gray-600 dark:text-gray-700 dark:text-white/80"
                     inputClassName={DIALOG_FORM_FIELD_INDIGO}
                   />
                 </div>
@@ -850,10 +850,10 @@ export default function InvoiceDialog({
                 {selectedOrder && (
                   <div className="rounded-md border border-indigo-400/20 bg-white/5 p-3 space-y-2">
                     {/* REQ-0187 — glass-safe densify; solid badges on dark dialog glass */}
-                    <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-white/80">
+                    <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-gray-600 dark:text-gray-700 dark:text-white/80">
                       <CopyableText
                         value={selectedOrder.orderNumber}
-                        className="font-medium text-white"
+                        className="font-medium text-gray-700 dark:text-white"
                       >
                         {selectedOrder.orderNumber}
                       </CopyableText>
@@ -869,7 +869,7 @@ export default function InvoiceDialog({
                       />
                       <ClientCompactDateTime
                         date={selectedOrder.createdAt}
-                        className="text-xs text-white/70"
+                        className="text-xs text-gray-500 dark:text-gray-700 dark:text-white/70"
                       />
                       {(selectedOrder.placedByName ||
                         selectedOrder.placedByEmail) && (
@@ -884,7 +884,7 @@ export default function InvoiceDialog({
                           }
                           image={selectedOrder.placedByImage}
                           size={16}
-                          linkClassName="text-xs font-normal text-white/70"
+                          linkClassName="text-xs font-normal text-gray-500 dark:text-gray-700 dark:text-white/70"
                         />
                       )}
                     </div>
@@ -893,8 +893,8 @@ export default function InvoiceDialog({
                         selectedOrder.items,
                       );
                       return (
-                        <p className="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-xs text-white/70">
-                          <span className="font-medium text-white/90">
+                        <p className="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-xs text-gray-500 dark:text-gray-700 dark:text-white/70">
+                          <span className="font-medium text-gray-700 dark:text-gray-700 dark:text-white/90">
                             {fmt(selectedOrder.total)}
                           </span>
                           <span aria-hidden>·</span>
@@ -915,7 +915,7 @@ export default function InvoiceDialog({
                         {selectedOrder.items.map((item) => (
                           <li
                             key={item.id}
-                            className="flex items-start gap-2 text-xs text-white/85 min-w-0"
+                            className="flex items-start gap-2 text-xs text-gray-600 dark:text-gray-700 dark:text-white/85 min-w-0"
                           >
                             <ProductThumb
                               name={item.productName}
@@ -924,20 +924,20 @@ export default function InvoiceDialog({
                             />
                             <span className="min-w-0 flex-1 space-y-0.5">
                               <span className="flex flex-wrap items-baseline gap-x-1.5">
-                                <span className="truncate font-medium text-white">
+                                <span className="truncate font-medium text-gray-700 dark:text-white">
                                   {item.productName}
                                 </span>
                                 {item.sku ? (
-                                  <span className="shrink-0 font-mono text-[11px] text-white/60">
+                                  <span className="shrink-0 font-mono text-[11px] text-gray-500 dark:text-gray-700 dark:text-white/60">
                                     · {item.sku}
                                   </span>
                                 ) : null}
-                                <span className="shrink-0 text-white/70">
+                                <span className="shrink-0 text-gray-500 dark:text-gray-700 dark:text-white/70">
                                   · ×{item.quantity}
                                 </span>
                               </span>
                               {(item.categoryName || item.supplierName) && (
-                                <span className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[11px] text-white/60">
+                                <span className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[11px] text-gray-500 dark:text-gray-700 dark:text-white/60">
                                   {item.categoryName ? (
                                     <span className="inline-flex items-center gap-1">
                                       <Tag
@@ -952,13 +952,13 @@ export default function InvoiceDialog({
                                       label={item.supplierName}
                                       seed={item.supplierId ?? item.supplierName}
                                       size={14}
-                                      linkClassName="text-[11px] font-normal text-white/60"
+                                      linkClassName="text-[11px] font-normal text-gray-500 dark:text-gray-700 dark:text-white/60"
                                     />
                                   ) : null}
                                 </span>
                               )}
                             </span>
-                            <span className="shrink-0 text-white/80">
+                            <span className="shrink-0 text-gray-600 dark:text-gray-700 dark:text-white/80">
                               {fmt(item.subtotal)}
                             </span>
                           </li>
@@ -983,35 +983,35 @@ export default function InvoiceDialog({
               {/* Order Pricing Summary (read-only — values calculated at order time) */}
               {selectedOrder && (
                 <div className="p-4 border border-indigo-400/20 rounded-lg bg-white/5 space-y-2">
-                  <div className="flex justify-between text-sm text-white/70">
+                  <div className="flex justify-between text-sm text-gray-500 dark:text-gray-700 dark:text-white/70">
                     <span>Subtotal:</span>
                     <span>{fmt(selectedOrder.subtotal ?? 0)}</span>
                   </div>
                   {(selectedOrder.tax ?? 0) > 0 && (
-                    <div className="flex justify-between text-sm text-white/70">
+                    <div className="flex justify-between text-sm text-gray-500 dark:text-gray-700 dark:text-white/70">
                       <span>Tax (7%):</span>
                       <span>{fmt(selectedOrder.tax ?? 0)}</span>
                     </div>
                   )}
                   {(selectedOrder.shipping ?? 0) > 0 && (
-                    <div className="flex justify-between text-sm text-white/70">
+                    <div className="flex justify-between text-sm text-gray-500 dark:text-gray-700 dark:text-white/70">
                       <span>Shipping:</span>
                       <span>{fmt(selectedOrder.shipping ?? 0)}</span>
                     </div>
                   )}
                   {(selectedOrder.discount ?? 0) > 0 && (
-                    <div className="flex justify-between text-sm text-white/70">
+                    <div className="flex justify-between text-sm text-gray-500 dark:text-gray-700 dark:text-white/70">
                       <span>Discount:</span>
                       <span className="text-red-400">
                         -{fmt(selectedOrder.discount ?? 0)}
                       </span>
                     </div>
                   )}
-                  <div className="flex justify-between text-base font-medium text-white pt-2 border-t border-indigo-400/20">
+                  <div className="flex justify-between text-base font-medium text-gray-700 dark:text-white pt-2 border-t border-indigo-400/20">
                     <span>Invoice Total:</span>
                     <span>{fmt(selectedOrder.total ?? 0)}</span>
                   </div>
-                  <p className="text-xs text-white/50 pt-1">
+                  <p className="text-xs text-gray-400 dark:text-gray-700 dark:text-white/50 pt-1">
                     Tax, shipping, and discount are calculated from the order
                     and cannot be changed.
                   </p>

@@ -96,7 +96,7 @@ export default function ProductReviewDialog({
               "h-4 w-4",
               i < count
                 ? display.starClass
-                : "fill-transparent text-white/40",
+                : "fill-transparent text-gray-400 dark:text-gray-700 dark:text-white/40",
             )}
           />
         ))}
@@ -136,7 +136,7 @@ export default function ProductReviewDialog({
                 // REQ-0198 — match SelectTrigger h-auto min-h-11 + densify row
                 <div
                   className={cn(
-                    "flex h-auto min-h-11 w-full items-center rounded-md px-2 py-1.5 text-sm text-white/60",
+                    "flex h-auto min-h-11 w-full items-center rounded-md px-2 py-1.5 text-sm text-gray-500 dark:text-gray-700 dark:text-white/60",
                     DIALOG_FORM_FIELD_AMBER,
                   )}
                   aria-hidden
@@ -335,7 +335,7 @@ export default function ProductReviewDialog({
               )}
               maxLength={2000}
             />
-            <p className="text-xs text-white/50 text-right">
+            <p className="text-xs text-gray-400 dark:text-gray-700 dark:text-white/50 text-right">
               {comment.length}/2000
             </p>
           </div>

@@ -129,13 +129,13 @@ export default function CreateUserDialog() {
       </DialogTrigger>
       <DialogContent className="p-2 sm:p-4 sm:px-8 poppins max-h-[90vh] overflow-y-auto border-blue-400/30 dark:border-blue-400/30 shadow-sm">
         <DialogHeader>
-          <DialogTitle className="text-[22px] text-white flex items-center gap-2">
+          <DialogTitle className="text-[22px] text-gray-700 dark:text-white flex items-center gap-2">
             <div className="p-2 rounded-xl border border-blue-300/30 bg-blue-100/50 dark:border-blue-400/30 dark:bg-blue-500/20">
               <UserPlus className="h-5 w-5 text-sky-600 dark:text-sky-400" />
             </div>
             Create New User
           </DialogTitle>
-          <DialogDescription className="text-white/70">
+          <DialogDescription className="text-gray-500 dark:text-gray-700 dark:text-white/70">
             Add a new user to the system with their details and role.
           </DialogDescription>
         </DialogHeader>
@@ -144,7 +144,7 @@ export default function CreateUserDialog() {
             <div className="space-y-2">
               <Label
                 htmlFor="name"
-                className="text-sm font-medium text-white/80"
+                className="text-sm font-medium text-gray-600 dark:text-gray-700 dark:text-white/80"
               >
                 Full Name *
               </Label>
@@ -163,7 +163,7 @@ export default function CreateUserDialog() {
             <div className="space-y-2">
               <Label
                 htmlFor="username"
-                className="text-sm font-medium text-white/80"
+                className="text-sm font-medium text-gray-600 dark:text-gray-700 dark:text-white/80"
               >
                 Username
               </Label>
@@ -185,7 +185,7 @@ export default function CreateUserDialog() {
           <div className="space-y-2">
             <Label
               htmlFor="email"
-              className="text-sm font-medium text-white/80"
+              className="text-sm font-medium text-gray-600 dark:text-gray-700 dark:text-white/80"
             >
               Email Address *
             </Label>
@@ -205,7 +205,7 @@ export default function CreateUserDialog() {
           <div className="space-y-2">
             <Label
               htmlFor="password"
-              className="text-sm font-medium text-white/80"
+              className="text-sm font-medium text-gray-600 dark:text-gray-700 dark:text-white/80"
             >
               Password *
             </Label>
@@ -222,7 +222,7 @@ export default function CreateUserDialog() {
                 type="button"
                 variant="ghost"
                 size="sm"
-                className="absolute right-0 top-0 h-full px-2 py-2 hover:bg-transparent text-white/60 hover:text-white/80"
+                className="absolute right-0 top-0 h-full px-2 py-2 hover:bg-transparent text-gray-500 dark:text-gray-700 dark:text-white/60 hover:text-gray-700 dark:hover:text-gray-900 dark:hover:text-gray-600 dark:text-gray-700 dark:text-white/80"
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? (
@@ -238,7 +238,7 @@ export default function CreateUserDialog() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="role" className="text-sm font-medium text-white/80">
+            <Label htmlFor="role" className="text-sm font-medium text-gray-600 dark:text-gray-700 dark:text-white/80">
               User Role
             </Label>
             <DeferredSelectGate
@@ -246,7 +246,7 @@ export default function CreateUserDialog() {
               placeholder={
                 <div
                   className={cn(
-                    "flex h-11 w-full items-center rounded-md px-2 text-sm text-white/60",
+                    "flex h-11 w-full items-center rounded-md px-2 text-sm text-gray-500 dark:text-gray-700 dark:text-white/60",
                     DIALOG_FORM_FIELD_BLUE,
                   )}
                   aria-hidden

@@ -136,7 +136,9 @@ export function ProductOptionRow({
           <span
             className={cn(
               "truncate text-xs",
-              metaOnDark ? "text-white/85" : PRODUCT_OPTION_META_POPOVER_CLASS,
+              metaOnDark
+                ? "text-gray-600 dark:text-white/85"
+                : PRODUCT_OPTION_META_POPOVER_CLASS,
             )}
           >
             {meta}
@@ -244,13 +246,13 @@ export function DialogProductOptionRow({
       : null;
   const showReserved = reservedN != null && reservedN > 0;
   const mutedClass = metaOnDark
-    ? "text-white/70"
+    ? "text-gray-500 dark:text-white/70"
     : "text-gray-500 dark:text-gray-400";
   const nameClass = metaOnDark
-    ? "text-sm font-normal text-white/90"
+    ? "text-sm font-normal text-gray-700 dark:text-white/90"
     : "text-sm font-normal text-gray-700 dark:text-gray-100";
   const metaRowClass = metaOnDark
-    ? "text-xs text-white/80"
+    ? "text-xs text-gray-600 dark:text-white/80"
     : "text-xs text-gray-600 dark:text-gray-300";
 
   return (
@@ -345,7 +347,10 @@ export function DialogProductOptionRow({
                 image={ownerImage}
                 label={ownerLabel}
                 size={18}
-                linkClassName={cn("text-xs", metaOnDark && "text-white/85")}
+                linkClassName={cn(
+                  "text-xs",
+                  metaOnDark && "text-gray-600 dark:text-white/85",
+                )}
                 className="gap-1"
               />
             ) : ownerLabel ? (
@@ -362,7 +367,10 @@ export function DialogProductOptionRow({
                 image={supplierImage}
                 label={supplierLabel}
                 size={18}
-                linkClassName={cn("text-xs", metaOnDark && "text-white/85")}
+                linkClassName={cn(
+                  "text-xs",
+                  metaOnDark && "text-gray-600 dark:text-white/85",
+                )}
                 className="gap-1"
               />
             ) : supplierLabel ? (
